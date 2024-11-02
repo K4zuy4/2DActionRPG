@@ -71,8 +71,8 @@ public class TileMap {
     }
 
     private Image loadTileImage(int type) throws IOException {
-        if (tileImageCache.containsKey(type)) {
-            return tileImageCache.get(type); // Bild aus dem Cache zurückgeben
+        if (tileImageCache.containsKey(type)) { //Optimierung für's Tile laden
+            return tileImageCache.get(type);
         }
 
         String path = "/Tiles/tile" + type + ".png";
@@ -83,7 +83,7 @@ public class TileMap {
         }
 
         Image image = new Image(inputStream);
-        tileImageCache.put(type, image); // Bild im Cache speichern
+        tileImageCache.put(type, image); // Bild cachen
         return image;
     }
 }

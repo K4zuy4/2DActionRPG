@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.projectgame.project2dgame.Controller.GameFieldController;
+import org.projectgame.project2dgame.Controller.KeyInputHandler;
+import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.GameField.GameLoop;
 import org.projectgame.project2dgame.GameField.TileManagement.TileMap;
@@ -26,8 +28,11 @@ public class Main extends Application {
         Pane gamePane = controller.getGamePane();
 
         GameField gameField = new GameField();
-
         TileMap tileMap = new TileMap("/Tiles/TileMap.txt", gameField.getTileSize(), gamePane);
+
+        EntityManagement entityManagement = new EntityManagement(gamePane, tileMap, gameField);
+        entityManagement.loadEntities();
+        entityManagement.loadCharacter();
 
         Scene scene = new Scene(root, gameField.getScreenWidth(), gameField.getScreenHeight());
         stage.setTitle("2D Action-RPG");
@@ -35,7 +40,10 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setOnCloseRequest(e -> System.exit(0));
 
-        gameLoop = new GameLoop();
+        KeyInputHandler keyInputHandler = new KeyInputHandler(entityManagement);
+        keyInputHandler.addKeyHandlers(scene);
+
+        gameLoop = new GameLoop(entityManagement, keyInputHandler);
         gameLoop.start();
 
         stage.show();

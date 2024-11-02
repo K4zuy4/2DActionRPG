@@ -24,4 +24,8 @@ public class GameField {
     public int getTileSize() {
         return tileSize;
     }
+
+    public int getScale() {
+        return scale;
+    }
 }

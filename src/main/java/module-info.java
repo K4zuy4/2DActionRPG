@@ -9,6 +9,7 @@ module org.projectgame.project2dgame {
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
     requires java.desktop;
+    requires annotations;
 
     opens org.projectgame.project2dgame to javafx.fxml;
     exports org.projectgame.project2dgame;
@@ -19,4 +20,6 @@ module org.projectgame.project2dgame {
     opens org.projectgame.project2dgame.GameField to javafx.fxml;
     exports org.projectgame.project2dgame.GameField.TileManagement;
     opens org.projectgame.project2dgame.GameField.TileManagement to javafx.fxml;
+    exports org.projectgame.project2dgame.Entities;
+    opens org.projectgame.project2dgame.Entities to javafx.fxml;
 }
