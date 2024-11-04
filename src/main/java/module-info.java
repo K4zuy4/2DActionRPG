@@ -10,6 +10,7 @@ module org.projectgame.project2dgame {
     requires com.almasb.fxgl.all;
     requires java.desktop;
     requires annotations;
+    requires com.fasterxml.jackson.databind;
 
     opens org.projectgame.project2dgame to javafx.fxml;
     exports org.projectgame.project2dgame;
@@ -22,4 +23,6 @@ module org.projectgame.project2dgame {
     opens org.projectgame.project2dgame.GameField.TileManagement to javafx.fxml;
     exports org.projectgame.project2dgame.Entities;
     opens org.projectgame.project2dgame.Entities to javafx.fxml;
+    exports org.projectgame.project2dgame.Data;
+    opens org.projectgame.project2dgame.Data to javafx.fxml;
 }

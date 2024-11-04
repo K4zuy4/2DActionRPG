@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.projectgame.project2dgame.Controller.GameFieldController;
 import org.projectgame.project2dgame.Controller.KeyInputHandler;
+import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.GameField.GameLoop;
@@ -34,6 +35,8 @@ public class Main extends Application {
         entityManagement.loadEntities();
         entityManagement.loadCharacter();
 
+        GameSettings gameSettings = new GameSettings();
+
         Scene scene = new Scene(root, gameField.getScreenWidth(), gameField.getScreenHeight());
         stage.setTitle("2D Action-RPG");
         stage.setResizable(false);
@@ -43,7 +46,7 @@ public class Main extends Application {
         KeyInputHandler keyInputHandler = new KeyInputHandler(entityManagement);
         keyInputHandler.addKeyHandlers(scene);
 
-        gameLoop = new GameLoop(entityManagement, keyInputHandler);
+        gameLoop = new GameLoop(entityManagement, keyInputHandler, gameSettings);
         gameLoop.start();
 
         stage.show();

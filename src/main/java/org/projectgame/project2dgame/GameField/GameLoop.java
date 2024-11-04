@@ -3,6 +3,7 @@ package org.projectgame.project2dgame.GameField;
 import javafx.animation.AnimationTimer;
 import javafx.scene.input.KeyCode;
 import org.projectgame.project2dgame.Controller.KeyInputHandler;
+import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.Entities.EntityManagement;
 
 import java.util.Set;
@@ -14,10 +15,12 @@ public class GameLoop extends AnimationTimer {
     private int movementSpeed;
     private final EntityManagement entityManagement;
     private final KeyInputHandler keyInputHandler;
+    private GameSettings gameSettings;
 
-    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler) {
+    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, GameSettings gameSettings) {
         this.entityManagement = entityManagement;
         this.keyInputHandler = keyInputHandler;
+        this.gameSettings = gameSettings;
         this.movementSpeed = entityManagement.getCharacter().getCharacterSpeed();
     }
 
@@ -60,16 +63,16 @@ public class GameLoop extends AnimationTimer {
         double distance = movementSpeed * deltaTime;
 
         if (entityManagement.getCharacter() != null) {
-            if (pressedKeys.contains(KeyCode.W)) {
+            if (pressedKeys.contains(gameSettings.getKeyMap().get("upKey"))) {
                 entityManagement.getCharacter().getMovementHandler().moveUp(distance);
             }
-            if (pressedKeys.contains(KeyCode.S)) {
+            if (pressedKeys.contains(gameSettings.getKeyMap().get("downKey"))) {
                 entityManagement.getCharacter().getMovementHandler().moveDown(distance);
             }
-            if (pressedKeys.contains(KeyCode.A)) {
+            if (pressedKeys.contains(gameSettings.getKeyMap().get("leftKey"))) {
                 entityManagement.getCharacter().getMovementHandler().moveLeft(distance);
             }
-            if (pressedKeys.contains(KeyCode.D)) {
+            if (pressedKeys.contains(gameSettings.getKeyMap().get("rightKey"))) {
                 entityManagement.getCharacter().getMovementHandler().moveRight(distance);
             }
         }
