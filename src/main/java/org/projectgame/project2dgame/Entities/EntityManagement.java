@@ -8,7 +8,7 @@ public class EntityManagement {
     private final Pane gamePane;
     private final TileMap tileMap;
     private Character character;
-    private GameField gameField;
+    private final GameField gameField;
 
     public EntityManagement(Pane gamePane, TileMap tileMap, GameField gameField) {
         this.gamePane = gamePane;
@@ -20,7 +20,7 @@ public class EntityManagement {
     }
 
     public void loadCharacter() {
-        character = new Character(100, 100, 100, "/Entities/char_walk_right.gif", this.gameField);
+        character = new Character(100, 100, 100, "/Entities/player_idle.gif", this.gameField);
         gamePane.getChildren().add(character.getSprite());
     }
 

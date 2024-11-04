@@ -49,6 +49,8 @@ public class Main extends Application {
         gameLoop = new GameLoop(entityManagement, keyInputHandler, gameSettings);
         gameLoop.start();
 
+        Debug debug = new Debug(gameSettings);
+
         stage.show();
     }
 

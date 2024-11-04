@@ -57,4 +57,9 @@ public class GameSettings {
         this.keyMap = wrapper.getKeyMap();
         System.out.println(keyMap.get("upKey"));
     }
+
+    public void changeKey(String key, KeyCode keyCode) throws IOException {
+        keyMap.replace(key, keyCode);
+        savedata();
+    }
 }

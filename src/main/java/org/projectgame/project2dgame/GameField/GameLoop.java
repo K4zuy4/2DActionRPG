@@ -16,6 +16,7 @@ public class GameLoop extends AnimationTimer {
     private final EntityManagement entityManagement;
     private final KeyInputHandler keyInputHandler;
     private GameSettings gameSettings;
+    private boolean FPSAnzeigen = false;
 
     public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, GameSettings gameSettings) {
         this.entityManagement = entityManagement;
@@ -37,7 +38,7 @@ public class GameLoop extends AnimationTimer {
 
         if (now - lastFpsUpdate >= 1_000_000_000) { //FPS anzeigen
             int fps = frameCount;
-            System.out.println("FPS: " + fps);
+            if(FPSAnzeigen) System.out.println("FPS: " + fps);
             frameCount = 0;
             lastFpsUpdate = now;
         }
