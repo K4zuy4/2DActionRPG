@@ -11,12 +11,14 @@ public class GameLoop extends AnimationTimer {
     private long lastUpdate = 0;
     private int frameCount = 0;
     private long lastFpsUpdate = 0;
+    private int movementSpeed;
     private final EntityManagement entityManagement;
     private final KeyInputHandler keyInputHandler;
 
     public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler) {
         this.entityManagement = entityManagement;
         this.keyInputHandler = keyInputHandler;
+        this.movementSpeed = entityManagement.getCharacter().getCharacterSpeed();
     }
 
     @Override
@@ -30,7 +32,7 @@ public class GameLoop extends AnimationTimer {
         double lastFrame = (now - lastUpdate) / 1_000_000_000.0; //Nanosekunde zu Sekunde
         frameCount++;
 
-        if (now - lastFpsUpdate >= 1_000_000_000) { // Update FPS every second
+        if (now - lastFpsUpdate >= 1_000_000_000) { //FPS anzeigen
             int fps = frameCount;
             System.out.println("FPS: " + fps);
             frameCount = 0;
@@ -55,7 +57,7 @@ public class GameLoop extends AnimationTimer {
 
     private void updateCharacterMovement(double deltaTime) {
         Set<KeyCode> pressedKeys = keyInputHandler.getPressedKeys();
-        double distance = 200 * deltaTime; //Geschwindigkeit in Pixel pro Sekunde
+        double distance = movementSpeed * deltaTime;
 
         if (entityManagement.getCharacter() != null) {
             if (pressedKeys.contains(KeyCode.W)) {

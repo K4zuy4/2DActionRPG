@@ -13,6 +13,7 @@ public class Character {
     private ImageView sprite;
     private MovementHandler movementHandler;
     private GameField gameField;
+    private int characterSpeed = 200;
 
     public Character(double x, double y, int health, String spritePath, GameField gameField) {
         this.gameField = gameField;
@@ -47,6 +48,10 @@ public class Character {
 
     public int getHealth() {
         return health;
+    }
+
+    public int getCharacterSpeed() {
+        return characterSpeed;
     }
 
     public void setHealth(int health) {
