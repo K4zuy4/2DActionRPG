@@ -1,8 +1,14 @@
 module org.projectgame.project2dgame {
+    requires javafx.graphics;
     requires javafx.controls;
+    requires javafx.media;
+    requires javafx.base;
+    requires javafx.web;
+    requires javafx.swing;
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
+
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;

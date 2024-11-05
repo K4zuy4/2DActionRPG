@@ -20,8 +20,9 @@ public class EntityManagement {
     }
 
     public void loadCharacter() {
-        character = new Character(100, 100, 100, "/Entities/player_idle.gif", this.gameField);
+        character = new Character(100, 100, 100, "/Entities/player.png", this.gameField);
         gamePane.getChildren().add(character.getSprite());
+        gamePane.getChildren().add(character.getHitbox());
     }
 
     public void updateEntities(double deltaTime) {

@@ -57,6 +57,7 @@ public class GameLoop extends AnimationTimer {
     public void render() {
         entityManagement.renderEntities();
         entityManagement.renderCharacter();
+        entityManagement.getCharacter().updateHitboxPosition();
     }
 
     private void updateCharacterMovement(double deltaTime) {

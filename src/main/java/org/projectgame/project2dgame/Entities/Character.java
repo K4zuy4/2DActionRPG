@@ -2,9 +2,13 @@ package org.projectgame.project2dgame.Entities;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.GameField.GameField;
 
 import java.util.Objects;
+
+import static javafx.scene.paint.Color.rgb;
 
 public class Character {
     private double x;
@@ -14,6 +18,8 @@ public class Character {
     private MovementHandler movementHandler;
     private GameField gameField;
     private int characterSpeed = 200;
+    private Rectangle hitbox;
+    private boolean collisionOn = false;
 
     public Character(double x, double y, int health, String spritePath, GameField gameField) {
         this.gameField = gameField;
@@ -26,6 +32,14 @@ public class Character {
         this.sprite.setX(x);
         this.sprite.setY(y);
         movementHandler = new MovementHandler(this);
+
+        this.hitbox = new Rectangle(0, 0, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
+        this.hitbox.setFill(rgb(255, 0, 0, 0.5));
+    }
+
+    public void updateHitboxPosition() {
+        hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
+        hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight())); // zentriert die Hitbox vertikal
     }
 
     public double getX() {
@@ -35,6 +49,7 @@ public class Character {
     public void setX(double x) {
         this.x = x;
         this.sprite.setX(x);
+        updateHitboxPosition();
     }
 
     public double getY() {
@@ -44,6 +59,7 @@ public class Character {
     public void setY(double y) {
         this.y = y;
         this.sprite.setY(y);
+        updateHitboxPosition();
     }
 
     public int getHealth() {
@@ -73,17 +89,17 @@ public class Character {
         }
     }
 
-    public void update(double deltaTime) {
-
-    }
 
     public void render() {
-
         sprite.setX(x);
         sprite.setY(y);
     }
 
     public Character getCharacter() {
         return this;
+    }
+
+    public Rectangle getHitbox() {
+        return hitbox;
     }
 }
