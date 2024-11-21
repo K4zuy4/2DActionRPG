@@ -2,7 +2,7 @@ package org.projectgame.project2dgame.GameField;
 
 public class GameField {
 
-    final int originaleTileGroesse = 16; //16x16 Pixel
+    public final int originaleTileGroesse = 16; //16x16 Pixel
     final int scale = 4;
 
     final int tileSize = originaleTileGroesse * scale;  //64x64 Pixel

@@ -21,12 +21,13 @@ public class Main extends Application {
     private GameLoop gameLoop;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException{
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/GameField.fxml"));
         Parent root = loader.load();
 
         GameFieldController controller = loader.getController();
         Pane gamePane = controller.getGamePane();
+
 
         GameField gameField = new GameField();
         TileMap tileMap = new TileMap("/Tiles/TileMap.txt", gameField.getTileSize(), gamePane);
