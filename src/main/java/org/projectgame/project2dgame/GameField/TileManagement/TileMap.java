@@ -3,13 +3,13 @@ package org.projectgame.project2dgame.GameField.TileManagement;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.Main;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static javafx.scene.paint.Color.rgb;
 
 public class TileMap {
     private final Tile[][] tiles;
@@ -18,6 +18,7 @@ public class TileMap {
     private final int height;
     private final Pane tilePane;
     Map<Integer, Image> tileImageCache = new HashMap<>();
+    // private final List<Integer> solidTileTypes = Arrays.asList(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
     public TileMap(String path, int tileSize, Pane _gamePane) throws IOException {
         this.tileSize = tileSize;
@@ -47,7 +48,7 @@ public class TileMap {
             for (int i = 0; i < tokens.length; i++) {
                 long type = Long.parseLong(tokens[i]);
                 Image image = loadTileImage((int) type);
-                tileRow[i] = new Tile(image, (int) type);
+                tileRow[i] = new Tile(image, (int) type, tileSize);
             }
             tileList.add(tileRow);
             rows++;
@@ -56,15 +57,33 @@ public class TileMap {
         return tileList.toArray(new Tile[rows][]);
     }
 
+    public void printTileArray() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                System.out.print(tiles[y][x].getType() + " ");
+            }
+            System.out.println();
+        }
+    }
+
     private void drawTiles() {
-        for(int y = 0; y < height; y++) {
-            for(int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
                 Tile tile = tiles[y][x];
                 ImageView imageView = new ImageView(tile.getImage());
                 imageView.setFitWidth(tileSize);
                 imageView.setFitHeight(tileSize);
                 imageView.setX(x * tileSize);
                 imageView.setY(y * tileSize);
+
+                if (tile.getType() != 1) {
+                    Rectangle rectangle = tile.getHitbox();
+                    rectangle.setX(x * tileSize);
+                    rectangle.setY(y * tileSize);
+
+                    tilePane.getChildren().addAll(rectangle);
+                }
+
                 tilePane.getChildren().add(imageView);
             }
         }
@@ -85,5 +104,25 @@ public class TileMap {
         Image image = new Image(inputStream);
         tileImageCache.put(type, image); // Bild cachen
         return image;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public Tile getTile(int y, int x) {
+        return tiles[y][x];
+    }
+
+    public int getTileSize() {
+        return tileSize;
+    }
+
+    public Pane getTilePane() {
+        return tilePane;
     }
 }

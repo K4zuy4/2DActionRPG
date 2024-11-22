@@ -15,7 +15,6 @@ public class Character {
     private double y;
     private int health;
     private ImageView sprite;
-    private MovementHandler movementHandler;
     private GameField gameField;
     private int characterSpeed = 200;
     private Rectangle hitbox;
@@ -31,7 +30,6 @@ public class Character {
         this.sprite.setFitWidth(gameField.getTileSize() * 1.5);
         this.sprite.setX(x);
         this.sprite.setY(y);
-        movementHandler = new MovementHandler(this);
 
         this.hitbox = new Rectangle(0, 0, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
         this.hitbox.setFill(rgb(255, 0, 0, 0.5));
@@ -62,24 +60,12 @@ public class Character {
         updateHitboxPosition();
     }
 
-    public int getHealth() {
-        return health;
-    }
-
     public int getCharacterSpeed() {
         return characterSpeed;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
     public ImageView getSprite() {
         return sprite;
-    }
-
-    public MovementHandler getMovementHandler() {
-        return movementHandler;
     }
 
     public void takeDamage(int damage) {

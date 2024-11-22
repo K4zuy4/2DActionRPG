@@ -6,13 +6,11 @@ import org.projectgame.project2dgame.GameField.TileManagement.TileMap;
 
 public class EntityManagement {
     private final Pane gamePane;
-    private final TileMap tileMap;
     private Character character;
     private final GameField gameField;
 
-    public EntityManagement(Pane gamePane, TileMap tileMap, GameField gameField) {
+    public EntityManagement(Pane gamePane, GameField gameField) {
         this.gamePane = gamePane;
-        this.tileMap = tileMap;
         this.gameField = gameField;
     }
 

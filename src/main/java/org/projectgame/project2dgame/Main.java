@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.Controller.GameFieldController;
 import org.projectgame.project2dgame.Controller.KeyInputHandler;
 import org.projectgame.project2dgame.Data.GameSettings;
@@ -32,7 +33,7 @@ public class Main extends Application {
         GameField gameField = new GameField();
         TileMap tileMap = new TileMap("/Tiles/TileMap.txt", gameField.getTileSize(), gamePane);
 
-        EntityManagement entityManagement = new EntityManagement(gamePane, tileMap, gameField);
+        EntityManagement entityManagement = new EntityManagement(gamePane, gameField);
         entityManagement.loadEntities();
         entityManagement.loadCharacter();
 
@@ -47,7 +48,7 @@ public class Main extends Application {
         KeyInputHandler keyInputHandler = new KeyInputHandler(entityManagement);
         keyInputHandler.addKeyHandlers(scene);
 
-        gameLoop = new GameLoop(entityManagement, keyInputHandler, gameSettings);
+        gameLoop = new GameLoop(entityManagement, keyInputHandler, gameSettings, tileMap);
         gameLoop.start();
 
         Debug debug = new Debug(gameSettings);

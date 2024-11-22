@@ -2,9 +2,14 @@ package org.projectgame.project2dgame.GameField;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.Controller.KeyInputHandler;
 import org.projectgame.project2dgame.Data.GameSettings;
+import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.EntityManagement;
+import org.projectgame.project2dgame.GameField.TileManagement.TileMap;
 
 import java.util.Set;
 
@@ -13,16 +18,20 @@ public class GameLoop extends AnimationTimer {
     private int frameCount = 0;
     private long lastFpsUpdate = 0;
     private int movementSpeed;
+    private TileMap tileMap;
     private final EntityManagement entityManagement;
     private final KeyInputHandler keyInputHandler;
+    private final CollisionCheck collisionCheck;
     private GameSettings gameSettings;
     private boolean FPSAnzeigen = false;
 
-    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, GameSettings gameSettings) {
+    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, GameSettings gameSettings, TileMap tileMap) {
         this.entityManagement = entityManagement;
         this.keyInputHandler = keyInputHandler;
         this.gameSettings = gameSettings;
         this.movementSpeed = entityManagement.getCharacter().getCharacterSpeed();
+        this.tileMap = tileMap;
+        this.collisionCheck = new CollisionCheck(this.tileMap, this.entityManagement);
     }
 
     @Override
@@ -66,17 +75,32 @@ public class GameLoop extends AnimationTimer {
 
         if (entityManagement.getCharacter() != null) {
             if (pressedKeys.contains(gameSettings.getKeyMap().get("upKey"))) {
-                entityManagement.getCharacter().getMovementHandler().moveUp(distance);
+                moveCharacter(0, -distance);
             }
             if (pressedKeys.contains(gameSettings.getKeyMap().get("downKey"))) {
-                entityManagement.getCharacter().getMovementHandler().moveDown(distance);
+                moveCharacter(0, distance);
             }
             if (pressedKeys.contains(gameSettings.getKeyMap().get("leftKey"))) {
-                entityManagement.getCharacter().getMovementHandler().moveLeft(distance);
+                moveCharacter(-distance, 0);
             }
             if (pressedKeys.contains(gameSettings.getKeyMap().get("rightKey"))) {
-                entityManagement.getCharacter().getMovementHandler().moveRight(distance);
+                moveCharacter(distance, 0);
             }
+        }
+    }
+
+    private void moveCharacter(double dx, double dy) {
+        Character character = entityManagement.getCharacter();
+        double newX = character.getX() + dx;
+        double newY = character.getY() + dy;
+        double newHitboxX = character.getHitbox().getX() + dx;
+        double newHitboxY = character.getHitbox().getY() + dy;
+        Rectangle newHitbox = new Rectangle(newHitboxX, newHitboxY, character.getHitbox().getWidth(), character.getHitbox().getHeight());
+        newHitbox.setFill(Color.RED);
+
+        if(!collisionCheck.checkCollision(newHitbox)) {
+            character.setX(newX);
+            character.setY(newY);
         }
     }
 }
