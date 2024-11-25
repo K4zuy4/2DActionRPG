@@ -15,7 +15,7 @@ public class Tile {
         this.type = type;
         if (type != 1) {
             hitbox = new Rectangle(tileSize, tileSize);
-            hitbox.setFill(rgb(255, 255, 255, 0.5)); // Make the rectangle invisible
+            hitbox.setFill(rgb(255, 255, 255, 1));
             hitbox.setStroke(null);
         }
     }

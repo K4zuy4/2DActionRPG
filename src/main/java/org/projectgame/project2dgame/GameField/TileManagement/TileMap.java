@@ -9,8 +9,6 @@ import org.projectgame.project2dgame.Main;
 import java.io.*;
 import java.util.*;
 
-import static javafx.scene.paint.Color.rgb;
-
 public class TileMap {
     private final Tile[][] tiles;
     private final int tileSize;
@@ -18,7 +16,6 @@ public class TileMap {
     private final int height;
     private final Pane tilePane;
     Map<Integer, Image> tileImageCache = new HashMap<>();
-    // private final List<Integer> solidTileTypes = Arrays.asList(0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
     public TileMap(String path, int tileSize, Pane _gamePane) throws IOException {
         this.tileSize = tileSize;
@@ -55,15 +52,6 @@ public class TileMap {
         }
 
         return tileList.toArray(new Tile[rows][]);
-    }
-
-    public void printTileArray() {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                System.out.print(tiles[y][x].getType() + " ");
-            }
-            System.out.println();
-        }
     }
 
     private void drawTiles() {
@@ -116,13 +104,5 @@ public class TileMap {
 
     public Tile getTile(int y, int x) {
         return tiles[y][x];
-    }
-
-    public int getTileSize() {
-        return tileSize;
-    }
-
-    public Pane getTilePane() {
-        return tilePane;
     }
 }

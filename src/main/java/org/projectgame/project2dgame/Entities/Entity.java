@@ -2,24 +2,21 @@ package org.projectgame.project2dgame.Entities;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.GameField.GameField;
 
 import java.util.Objects;
 
-import static javafx.scene.paint.Color.rgb;
-
-public class Character {
+public class Entity {
     private double x;
     private double y;
     private int health;
     private ImageView sprite;
     private GameField gameField;
-    private int characterSpeed = 200;
+    private int entitySpeed = 200;
     private Rectangle hitbox;
 
-    public Character(double x, double y, int health, String spritePath, GameField gameField) {
+    public Entity(double x, double y, int health, String spritePath, GameField gameField) {
         this.gameField = gameField;
         this.x = x;
         this.y = y;
@@ -61,8 +58,8 @@ public class Character {
         updateHitboxPosition();
     }
 
-    public int getCharacterSpeed() {
-        return characterSpeed;
+    public int getEntitySpeed() {
+        return entitySpeed;
     }
 
     public ImageView getSprite() {
@@ -74,7 +71,7 @@ public class Character {
         sprite.setY(y);
     }
 
-    public Character getCharacter() {
+    public Entity getEntity() {
         return this;
     }
 
