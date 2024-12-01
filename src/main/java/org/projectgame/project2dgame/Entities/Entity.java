@@ -7,6 +7,8 @@ import org.projectgame.project2dgame.GameField.GameField;
 
 import java.util.Objects;
 
+import static javafx.scene.paint.Color.rgb;
+
 public class Entity {
     private double x;
     private double y;
@@ -28,9 +30,8 @@ public class Entity {
         this.sprite.setY(y);
 
         this.hitbox = new Rectangle(0, 0, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
-        //this.hitbox.setFill(rgb(255, 0, 0, 0.5));
-        this.hitbox.setFill(null);
-
+        this.hitbox.setFill(rgb(255, 0, 0, 0.5));
+        //this.hitbox.setFill(null);
     }
 
     public void updateHitboxPosition() {

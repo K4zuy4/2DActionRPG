@@ -33,7 +33,6 @@ public class Character {
         this.hitbox = new Rectangle(0, 0, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
         //this.hitbox.setFill(rgb(255, 0, 0, 0.5));
         this.hitbox.setFill(null);
-
     }
 
     public void updateHitboxPosition() {
