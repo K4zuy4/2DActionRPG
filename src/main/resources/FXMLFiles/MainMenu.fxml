@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.MainMenuController">
+<AnchorPane prefHeight="500.0" prefWidth="380.0" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.MainMenuController">
    <children>
-      <Text layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="custom-font" text="Crying Light" textAlignment="CENTER" wrappingWidth="300.0" AnchorPane.leftAnchor="0.0">
+      <Text fill="#f8f8f8" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sanctum of Sorrow" textAlignment="CENTER" wrappingWidth="381.0" AnchorPane.leftAnchor="0.0">
          <font>
-            <Font name="Bernard MT Condensed" size="24.0" />
+            <Font name="Britannic Bold" size="48.0" />
          </font>
       </Text>
+      <Button fx:id="levelSelectButton" layoutX="75.0" layoutY="180.0" mnemonicParsing="false" onAction="#onLevelSelectButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Level Selection">
+         <font>
+            <Font name="Britannic Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="endlessModeButton" layoutX="75.0" layoutY="250.0" mnemonicParsing="false" onAction="#onEndlessModeButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Endless Mode">
+         <font>
+            <Font name="Britannic Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="settingsButton" layoutX="75.0" layoutY="320.0" mnemonicParsing="false" onAction="#onSettingsButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Settings">
+         <font>
+            <Font name="Britannic Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="exitButton" layoutX="75.0" layoutY="390.0" mnemonicParsing="false" onAction="#onExitButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Exit">
+         <font>
+            <Font name="Britannic Bold" size="12.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

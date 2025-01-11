@@ -24,6 +24,7 @@ public class GameLoop extends AnimationTimer {
     private final CollisionCheck collisionCheck;
     private GameSettings gameSettings;
     private boolean FPSAnzeigen = false;
+    private boolean running = true;
 
     public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, GameSettings gameSettings, TileMap tileMap) {
         this.entityManagement = entityManagement;
@@ -36,6 +37,11 @@ public class GameLoop extends AnimationTimer {
 
     @Override
     public void handle(long now) {
+        if (!running) {
+            stop();
+            return;
+        }
+
         if(lastUpdate == 0) {
             lastUpdate = now;
             lastFpsUpdate = now;
@@ -58,8 +64,12 @@ public class GameLoop extends AnimationTimer {
         lastUpdate = now;
     }
 
+    public void stopLoop() {
+        running = false;
+    }
+
     public void update(double lastFrame) {
-        entityManagement.updateEntities(lastFrame);
+        entityManagement.updateEntities(lastFrame, collisionCheck);
         updateCharacterMovement(lastFrame);
     }
 

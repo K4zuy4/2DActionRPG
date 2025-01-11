@@ -1,5 +1,6 @@
 package org.projectgame.project2dgame.Entities;
 
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -7,6 +8,9 @@ import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.GameField.GameField;
 
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static javafx.scene.paint.Color.rgb;
 
@@ -31,8 +35,8 @@ public class Character {
         this.sprite.setY(y);
 
         this.hitbox = new Rectangle(0, 0, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
-        //this.hitbox.setFill(rgb(255, 0, 0, 0.5));
-        this.hitbox.setFill(null);
+        this.hitbox.setFill(rgb(255, 0, 0, 0.5));
+        //this.hitbox.setFill(null);
     }
 
     public void updateHitboxPosition() {
@@ -79,5 +83,20 @@ public class Character {
 
     public Rectangle getHitbox() {
         return hitbox;
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
+    }
+
+    public void setCharacterSpeed() {
+        characterSpeed += 50;
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        scheduler.schedule(() -> Platform.runLater(() -> {
+            characterSpeed -= 50;
+        }), 2, TimeUnit.SECONDS);
+
+        scheduler.shutdown();
     }
 }

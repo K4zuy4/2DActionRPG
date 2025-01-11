@@ -3,6 +3,7 @@ package org.projectgame.project2dgame.Entities;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
+import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.GameField.GameField;
 
 import java.util.Objects;
@@ -15,7 +16,7 @@ public class Entity {
     private int health;
     private ImageView sprite;
     private GameField gameField;
-    private int entitySpeed = 200;
+    private int entitySpeed = 150;
     private Rectangle hitbox;
 
     public Entity(double x, double y, int health, String spritePath, GameField gameField) {
@@ -38,6 +39,7 @@ public class Entity {
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight()));
     }
+
 
     public double getX() {
         return x;
