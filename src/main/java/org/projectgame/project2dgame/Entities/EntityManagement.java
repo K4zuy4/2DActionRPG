@@ -66,22 +66,19 @@ public class EntityManagement {
 
             // Prüfe horizontale Bewegung
             if (!collisionCheck.checkCollisionEntity(entity.getHitbox(), dx, 0)) {
-                newX += dx; // Bewegung in X-Richtung
+                newX += dx;
             }
 
             // Prüfe vertikale Bewegung
             if (!collisionCheck.checkCollisionEntity(entity.getHitbox(), 0, dy)) {
-                newY += dy; // Bewegung in Y-Richtung
+                newY += dy;
             }
 
-            // Aktualisiere die Position
             entity.setX(newX);
             entity.setY(newY);
         }
 
     }
-
-
 
     public void renderEntities() {
 
