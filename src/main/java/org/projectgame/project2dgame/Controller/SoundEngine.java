@@ -52,7 +52,6 @@ public class SoundEngine {
             backgroundMusicPlayer.stop();
         }
 
-        // Alle geladenen Soundeffekte stoppen (optional)
         for (AudioClip soundEffect : soundEffects.values()) {
             soundEffect.stop();
         }
