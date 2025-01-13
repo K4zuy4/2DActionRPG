@@ -77,6 +77,7 @@ public class Main extends Application {
                 gameLoop.start();
                 primaryStage.setScene(scene);
                 primaryStage.setTitle("Sanctum of Sorrow - Level " + level);
+                soundEngine.playFightMusic();
                 break;
 
             case "LevelSelect":
