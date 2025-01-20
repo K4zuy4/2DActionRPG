@@ -1,12 +1,7 @@
 package org.projectgame.project2dgame.Controller;
 
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SoundEngine {
     private MediaPlayer backgroundMusicPlayer;
