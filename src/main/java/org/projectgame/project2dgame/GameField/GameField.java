@@ -25,7 +25,4 @@ public class GameField {
         return tileSize;
     }
 
-    public int getScale() {
-        return scale;
-    }
 }

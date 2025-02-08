@@ -9,30 +9,31 @@ import org.projectgame.project2dgame.Controller.KeyInputHandler;
 import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.EntityManagement;
-import org.projectgame.project2dgame.GameField.TileManagement.TileMap;
 
+import java.util.LinkedList;
 import java.util.Set;
 
 public class GameLoop extends AnimationTimer {
     private long lastUpdate = 0;
     private int frameCount = 0;
     private long lastFpsUpdate = 0;
-    private int movementSpeed;
-    private TileMap tileMap;
     private final EntityManagement entityManagement;
     private final KeyInputHandler keyInputHandler;
     private final CollisionCheck collisionCheck;
-    private GameSettings gameSettings;
-    private boolean FPSAnzeigen = false;
+    private final GameSettings gameSettings;
+    private final boolean FPSAnzeigen = false;
     private boolean running = true;
+    private final Character character;
+    private final LinkedList<String> directionQueue = new LinkedList<>();
 
-    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, GameSettings gameSettings, TileMap tileMap) {
+    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, GameSettings gameSettings, CollisionCheck collisionCheck) {
         this.entityManagement = entityManagement;
         this.keyInputHandler = keyInputHandler;
         this.gameSettings = gameSettings;
-        this.movementSpeed = entityManagement.getCharacter().getCharacterSpeed();
-        this.tileMap = tileMap;
-        this.collisionCheck = new CollisionCheck(this.tileMap, this.entityManagement);
+        this.collisionCheck = collisionCheck;
+        this.entityManagement.setCollisonCheck(collisionCheck);
+        this.character = entityManagement.getCharacter();
+        this.entityManagement.createProjectileManagement();
     }
 
     @Override
@@ -64,13 +65,10 @@ public class GameLoop extends AnimationTimer {
         lastUpdate = now;
     }
 
-    public void stopLoop() {
-        running = false;
-    }
-
     public void update(double lastFrame) {
         entityManagement.updateEntities(lastFrame, collisionCheck);
         updateCharacterMovement(lastFrame);
+        entityManagement.getProjectileManagement().updateProjectiles(lastFrame);
     }
 
     public void render() {
@@ -81,9 +79,18 @@ public class GameLoop extends AnimationTimer {
 
     private void updateCharacterMovement(double deltaTime) {
         Set<KeyCode> pressedKeys = keyInputHandler.getPressedKeys();
-        double distance = movementSpeed * deltaTime;
+        double distance = character.getCharacterSpeed() * deltaTime;
 
         if (entityManagement.getCharacter() != null) {
+            entityManagement.getCharacter().updateDirectionQueue(pressedKeys, directionQueue);
+
+            if (!directionQueue.isEmpty()) {
+                String newDirection = directionQueue.getLast();
+                if (!newDirection.equals(entityManagement.getCharacter().getDirection())) {
+                    entityManagement.getCharacter().setDirection(newDirection);
+                }
+            }
+
             if (pressedKeys.contains(gameSettings.getKeyMap().get("upKey"))) {
                 moveCharacter(0, -distance);
             }
@@ -96,11 +103,20 @@ public class GameLoop extends AnimationTimer {
             if (pressedKeys.contains(gameSettings.getKeyMap().get("rightKey"))) {
                 moveCharacter(distance, 0);
             }
+            long currentTime = System.currentTimeMillis();
+            if (pressedKeys.contains(gameSettings.getKeyMap().get("shootKey"))) {
+                character.setShooting(true);
+                if (character.isShooting() && (currentTime - character.getLastShotTime() >= character.getShootCooldown())) {
+                    entityManagement.getProjectileManagement().characterProjectile();
+                    character.setLastShotTime(currentTime);
+                }
+            } else {
+                character.setShooting(false);
+            }
         }
     }
 
     private void moveCharacter(double dx, double dy) {
-        Character character = entityManagement.getCharacter();
         double newX = character.getX() + dx;
         double newY = character.getY() + dy;
         double newHitboxX = character.getHitbox().getX() + dx;

@@ -3,9 +3,11 @@ package org.projectgame.project2dgame.Controller;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import java.util.Objects;
+
 public class SoundEngine {
     private MediaPlayer backgroundMusicPlayer;
-    private double lautstaerke = 0.5;
+    private final double lautstaerke = 0.5;
 
     public SoundEngine() {
 
@@ -16,7 +18,7 @@ public class SoundEngine {
             backgroundMusicPlayer.stop();
         }
 
-        Media backgroundMusic = new Media(getClass().getResource(musicFilePath).toExternalForm());
+        Media backgroundMusic = new Media(Objects.requireNonNull(getClass().getResource(musicFilePath)).toExternalForm());
 
         backgroundMusicPlayer = new MediaPlayer(backgroundMusic);
         backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);

@@ -10,14 +10,14 @@ import java.util.Map;
 
 public class GameSettings {
     private Map<String, KeyCode> keyMap;
-    private static final String DATEN_PFAD = getAppDataPath("/Data/data.json");
+    private static final String DATEN_PFAD = getAppDataPath("/Sanctum_of_Sorrow/data.json");
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public GameSettings() throws IOException {
         this.keyMap = new HashMap<>();
         createAppDataDirectory();
         loadData();
-        System.out.println(keyMap);
+        savedata();
     }
 
     private static String getAppDataPath(String fileName) {
@@ -35,7 +35,7 @@ public class GameSettings {
     }
 
     public void createAppDataDirectory() {
-        File file = new File(getAppDataPath("Data"));
+        File file = new File(getAppDataPath("Sanctum_of_Sorrow"));
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -48,6 +48,11 @@ public class GameSettings {
             keyMap.put("downKey", KeyCode.S);
             keyMap.put("leftKey", KeyCode.A);
             keyMap.put("rightKey", KeyCode.D);
+            keyMap.put("shootKey", KeyCode.SPACE);
+            keyMap.put("lookUpKey", KeyCode.UP);
+            keyMap.put("lookDownKey", KeyCode.DOWN);
+            keyMap.put("lookLeftKey", KeyCode.LEFT);
+            keyMap.put("lookRightKey", KeyCode.RIGHT);
             return;
         }
 
@@ -55,7 +60,6 @@ public class GameSettings {
 
         this.keyMap.clear();
         this.keyMap = wrapper.getKeyMap();
-        System.out.println(keyMap.get("upKey"));
     }
 
     public void changeKey(String key, KeyCode keyCode) throws IOException {

@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.Controller.GameFieldController;
 import org.projectgame.project2dgame.Controller.KeyInputHandler;
 import org.projectgame.project2dgame.Controller.SoundEngine;
@@ -22,7 +23,16 @@ public class Main extends Application {
 
     private static Stage primaryStage;
     private static GameLoop gameLoop;
-    private static SoundEngine soundEngine = new SoundEngine();
+    private final static SoundEngine soundEngine = new SoundEngine();
+    public static GameSettings gameSettings;
+
+    static {
+        try {
+            gameSettings = new GameSettings();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void start(Stage stage) throws IOException{
@@ -35,7 +45,6 @@ public class Main extends Application {
             System.exit(0);
         });
 
-        GameSettings gameSettings = new GameSettings();
         Debug debug = new Debug(gameSettings);
 
         primaryStage.show();
@@ -43,7 +52,7 @@ public class Main extends Application {
 
     public static void setWindow(String window, int level) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        Scene scene = null;
+        Scene scene;
         switch (window) {
             case "MainMenu":
                 loader.setLocation(Main.class.getResource("/FXMLFiles/MainMenu.fxml"));
@@ -62,22 +71,20 @@ public class Main extends Application {
                 TileMap tileMap = levelSelector(level, gameField, gamePane);
 
                 EntityManagement entityManagement = new EntityManagement(gamePane, gameField);
-                entityManagement.loadEntities();
                 entityManagement.loadCharacter();
 
-
-                GameSettings gameSettings = new GameSettings();
                 scene = new Scene(root, gameField.getScreenWidth(), gameField.getScreenHeight());
 
-                KeyInputHandler keyInputHandler = new KeyInputHandler(entityManagement);
+                KeyInputHandler keyInputHandler = new KeyInputHandler();
                 keyInputHandler.addKeyHandlers(scene);
 
-                gameLoop = new GameLoop(entityManagement, keyInputHandler, gameSettings, tileMap);
-                controller.setGameLoop(gameLoop);
+                CollisionCheck collisionCheck = new CollisionCheck(tileMap, entityManagement);
+                gameLoop = new GameLoop(entityManagement, keyInputHandler, gameSettings, collisionCheck);
                 gameLoop.start();
                 primaryStage.setScene(scene);
                 primaryStage.setTitle("Sanctum of Sorrow - Level " + level);
                 soundEngine.playFightMusic();
+                entityManagement.loadEntities(collisionCheck);
                 break;
 
             case "LevelSelect":
@@ -95,23 +102,12 @@ public class Main extends Application {
     }
 
     public static TileMap levelSelector(int level, GameField gameField, Pane gamePane) throws IOException {
-        switch(level) {
-            case 1:
-                TileMap tileMap = new TileMap("/Tiles/TileMap1.txt", gameField.getTileSize(), gamePane);
-                return tileMap;
-            case 2:
-                TileMap tileMap2 = new TileMap("/Tiles/TileMap2.txt", gameField.getTileSize(), gamePane);
-                return tileMap2;
-            case 3:
-                TileMap tileMap3 = new TileMap("/Tiles/TileMap3.txt", gameField.getTileSize(), gamePane);
-                return tileMap3;
-            default:
-                throw new IllegalArgumentException("Unknown level: " + level);
-        }
-    }
-
-    public GameLoop getGameLoop() {
-        return gameLoop;
+        return switch (level) {
+            case 1 -> new TileMap("/Tiles/TileMap1.txt", gameField.getTileSize(), gamePane);
+            case 2 -> new TileMap("/Tiles/TileMap2.txt", gameField.getTileSize(), gamePane);
+            case 3 -> new TileMap("/Tiles/TileMap3.txt", gameField.getTileSize(), gamePane);
+            default -> throw new IllegalArgumentException("Unknown level: " + level);
+        };
     }
 
     @Override

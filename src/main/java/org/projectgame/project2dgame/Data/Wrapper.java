@@ -9,13 +9,11 @@ public class Wrapper {
     private Map<String, KeyCode> keyMap;
 
     public Wrapper() {
-        if(keyMap == null) {
-            this.keyMap = new HashMap<>();
-            this.keyMap.put("upKey", KeyCode.W);
-            this.keyMap.put("downKey", KeyCode.S);
-            this.keyMap.put("leftKey", KeyCode.A);
-            this.keyMap.put("rightKey", KeyCode.D);
-        }
+        this.keyMap = new HashMap<>();
+        this.keyMap.put("upKey", KeyCode.W);
+        this.keyMap.put("downKey", KeyCode.S);
+        this.keyMap.put("leftKey", KeyCode.A);
+        this.keyMap.put("rightKey", KeyCode.D);
     }
 
     public Wrapper(Map<String, KeyCode> keyMap) {

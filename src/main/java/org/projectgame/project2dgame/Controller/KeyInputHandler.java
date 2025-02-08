@@ -3,17 +3,14 @@ package org.projectgame.project2dgame.Controller;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import org.projectgame.project2dgame.Entities.EntityManagement;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class KeyInputHandler {
-    private final EntityManagement entityManagement;
     private final Set<KeyCode> pressedKeys = new HashSet<>();
 
-    public KeyInputHandler(EntityManagement entityManagement) {
-        this.entityManagement = entityManagement;
+    public KeyInputHandler() {
     }
 
     public void addKeyHandlers(Scene scene) {

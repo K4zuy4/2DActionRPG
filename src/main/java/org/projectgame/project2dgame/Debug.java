@@ -8,11 +8,11 @@ import java.util.Scanner;
 
 
 public class Debug {
-    private GameSettings gameSettings;
-    private Scanner scanner = new Scanner(System.in);
+    private final GameSettings gameSettings;
+    private final Scanner scanner = new Scanner(System.in);
     private volatile boolean running = true;
 
-    public Debug(GameSettings gameSettings) throws IOException {
+    public Debug(GameSettings gameSettings) {
         this.gameSettings = gameSettings;
         startDebug();
     }

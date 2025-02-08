@@ -78,7 +78,7 @@ public class TileMap {
     }
 
     private Image loadTileImage(int type) throws IOException {
-        if (tileImageCache.containsKey(type)) { //Optimierung für Tile laden (cache)
+        if (tileImageCache.containsKey(type)) { // cache
             return tileImageCache.get(type);
         }
 
@@ -105,4 +105,5 @@ public class TileMap {
     public Tile getTile(int y, int x) {
         return tiles[y][x];
     }
+
 }
