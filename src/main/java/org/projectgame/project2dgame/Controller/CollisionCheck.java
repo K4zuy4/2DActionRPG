@@ -173,4 +173,31 @@ public class CollisionCheck {
 
         return false;
     }
+
+
+
+
+    public boolean isObstacleBetween(double startX, double startY, double endX, double endY) {
+        double dx = endX - startX;
+        double dy = endY - startY;
+        double steps = Math.max(Math.abs(dx), Math.abs(dy));
+
+        if (steps == 0) return false;
+
+        double stepX = dx / steps;
+        double stepY = dy / steps;
+        double x = startX;
+        double y = startY;
+
+        for (int i = 0; i < steps; i++) {
+            x += stepX;
+            y += stepY;
+
+            if (checkCollision(new Rectangle(x, y, 1, 1))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -34,5 +34,21 @@ public class SoundEngine {
     public void playFightMusic() {
         playBackgroundMusic("/Sound/FightSound.mp3");
     }
+
+    public void playGameOver() {
+        playBackgroundMusic("/Sound/GameOver.mp3");
+        backgroundMusicPlayer.setCycleCount(1);
+    }
+
+    public void stopMusic() {
+        if (backgroundMusicPlayer != null) {
+            backgroundMusicPlayer.stop();
+        }
+    }
+
+    public void playWin() {
+        playBackgroundMusic("/Sound/win.mp3");
+        backgroundMusicPlayer.setCycleCount(1);
+    }
 }
 

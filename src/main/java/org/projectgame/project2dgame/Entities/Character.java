@@ -7,7 +7,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.GameField.GameField;
+import org.projectgame.project2dgame.Main;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
@@ -71,7 +73,14 @@ public class Character {
     public void takeDamage(int damage) {
         if (!invincible) {
             health -= damage;
-            if (health < 0) health = 0;
+            if (health < 0){
+                health = 0;
+                try {
+                    Main.setWindow("GameOver", 0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             updateHealthBar();
             invincible = true;
 

@@ -1,6 +1,7 @@
 package org.projectgame.project2dgame.GameField;
 
 public class GameField {
+    public int level = 0;
 
     public final int originaleTileGroesse = 16; //16x16 Pixel
     final int scale = 4;
@@ -23,6 +24,14 @@ public class GameField {
 
     public int getTileSize() {
         return tileSize;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
 }

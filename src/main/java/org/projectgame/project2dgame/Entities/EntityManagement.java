@@ -5,8 +5,11 @@ import javafx.animation.Timeline;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
+import org.projectgame.project2dgame.Entities.Enemies.Slime;
 import org.projectgame.project2dgame.GameField.GameField;
+import org.projectgame.project2dgame.Main;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,7 +43,7 @@ public class EntityManagement {
                 } while (!collisionCheck.kannSpawnen(x, y, tempEntities));
 
                 if (collisionCheck.kannSpawnen(x, y, tempEntities)) {
-                    Entity entity = new Entity(x, y, 100, "/Entities/player_idle.gif", this.gameField);
+                    Slime entity = new Slime(x, y, gameField, gamePane, this);
                     tempEntities.add(entity);
                     entities.add(entity);
                     gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
@@ -71,10 +74,17 @@ public class EntityManagement {
         double playerY = player.getY();
 
         for (Entity entity : entities) {
+
+            if (!isPlayerVisible(entity, player, collisionCheck)) {
+                zufaelligBewegen(entity, deltaTime, collisionCheck);
+                continue;
+            }
+            entity.setIdle(false);
+
             double dx = playerX - entity.getX();
             double dy = playerY - entity.getY();
-
             double distance = Math.sqrt(dx * dx + dy * dy);
+
             if (distance > 0) {
                 dx = (dx / distance) * entity.getEntitySpeed() * deltaTime;
                 dy = (dy / distance) * entity.getEntitySpeed() * deltaTime;
@@ -94,8 +104,57 @@ public class EntityManagement {
             entity.setX(newX);
             entity.setY(newY);
         }
-
     }
+
+
+    // Slimes gehen nicht Idle
+    private void zufaelligBewegen(Entity entity, double deltaTime, CollisionCheck collisionCheck) {
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime - entity.lastIdleTime > entity.getDurationIdle()) {
+            entity.setIdle(true);
+            entity.lastIdleTime = currentTime;
+            entity.setDurationIdle(2000 + (long) (Math.random() * 2000));
+            return;
+        }
+        entity.setIdle(false);
+        entity.setDurationIdle(1000 + (long) (Math.random() * 2000));
+
+        if (currentTime - entity.getLastRandomMoveTime() > 2000 + Math.random() * 1000) {
+            double angle = Math.random() * 2 * Math.PI;
+            entity.setRandomDirectionX(Math.cos(angle));
+            entity.setRandomDirectionY(Math.sin(angle));
+            entity.setLastRandomMoveTime(currentTime);
+        }
+
+        double dx = entity.getRandomDirectionX() * entity.getEntitySpeed() * deltaTime;
+        double dy = entity.getRandomDirectionY() * entity.getEntitySpeed() * deltaTime;
+
+        double newX = entity.getX();
+        double newY = entity.getY();
+
+        if (!collisionCheck.checkCollisionEntity(entity.getHitbox(), dx, 0)) {
+            newX += dx;
+        }
+
+        if (!collisionCheck.checkCollisionEntity(entity.getHitbox(), 0, dy)) {
+            newY += dy;
+        }
+
+        entity.setX(newX);
+        entity.setY(newY);
+    }
+
+
+    private boolean isPlayerVisible(Entity entity, Character player, CollisionCheck collisionCheck) {
+        double startX = entity.getX() + entity.getSprite().getBoundsInLocal().getWidth() / 2;
+        double startY = entity.getY() + entity.getSprite().getBoundsInLocal().getHeight() / 2;
+        double endX = player.getX() + player.getSprite().getBoundsInLocal().getWidth() / 2;
+        double endY = player.getY() + player.getSprite().getBoundsInLocal().getHeight() / 2;
+
+        return !collisionCheck.isObstacleBetween(startX, startY, endX, endY);
+    }
+
 
     public void renderEntities() {
 
@@ -135,6 +194,23 @@ public class EntityManagement {
 
     public void removeProjectileFromPane(Projectile projectile) {
         gamePane.getChildren().remove(projectile.getSprite());
+    }
+
+    public void removeEntity(Entity entity) {
+        entities.remove(entity);
+        if (entity instanceof Slime) {
+            gamePane.getChildren().remove(entity.getSprite());
+            gamePane.getChildren().remove(entity.getHitbox());
+            gamePane.getChildren().remove(entity.getHealthBar());
+        }
+
+        if(entities.isEmpty()) {
+            try {
+                Main.setWindow("Win", 0);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
 

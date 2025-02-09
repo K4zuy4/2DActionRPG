@@ -64,7 +64,7 @@ public class TileMap {
                 imageView.setX(x * tileSize);
                 imageView.setY(y * tileSize);
 
-                if (tile.getType() != 1) {
+                if (tile.getType() != 1 && tile.getType() != 18 && tile.getType() != 19 && tile.getType() != 20 && tile.getType() != 21) {
                     Rectangle rectangle = tile.getHitbox();
                     rectangle.setX(x * tileSize);
                     rectangle.setY(y * tileSize);

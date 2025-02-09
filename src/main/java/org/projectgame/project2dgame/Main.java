@@ -25,6 +25,7 @@ public class Main extends Application {
     private static GameLoop gameLoop;
     private final static SoundEngine soundEngine = new SoundEngine();
     public static GameSettings gameSettings;
+    private static final GameField gameField = new GameField();
 
     static {
         try {
@@ -66,7 +67,8 @@ public class Main extends Application {
                 Parent root = loader.load();
                 GameFieldController controller = loader.getController();
                 Pane gamePane = controller.getGamePane();
-                GameField gameField = new GameField();
+
+                gameField.setLevel(level);
 
                 TileMap tileMap = levelSelector(level, gameField, gamePane);
 
@@ -91,6 +93,24 @@ public class Main extends Application {
                 loader.setLocation(Main.class.getResource("/FXMLFiles/LevelSelection.fxml"));
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - Level Selection");
+                break;
+
+            case "GameOver":
+                loader.setLocation(Main.class.getResource("/FXMLFiles/GameOverScreen.fxml"));
+                scene = new Scene(loader.load());
+                primaryStage.setTitle("Sanctum of Sorrow - Game Over");
+                soundEngine.stopMusic();
+                soundEngine.playGameOver();
+                if (gameLoop != null) gameLoop.stop();
+                break;
+
+            case "Win":
+                loader.setLocation(Main.class.getResource("/FXMLFiles/WinScreen.fxml"));
+                scene = new Scene(loader.load());
+                primaryStage.setTitle("Sanctum of Sorrow - You Win!");
+                soundEngine.stopMusic();
+                soundEngine.playWin();
+                if (gameLoop != null) gameLoop.stop();
                 break;
 
             default:
@@ -119,5 +139,9 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public static GameField getGameField() {
+        return gameField;
     }
 }
