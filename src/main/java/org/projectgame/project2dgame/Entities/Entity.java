@@ -3,13 +3,10 @@ package org.projectgame.project2dgame.Entities;
 import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.Entities.Enemies.Slime;
 import org.projectgame.project2dgame.GameField.GameField;
-
-import static javafx.scene.paint.Color.BLACK;
 
 public abstract class Entity {
     protected double x;

@@ -64,7 +64,8 @@ public class TileMap {
                 imageView.setX(x * tileSize);
                 imageView.setY(y * tileSize);
 
-                if (tile.getType() != 1 && tile.getType() != 18 && tile.getType() != 19 && tile.getType() != 20 && tile.getType() != 21) {
+                tilePane.getChildren().add(imageView);
+                if (tile.getType() == 16 || tile.getType() == 17 || tile.getType() == 18 || tile.getType() == 33 || tile.getType() == 31 || tile.getType() == 46 || tile.getType() == 47 || tile.getType() == 48 || tile.getType() == 76 || tile.getType() == 77 || tile.getType() == 78 || tile.getType() == 85 || tile.getType() == 91 || tile.getType() == 93 || tile.getType() == 106 || tile.getType() == 107 || tile.getType() == 108 || tile.getType() == 145 || tile.getType() == 160 || tile.getType() == 231 || tile.getType() == 241 || tile.getType() == 251 || tile.getType() == 261 || tile.getType() == 351 || tile.getType() == 361 || tile.getType() == 381 || tile.getType() == 391 || tile.getType() == 401 || tile.getType() == 411 || tile.getType() == 501 || tile.getType() == 511 || tile.getType() == 531 || tile.getType() == 551 || tile.getType() == 561 || tile.getType() == 701 || tile.getType() == 711 || tile.getType() == 841) {
                     Rectangle rectangle = tile.getHitbox();
                     rectangle.setX(x * tileSize);
                     rectangle.setY(y * tileSize);
@@ -72,9 +73,11 @@ public class TileMap {
                     tilePane.getChildren().addAll(rectangle);
                 }
 
-                tilePane.getChildren().add(imageView);
             }
         }
+
+        Main.getGeldLabel().toFront();
+        Main.getImageView().toFront();
     }
 
     private Image loadTileImage(int type) throws IOException {
@@ -82,7 +85,7 @@ public class TileMap {
             return tileImageCache.get(type);
         }
 
-        String path = "/Tiles/tile" + type + ".png";
+        String path = "/Tiles/Tiles/tile" + type + ".png";
         InputStream inputStream = Main.class.getResourceAsStream(path);
 
         if (inputStream == null) {

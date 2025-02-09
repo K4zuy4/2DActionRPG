@@ -13,10 +13,10 @@ public class Tile {
     public Tile(Image image, int type, int tileSize) {
         this.image = image;
         this.type = type;
-        if (type != 1) {
+        if (type == 16 || type == 17 || type == 18 || type == 33 || type == 31 || type == 46 || type == 47 || type == 48 || type == 76 || type == 77 || type == 78 || type == 85 || type == 91 || type == 93 || type == 106 || type == 107 || type == 108 || type == 145 || type == 160 || type == 231 || type == 241 || type == 251 || type == 261 || type == 351 || type == 361 || type == 381 || type == 391 || type == 401 || type == 411 || type == 501 || type == 511 || type == 531 || type == 551 || type == 561 || type == 701 || type == 711 || type == 841) {
             hitbox = new Rectangle(tileSize, tileSize);
-            hitbox.setFill(rgb(255, 255, 255, 1));
-            hitbox.setStroke(null);
+            hitbox.setFill(rgb(255, 255, 255, 0));
+            //hitbox.setStroke(null);
         }
     }
 

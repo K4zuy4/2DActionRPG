@@ -5,6 +5,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
@@ -26,6 +28,8 @@ public class Main extends Application {
     private final static SoundEngine soundEngine = new SoundEngine();
     public static GameSettings gameSettings;
     private static final GameField gameField = new GameField();
+    private static Label geldLabel;
+    private static ImageView imageView;
 
     static {
         try {
@@ -67,12 +71,16 @@ public class Main extends Application {
                 Parent root = loader.load();
                 GameFieldController controller = loader.getController();
                 Pane gamePane = controller.getGamePane();
+                geldLabel = controller.getGeldLabel();
+                imageView = controller.getImageView();
+                gamePane.getChildren().add(geldLabel);
+                gamePane.getChildren().add(imageView);
 
                 gameField.setLevel(level);
 
                 TileMap tileMap = levelSelector(level, gameField, gamePane);
 
-                EntityManagement entityManagement = new EntityManagement(gamePane, gameField);
+                EntityManagement entityManagement = new EntityManagement(gamePane, gameField, geldLabel);
                 entityManagement.loadCharacter();
 
                 scene = new Scene(root, gameField.getScreenWidth(), gameField.getScreenHeight());
@@ -143,5 +151,13 @@ public class Main extends Application {
 
     public static GameField getGameField() {
         return gameField;
+    }
+
+    public static Label getGeldLabel() {
+        return geldLabel;
+    }
+
+    public static ImageView getImageView() {
+        return imageView;
     }
 }

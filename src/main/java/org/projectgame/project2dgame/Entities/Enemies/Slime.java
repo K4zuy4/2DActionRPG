@@ -32,7 +32,7 @@ public class Slime extends Entity {
         this.sprite.setY(y);
 
         this.hitbox = new Rectangle(x, y, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
-        this.hitbox.setFill(rgb(255, 0, 0, 0));
+        this.hitbox.setFill(rgb(255, 255, 255, 0));
 
         updateHitboxPosition();
     }
@@ -40,9 +40,9 @@ public class Slime extends Entity {
     @Override
     public void updateHitboxPosition() {
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
-        hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight() - 25));
+        hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight() - 10));
         healthBar.setLayoutX(x);
-        healthBar.setLayoutY(y - 10);
+        healthBar.setLayoutY(y + 20);
     }
 
     @Override

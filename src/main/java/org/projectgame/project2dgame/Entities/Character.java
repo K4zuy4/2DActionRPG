@@ -26,23 +26,26 @@ public class Character {
     private double y;
     private int health;
     private int maxHealth;
+    private int geld = 0;
     private ImageView sprite;
-    private GameField gameField;
+    private final GameField gameField;
     private int characterSpeed = 200;
-    private Rectangle hitbox;
+    private final Rectangle hitbox;
     private boolean invincible = false;
-    private ProgressBar healthBar;
+    private final ProgressBar healthBar;
     private String direction = "right";
     private long lastAttack = 0;
-    private long cooldown = 500;
+    private final long cooldown = 500;
     private boolean isShooting = false;
+    private final EntityManagement entityManagement;
 
-    public Character(double x, double y, int health, String spritePath, GameField gameField) {
+    public Character(double x, double y, int health, String spritePath, GameField gameField, EntityManagement entityManagement) {
         this.gameField = gameField;
         this.x = x;
         this.y = y;
         this.health = health;
         this.maxHealth = health;
+        this.entityManagement = entityManagement;
 
         this.sprite = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(spritePath))));
         this.sprite.setFitHeight(gameField.getTileSize() * 1.5);
@@ -57,8 +60,6 @@ public class Character {
         healthBar = new ProgressBar(1);
         healthBar.setPrefWidth(gameField.getTileSize() * 1.5);
         healthBar.setPrefHeight(10);
-        healthBar.getStylesheets().add(getClass().getResource("/css/healthbar.css").toExternalForm());
-
 
         updateHealthBar();
     }
@@ -210,5 +211,14 @@ public class Character {
 
     public void setShooting(boolean shooting) {
         isShooting = shooting;
+    }
+
+    public void setGeld(int geld) {
+        this.geld = geld;
+        entityManagement.getGeldLabel().setText(""+this.geld);
+    }
+
+    public int getGeld() {
+        return geld;
     }
 }

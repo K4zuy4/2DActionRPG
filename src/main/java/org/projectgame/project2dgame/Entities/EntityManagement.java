@@ -2,6 +2,7 @@ package org.projectgame.project2dgame.Entities;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
@@ -21,10 +22,12 @@ public class EntityManagement {
     private final List<Entity> entities = new ArrayList<>();
     private ProjectileManagement projectileManagement;
     private CollisionCheck collisonCheck;
+    private final Label geldLabel;
 
-    public EntityManagement(Pane gamePane, GameField gameField) {
+    public EntityManagement(Pane gamePane, GameField gameField, Label geldLabel) {
         this.gamePane = gamePane;
         this.gameField = gameField;
+        this.geldLabel = geldLabel;
     }
 
     // Überarbeitet von ChatGPT, da Problem mit den Gegner, welche in einander spawnen durch zu kleine Verzögerung zwischen den Spawns
@@ -35,7 +38,7 @@ public class EntityManagement {
         Timeline timeline = new Timeline();
 
         for (int i = 0; i < 5; i++) {
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 30), event -> {
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 50), event -> {
                 int x, y;
                 do {
                     x = 64 + random.nextInt(800);
@@ -54,7 +57,7 @@ public class EntityManagement {
     }
 
     public void loadCharacter() {
-        character = new Character(100, 100, 100, "/Entities/player.png", this.gameField);
+        character = new Character(100, 300, 100, "/Entities/player.png", this.gameField, this);
         gamePane.getChildren().add(character.getSprite());
         gamePane.getChildren().add(character.getHitbox());
         gamePane.getChildren().add(character.getHealthBar());
@@ -111,12 +114,12 @@ public class EntityManagement {
     private void zufaelligBewegen(Entity entity, double deltaTime, CollisionCheck collisionCheck) {
         long currentTime = System.currentTimeMillis();
 
-        if (currentTime - entity.lastIdleTime > entity.getDurationIdle()) {
+        /*if (currentTime - entity.lastIdleTime > entity.getDurationIdle()) {
             entity.setIdle(true);
             entity.lastIdleTime = currentTime;
             entity.setDurationIdle(2000 + (long) (Math.random() * 2000));
             return;
-        }
+        }*/
         entity.setIdle(false);
         entity.setDurationIdle(1000 + (long) (Math.random() * 2000));
 
@@ -202,6 +205,7 @@ public class EntityManagement {
             gamePane.getChildren().remove(entity.getSprite());
             gamePane.getChildren().remove(entity.getHitbox());
             gamePane.getChildren().remove(entity.getHealthBar());
+            character.setGeld(character.getGeld() + 10);
         }
 
         if(entities.isEmpty()) {
@@ -211,6 +215,10 @@ public class EntityManagement {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public Label getGeldLabel() {
+        return geldLabel;
     }
 }
 
