@@ -9,7 +9,7 @@
 
 <AnchorPane fx:id="anchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.GameFieldController">
    <children>
-      <Label fx:id="geldLabel" layoutX="67.0" layoutY="24.0" prefHeight="27.0" prefWidth="114.0" text="30" textFill="WHITE">
+      <Label fx:id="geldLabel" layoutX="67.0" layoutY="24.0" prefHeight="27.0" prefWidth="114.0" text="0" textFill="WHITE">
          <font>
             <Font name="Britannic Bold" size="30.0" />
          </font>
