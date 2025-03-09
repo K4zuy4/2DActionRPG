@@ -6,20 +6,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
+import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.Main;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static javafx.scene.paint.Color.rgb;
-import static org.projectgame.project2dgame.Main.gameSettings;
 
 public class Character {
     private double x;
@@ -60,6 +57,12 @@ public class Character {
         healthBar.setPrefHeight(10);
 
         updateHealthBar();
+
+        invincible = true;
+
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(() -> Platform.runLater(() -> invincible = false), 2, TimeUnit.SECONDS);
+        scheduler.shutdown();
     }
 
     public void updateHitboxPosition() {
@@ -69,16 +72,20 @@ public class Character {
         healthBar.setLayoutY(y - 20);
     }
 
-    public void takeDamage(int damage) {
+    public void takeDamage(int _damage) {
         if (!invincible) {
+            Random random = new Random();
+            int damage = random.nextInt(5 * 2 + 1) + (_damage - 5);
             health -= damage;
             if (health < 0){
                 health = 0;
+                CharacterInfo.reset();
                 try {
                     Main.setWindow("GameOver", 0);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                return;
             }
             CharacterInfo.setHealth(health);
             updateHealthBar();
@@ -172,10 +179,10 @@ public class Character {
 
     public void updateDirectionQueue(Set<KeyCode> pressedKeys, LinkedList<String> directionQueue) {
         Map<KeyCode, String> keyToDirection = Map.of(
-                gameSettings.getKeyMap().get("lookUpKey"), "up",
-                gameSettings.getKeyMap().get("lookDownKey"), "down",
-                gameSettings.getKeyMap().get("lookLeftKey"), "left",
-                gameSettings.getKeyMap().get("lookRightKey"), "right"
+                GameSettings.getKeyMap().get("lookUpKey"), "up",
+                GameSettings.getKeyMap().get("lookDownKey"), "down",
+                GameSettings.getKeyMap().get("lookLeftKey"), "left",
+                GameSettings.getKeyMap().get("lookRightKey"), "right"
         );
 
         for (var entry : keyToDirection.entrySet()) {

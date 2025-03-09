@@ -8,6 +8,8 @@ import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.Entities.Enemies.Slime;
 import org.projectgame.project2dgame.GameField.GameField;
 
+import java.util.Random;
+
 public abstract class Entity {
     protected double x;
     protected double y;
@@ -45,7 +47,9 @@ public abstract class Entity {
 
     public abstract void update(double deltaTime);
 
-    public void takeDamage(int damage) {
+    public void takeDamage(int _damage) {
+        Random random = new Random();
+        int damage = random.nextInt(5 * 2 + 1) + (_damage - 5);
         health -= damage;
         if (health <= 0) {
             health = 0;

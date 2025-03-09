@@ -2,23 +2,22 @@ package org.projectgame.project2dgame.Controller;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import org.projectgame.project2dgame.Data.GameSettings;
 
 import java.util.Objects;
 
 public class SoundEngine {
-    private MediaPlayer backgroundMusicPlayer;
-    private final double lautstaerke = 0.5;
+    private static MediaPlayer backgroundMusicPlayer;
+    private static double lautstaerke = GameSettings.getVolume();
 
-    public SoundEngine() {
+    private SoundEngine() {}
 
-    }
-
-    public void playBackgroundMusic(String musicFilePath) {
+    public static void playBackgroundMusic(String musicFilePath) {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.stop();
         }
 
-        Media backgroundMusic = new Media(Objects.requireNonNull(getClass().getResource(musicFilePath)).toExternalForm());
+        Media backgroundMusic = new Media(Objects.requireNonNull(SoundEngine.class.getResource(musicFilePath)).toExternalForm());
 
         backgroundMusicPlayer = new MediaPlayer(backgroundMusic);
         backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -26,29 +25,42 @@ public class SoundEngine {
         backgroundMusicPlayer.play();
     }
 
-
-    public void playMainMenuMusic() {
+    public static void playMainMenuMusic() {
         playBackgroundMusic("/Sound/MainMenu.mp3");
     }
 
-    public void playFightMusic() {
+    public static void playFightMusic() {
         playBackgroundMusic("/Sound/FightSound.mp3");
     }
 
-    public void playGameOver() {
+    public static void playShopMusic() {
+        playBackgroundMusic("/Sound/shop.mp3");
+    }
+
+    public static void playGameOver() {
         playBackgroundMusic("/Sound/GameOver.mp3");
         backgroundMusicPlayer.setCycleCount(1);
     }
 
-    public void stopMusic() {
+    public static void playWin() {
+        playBackgroundMusic("/Sound/win.mp3");
+        backgroundMusicPlayer.setCycleCount(1);
+    }
+
+    public static void stopMusic() {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.stop();
         }
     }
 
-    public void playWin() {
-        playBackgroundMusic("/Sound/win.mp3");
-        backgroundMusicPlayer.setCycleCount(1);
+    public static void changeVolume(double volume) {
+        lautstaerke = volume;
+        if (backgroundMusicPlayer != null) {
+            backgroundMusicPlayer.setVolume(volume);
+        }
+    }
+
+    public static double getVolume() {
+        return lautstaerke;
     }
 }
-

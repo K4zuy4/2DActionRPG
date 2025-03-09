@@ -32,3 +32,62 @@
     -fx-text-fill: #9a7b25;
     -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.8), 6, 0.8, 4, 4);
 }
+
+.menu-button2 {
+
+    -fx-font-size: 1.2em;
+    -fx-text-fill: #f2f2f2;
+    -fx-background-color: linear-gradient(to bottom right, #262626, #121212);
+    -fx-border-color: #444;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 6, 0.5, 4, 4),
+    innershadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0.5, 2, 2);
+    -fx-alignment: center;
+}
+
+.menu-button2:hover {
+    -fx-background-color: linear-gradient(to bottom right, #121212, #262626);
+    -fx-text-fill: #d4af37;
+    -fx-border-color: #d4af37;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 8, 0.7, 6, 6),
+    innershadow(gaussian, rgba(0, 0, 0, 0.6), 6, 0.6, 2, 2);
+    -fx-cursor: hand;
+}
+
+.menu-button2:pressed {
+    -fx-background-color: #1a1a1a;
+    -fx-text-fill: #9a7b25;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.8), 6, 0.8, 4, 4);
+}
+
+.slider {
+    -fx-font-family: 'Britannic Bold';
+    -fx-background-color: linear-gradient(to bottom, #1a1a1a, #141414, #0d0d0d);
+    -fx-text-fill: #f2f2f2;
+}
+
+.slider .track {
+    -fx-background-color: linear-gradient(to bottom, #262626, #121212);
+}
+
+.slider .thumb {
+    -fx-background-color: #f2f2f2;
+    -fx-background-radius: 50%;
+    -fx-min-width: 20;
+    -fx-min-height: 20;
+    -fx-max-width: 20;
+    -fx-max-height: 20;
+}
+
+.slider:hover .thumb {
+    -fx-background-color: #d4af37;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 8, 0.7, 6, 6);
+}
+
+.slider:pressed .thumb {
+    -fx-background-color: #9a7b25;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.8), 6, 0.8, 4, 4);
+}
+

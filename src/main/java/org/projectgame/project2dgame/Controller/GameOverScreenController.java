@@ -3,6 +3,7 @@ package org.projectgame.project2dgame.Controller;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Main;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class GameOverScreenController {
 
     @FXML
     protected void onRetryButton() throws IOException {
-        Main.setWindow("GameField", Main.getGameField().getLevel());
+        Main.setWindow("MainMenu", 0);
     }
 
     @FXML
@@ -33,7 +34,11 @@ public class GameOverScreenController {
 
     @FXML
     protected void onSettingsButton() {
-
+        try {
+            Main.setWindow("SettingsScreen", 0);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

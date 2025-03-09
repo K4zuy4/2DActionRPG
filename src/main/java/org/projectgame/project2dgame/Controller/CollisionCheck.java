@@ -2,6 +2,7 @@ package org.projectgame.project2dgame.Controller;
 
 import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.Entities.Character;
+import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Entities.Entity;
 import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.TileManagement.Tile;
@@ -18,10 +19,6 @@ public class CollisionCheck {
         this.entityManagement = entityManagement;
     }
 
-
-
-
-
     public boolean checkCollision(Rectangle playerHitbox) {
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
@@ -36,10 +33,6 @@ public class CollisionCheck {
         }
         return false;
     }
-
-
-
-
 
     public boolean checkCollisionEntity(Rectangle entityHitbox, double dx, double dy) {
         // Kollision mit Wänden
@@ -98,10 +91,6 @@ public class CollisionCheck {
         return false;
     }
 
-
-
-
-
     public boolean kannSpawnen(double spawnX, double spawnY, List<Entity> tempEntities) {
         double spriteSize = entityManagement.getGameField().getTileSize() * 1.5;
         double hitboxSize = entityManagement.getGameField().getTileSize() * 0.7;
@@ -148,10 +137,6 @@ public class CollisionCheck {
         return true;
     }
 
-
-
-
-
     public boolean checkCollisionProjectile(Rectangle projectileHitbox) {
         // Kollision mit Wänden
         for (int y = 0; y < tileMap.getHeight(); y++) {
@@ -166,16 +151,13 @@ public class CollisionCheck {
         // Kollision mit Gegnern
         for (Entity entity : entityManagement.getEntity()) {
             if (projectileHitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
-                entity.takeDamage(25);
+                entity.takeDamage(CharacterInfo.getDamage());
                 return true;
             }
         }
 
         return false;
     }
-
-
-
 
     public boolean isObstacleBetween(double startX, double startY, double endX, double endY) {
         double dx = endX - startX;
@@ -197,7 +179,6 @@ public class CollisionCheck {
                 return true;
             }
         }
-
         return false;
     }
 }

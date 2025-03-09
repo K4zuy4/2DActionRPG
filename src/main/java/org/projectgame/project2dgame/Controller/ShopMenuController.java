@@ -4,6 +4,7 @@ package org.projectgame.project2dgame.Controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Main;
 
@@ -11,11 +12,19 @@ public class ShopMenuController {
     @FXML
     Button damageButton;
     @FXML
+    Text damageLabel;
+    @FXML
     Button speedButton;
+    @FXML
+    Text speedLabel;
     @FXML
     Button firerateButton;
     @FXML
+    Text firerateLabel;
+    @FXML
     Button healButton;
+    @FXML
+    Text healLabel;
     @FXML
     Label geldLabel;
 
@@ -23,23 +32,27 @@ public class ShopMenuController {
     public void initialize() {
         geldLabel.setText("" + CharacterInfo.getMoney());
         disableButtons();
+        damageLabel.setText("Schaden - " + CharacterInfo.getDamagePrice() +"$");
+        speedLabel.setText("Speed - " + CharacterInfo.getSpeedPrice() +"$");
+        firerateLabel.setText("Feuerrate - " + CharacterInfo.getFireratePrice() +"$");
+        healLabel.setText("Heilung - " + CharacterInfo.getHealPrice() +"$");
     }
 
     public void disableButtons() {
 
-        if(CharacterInfo.getMoney() < 25) {
+        if(CharacterInfo.getMoney() < CharacterInfo.getHealPrice()) {
             healButton.setDisable(true);
         }
 
-        if(CharacterInfo.getMoney() < 30) {
+        if(CharacterInfo.getMoney() < CharacterInfo.getSpeedPrice()) {
             speedButton.setDisable(true);
         }
 
-        if(CharacterInfo.getMoney() < 45) {
+        if(CharacterInfo.getMoney() < CharacterInfo.getDamagePrice()) {
             damageButton.setDisable(true);
         }
 
-        if(CharacterInfo.getMoney() < 60) {
+        if(CharacterInfo.getMoney() < CharacterInfo.getFireratePrice()) {
             firerateButton.setDisable(true);
         }
     }
@@ -50,46 +63,51 @@ public class ShopMenuController {
 
     @FXML
     protected void onDamageButton() {
-        if(CharacterInfo.getMoney() >= 45) {
-            CharacterInfo.setMoney(CharacterInfo.getMoney() - 45);
-            CharacterInfo.setDamage(CharacterInfo.getDamage() + 2);
+        if(CharacterInfo.getMoney() >= CharacterInfo.getDamagePrice()) {
+            CharacterInfo.setMoney(CharacterInfo.getMoney() - CharacterInfo.getDamagePrice());
+            CharacterInfo.setDamagePrice(CharacterInfo.getDamagePrice() * 2);
+            CharacterInfo.setDamage(CharacterInfo.getDamage() + 5);
+            damageLabel.setText("Schaden - " + CharacterInfo.getDamagePrice() +"$");
             setGeldLabel();
             disableButtons();
         }
-        System.out.println("Damage");
     }
 
     @FXML
     protected void onSpeedButton() {
-        if(CharacterInfo.getMoney() >= 30) {
-            CharacterInfo.setMoney(CharacterInfo.getMoney() - 30);
-            CharacterInfo.setSpeed(CharacterInfo.getSpeed() + 50);
+        if(CharacterInfo.getMoney() >= CharacterInfo.getSpeedPrice()) {
+            CharacterInfo.setMoney(CharacterInfo.getMoney() - CharacterInfo.getSpeedPrice());
+            CharacterInfo.setSpeedPrice(CharacterInfo.getSpeedPrice() * 2);
+            CharacterInfo.setSpeed(CharacterInfo.getSpeed() + 25);
+            speedLabel.setText("Speed - " + CharacterInfo.getSpeedPrice() +"$");
             setGeldLabel();
             disableButtons();
         }
-        System.out.println("Speed");
     }
 
     @FXML
     protected void onFirerateButton() {
-        if(CharacterInfo.getMoney() >= 60) {
-            CharacterInfo.setMoney(CharacterInfo.getMoney() - 60);
-            CharacterInfo.setFireRate(CharacterInfo.getFireRate() - 100);
+        if(CharacterInfo.getMoney() >= CharacterInfo.getFireratePrice()) {
+            CharacterInfo.setMoney(CharacterInfo.getMoney() - CharacterInfo.getFireratePrice());
+            CharacterInfo.setFireratePrice(CharacterInfo.getFireratePrice() * 2);
+            CharacterInfo.setFireRate(CharacterInfo.getFireRate() - 70);
+            firerateLabel.setText("Feuerrate - " + CharacterInfo.getFireratePrice() +"$");
             setGeldLabel();
             disableButtons();
         }
-        System.out.println("Firerate");
     }
 
     @FXML
     protected void onHealButton() {
-        if(CharacterInfo.getMoney() >= 25) {
-            CharacterInfo.setMoney(CharacterInfo.getMoney() - 25);
+        if(CharacterInfo.getMoney() >= CharacterInfo.getHealPrice()) {
+
+            CharacterInfo.setMoney(CharacterInfo.getMoney() - CharacterInfo.getHealPrice());
+            CharacterInfo.setHealPrice(CharacterInfo.getHealPrice() * 2);
             CharacterInfo.setHealth(CharacterInfo.getMaxHealth());
+            healLabel.setText("Heilung - " + CharacterInfo.getHealPrice() +"$");
             setGeldLabel();
             disableButtons();
         }
-        System.out.println("Heal");
     }
 
     @FXML
@@ -99,6 +117,5 @@ public class ShopMenuController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Back");
     }
 }

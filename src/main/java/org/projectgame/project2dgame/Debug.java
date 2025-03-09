@@ -8,12 +8,10 @@ import java.util.Scanner;
 
 
 public class Debug {
-    private final GameSettings gameSettings;
     private final Scanner scanner = new Scanner(System.in);
     private volatile boolean running = true;
 
-    public Debug(GameSettings gameSettings) {
-        this.gameSettings = gameSettings;
+    public Debug() {
         startDebug();
     }
 
@@ -57,7 +55,7 @@ public class Debug {
                 String input = scanner.nextLine().toUpperCase();
                 KeyCode keyCode = getKeyCode(input);
                 if (keyCode != null) {
-                    gameSettings.changeKey(key, keyCode);
+                    GameSettings.changeKey(key, keyCode);
                 } else {
                     System.out.println("Ungültiger KeyCode");
                 }
@@ -68,7 +66,7 @@ public class Debug {
                 input = scanner.nextLine().toUpperCase();
                 keyCode = getKeyCode(input);
                 if (keyCode != null) {
-                    gameSettings.changeKey(key2, keyCode);
+                    GameSettings.changeKey(key2, keyCode);
                 } else {
                     System.out.println("Ungültiger KeyCode");
                 }
@@ -79,7 +77,7 @@ public class Debug {
                 input = scanner.nextLine().toUpperCase();
                 keyCode = getKeyCode(input);
                 if (keyCode != null) {
-                    gameSettings.changeKey(key3, keyCode);
+                    GameSettings.changeKey(key3, keyCode);
                 } else {
                     System.out.println("Ungültiger KeyCode");
                 }
@@ -90,7 +88,7 @@ public class Debug {
                 input = scanner.nextLine().toUpperCase();
                 keyCode = getKeyCode(input);
                 if (keyCode != null) {
-                    gameSettings.changeKey(key4, keyCode);
+                    GameSettings.changeKey(key4, keyCode);
                 } else {
                     System.out.println("Ungültiger KeyCode");
                 }

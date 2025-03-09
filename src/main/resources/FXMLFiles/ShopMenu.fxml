@@ -11,12 +11,12 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="380.0" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.ShopMenuController">
     <children>
-        <Text fill="#f8f8f8" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upgrades" textAlignment="CENTER" wrappingWidth="381.0" AnchorPane.leftAnchor="0.0">
+        <Text fill="#f8f8f8" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upgrades" textAlignment="CENTER" wrappingWidth="381.0" AnchorPane.leftAnchor="0.0">
             <font>
                 <Font name="Britannic Bold" size="48.0" />
             </font>
         </Text>
-        <Button fx:id="exitButton" layoutX="75.0" layoutY="420.0" mnemonicParsing="false" onAction="#onExitButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Exit">
+        <Button fx:id="exitButton" layoutX="75.0" layoutY="426.0" mnemonicParsing="false" onAction="#onExitButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button">
             <font>
                 <Font name="Britannic Bold" size="12.0" />
             </font>
@@ -26,7 +26,7 @@
                 <Font name="Britannic Bold" size="12.0" />
             </font>
         </Button>
-      <Text fill="WHITE" layoutX="39.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Schaden - 45" wrappingWidth="180.73828125">
+      <Text fx:id="damageLabel" fill="WHITE" layoutX="40.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Schaden - 40$" wrappingWidth="180.73828125">
          <font>
             <Font name="Britannic Bold" size="25.0" />
          </font>
@@ -36,7 +36,7 @@
             <Font name="Britannic Bold" size="12.0" />
          </font>
       </Button>
-      <Text fill="WHITE" layoutX="40.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed - 30" wrappingWidth="180.73828125">
+      <Text fx:id="speedLabel" fill="WHITE" layoutX="40.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed - 45$" wrappingWidth="180.73828125">
          <font>
             <Font name="Britannic Bold" size="25.0" />
          </font>
@@ -46,17 +46,17 @@
             <Font name="Britannic Bold" size="12.0" />
          </font>
       </Button>
-      <Text fill="WHITE" layoutX="40.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fire Rate - 60" wrappingWidth="180.73828125">
+      <Text fx:id="firerateLabel" fill="WHITE" layoutX="40.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Feuerrate - 60$" wrappingWidth="180.73828125">
          <font>
             <Font name="Britannic Bold" size="25.0" />
          </font>
       </Text>
-      <Button fx:id="healButton" layoutX="75.0" layoutY="356.0" mnemonicParsing="false" onAction="#onHealButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Heal - 25">
+      <Button fx:id="healButton" layoutX="240.0" layoutY="355.0" mnemonicParsing="false" onAction="#onHealButton" prefHeight="52.0" prefWidth="114.0" styleClass="menu-button" text="Buy">
          <font>
-            <Font name="Britannic Bold" size="12.0" />
+            <Font name="Britannic Bold" size="17.0" />
          </font>
       </Button>
-      <Group layoutX="138.0" layoutY="83.0">
+      <Group layoutX="139.0" layoutY="84.0">
          <children>
             <Label fx:id="geldLabel" layoutX="50.0" layoutY="13.0" prefHeight="27.0" prefWidth="114.0" text="0" textFill="WHITE">
                <font>
@@ -70,5 +70,15 @@
             </ImageView>
          </children>
       </Group>
+      <ImageView fitHeight="52.0" fitWidth="50.0" layoutX="166.0" layoutY="428.0">
+         <image>
+            <Image url="@../Images/undo.png" />
+         </image>
+      </ImageView>
+      <Text fx:id="healLabel" fill="WHITE" layoutX="40.0" layoutY="390.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Heilung - 30$" wrappingWidth="180.73828125">
+         <font>
+            <Font name="Britannic Bold" size="25.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>

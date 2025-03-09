@@ -3,6 +3,7 @@ package org.projectgame.project2dgame.Controller;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Main;
 
 import java.io.IOException;
@@ -18,8 +19,20 @@ public class WinScreenController {
     Button exitButton;
 
     @FXML
+    public void initialize() {
+        if (CharacterInfo.getLevelDone() == 3) {
+            nextButton.setDisable(true);
+        }
+
+        nextButton.setFocusTraversable(false);
+        levelSelectButton.setFocusTraversable(false);
+        upgradeButton.setFocusTraversable(false);
+        exitButton.setFocusTraversable(false);
+    }
+
+    @FXML
     protected void onNextButton() throws IOException {
-        Main.setWindow("GameField", Main.getGameField().getLevel() + 1);
+        Main.setWindow("GameField", CharacterInfo.getLevelDone());
     }
 
     @FXML

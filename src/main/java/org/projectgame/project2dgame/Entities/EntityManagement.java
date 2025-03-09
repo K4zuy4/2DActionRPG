@@ -32,7 +32,7 @@ public class EntityManagement {
 
     // Überarbeitet von ChatGPT, da Problem mit den Gegner, welche in einander spawnen durch zu kleine Verzögerung zwischen den Spawns
     public void loadEntities(CollisionCheck collisionCheck) {
-        int level = Main.getGameField().getLevel();
+        int level = CharacterInfo.getLevelDone();
         int amount = 0;
         int slimeHealth;
 
@@ -40,10 +40,10 @@ public class EntityManagement {
             amount = 7;
             slimeHealth = 50;
         } else if(level == 2) {
-            amount = 10;
+            amount = 9;
             slimeHealth = 60;
         } else if(level == 3) {
-            amount = 12;
+            amount = 10;
             slimeHealth = 70;
         } else {
             slimeHealth = 50;
@@ -222,12 +222,15 @@ public class EntityManagement {
             gamePane.getChildren().remove(entity.getSprite());
             gamePane.getChildren().remove(entity.getHitbox());
             gamePane.getChildren().remove(entity.getHealthBar());
-            character.setGeld(character.getGeld() + 10);
+            Random random = new Random();
+            int geld = random.nextInt(5 * 2 + 1) + (10 - 3);
+            character.setGeld(character.getGeld() + geld);
         }
 
         if(entities.isEmpty()) {
             try {
                 Main.setWindow("Win", 0);
+                CharacterInfo.setLevelDone(CharacterInfo.getLevelDone() + 1);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -2,6 +2,7 @@ package org.projectgame.project2dgame.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Main;
 
 import java.io.IOException;
@@ -15,6 +16,17 @@ public class LevelSelectionController {
     Button lvl3Button;
     @FXML
     Button backButton;
+
+    @FXML
+    public void initialize() {
+        if (CharacterInfo.getLevelDone() <= 2) {
+            lvl3Button.setDisable(true);
+        }
+        if(CharacterInfo.getLevelDone() <= 1) {
+            lvl2Button.setDisable(true);
+            lvl3Button.setDisable(true);
+        }
+    }
 
     @FXML
     protected void onLvl1Button() throws IOException {

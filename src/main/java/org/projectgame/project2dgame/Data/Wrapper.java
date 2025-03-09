@@ -7,17 +7,13 @@ import java.util.Map;
 
 public class Wrapper {
     private Map<String, KeyCode> keyMap;
+    private double volume;
 
-    public Wrapper() {
-        this.keyMap = new HashMap<>();
-        this.keyMap.put("upKey", KeyCode.W);
-        this.keyMap.put("downKey", KeyCode.S);
-        this.keyMap.put("leftKey", KeyCode.A);
-        this.keyMap.put("rightKey", KeyCode.D);
-    }
+    public Wrapper() {}
 
-    public Wrapper(Map<String, KeyCode> keyMap) {
+    public Wrapper(Map<String, KeyCode> keyMap, double volume) {
         this.keyMap = keyMap;
+        this.volume = volume;
     }
 
     public Map<String, KeyCode> getKeyMap() {
@@ -26,5 +22,13 @@ public class Wrapper {
 
     public void setKeyMap(Map<String, KeyCode> keyMap) {
         this.keyMap = keyMap;
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
+    public void setVolume(double volume) {
+        this.volume = volume;
     }
 }

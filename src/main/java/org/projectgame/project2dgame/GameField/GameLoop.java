@@ -20,16 +20,14 @@ public class GameLoop extends AnimationTimer {
     private final EntityManagement entityManagement;
     private final KeyInputHandler keyInputHandler;
     private final CollisionCheck collisionCheck;
-    private final GameSettings gameSettings;
     private final boolean FPSAnzeigen = false;
     private boolean running = true;
     private final Character character;
     private final LinkedList<String> directionQueue = new LinkedList<>();
 
-    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, GameSettings gameSettings, CollisionCheck collisionCheck) {
+    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, CollisionCheck collisionCheck) {
         this.entityManagement = entityManagement;
         this.keyInputHandler = keyInputHandler;
-        this.gameSettings = gameSettings;
         this.collisionCheck = collisionCheck;
         this.entityManagement.setCollisonCheck(collisionCheck);
         this.character = entityManagement.getCharacter();
@@ -91,20 +89,20 @@ public class GameLoop extends AnimationTimer {
                 }
             }
 
-            if (pressedKeys.contains(gameSettings.getKeyMap().get("upKey"))) {
+            if (pressedKeys.contains(GameSettings.getKeyMap().get("upKey"))) {
                 moveCharacter(0, -distance);
             }
-            if (pressedKeys.contains(gameSettings.getKeyMap().get("downKey"))) {
+            if (pressedKeys.contains(GameSettings.getKeyMap().get("downKey"))) {
                 moveCharacter(0, distance);
             }
-            if (pressedKeys.contains(gameSettings.getKeyMap().get("leftKey"))) {
+            if (pressedKeys.contains(GameSettings.getKeyMap().get("leftKey"))) {
                 moveCharacter(-distance, 0);
             }
-            if (pressedKeys.contains(gameSettings.getKeyMap().get("rightKey"))) {
+            if (pressedKeys.contains(GameSettings.getKeyMap().get("rightKey"))) {
                 moveCharacter(distance, 0);
             }
             long currentTime = System.currentTimeMillis();
-            if (pressedKeys.contains(gameSettings.getKeyMap().get("shootKey"))) {
+            if (pressedKeys.contains(GameSettings.getKeyMap().get("shootKey"))) {
                 character.setShooting(true);
                 if (character.isShooting() && (currentTime - character.getLastShotTime() >= character.getShootCooldown())) {
                     entityManagement.getProjectileManagement().characterProjectile();

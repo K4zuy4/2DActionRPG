@@ -25,19 +25,9 @@ public class Main extends Application {
 
     private static Stage primaryStage;
     private static GameLoop gameLoop;
-    private final static SoundEngine soundEngine = new SoundEngine();
-    public static GameSettings gameSettings;
     private static final GameField gameField = new GameField();
     private static Label geldLabel;
     private static ImageView imageView;
-
-    static {
-        try {
-            gameSettings = new GameSettings();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public void start(Stage stage) throws IOException{
@@ -50,7 +40,7 @@ public class Main extends Application {
             System.exit(0);
         });
 
-        Debug debug = new Debug(gameSettings);
+       // Debug debug = new Debug();
 
         primaryStage.show();
     }
@@ -63,7 +53,7 @@ public class Main extends Application {
                 loader.setLocation(Main.class.getResource("/FXMLFiles/MainMenu.fxml"));
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - Main Menu");
-                soundEngine.playMainMenuMusic();
+                SoundEngine.playMainMenuMusic();
                 break;
 
             case "GameField":
@@ -76,8 +66,6 @@ public class Main extends Application {
                 gamePane.getChildren().add(geldLabel);
                 gamePane.getChildren().add(imageView);
 
-                gameField.setLevel(level);
-
                 TileMap tileMap = levelSelector(level, gameField, gamePane);
 
                 EntityManagement entityManagement = new EntityManagement(gamePane, gameField, geldLabel);
@@ -89,11 +77,11 @@ public class Main extends Application {
                 keyInputHandler.addKeyHandlers(scene);
 
                 CollisionCheck collisionCheck = new CollisionCheck(tileMap, entityManagement);
-                gameLoop = new GameLoop(entityManagement, keyInputHandler, gameSettings, collisionCheck);
+                gameLoop = new GameLoop(entityManagement, keyInputHandler, collisionCheck);
                 gameLoop.start();
                 primaryStage.setScene(scene);
                 primaryStage.setTitle("Sanctum of Sorrow - Level " + level);
-                soundEngine.playFightMusic();
+                SoundEngine.playFightMusic();
                 entityManagement.loadEntities(collisionCheck);
                 break;
 
@@ -107,8 +95,8 @@ public class Main extends Application {
                 loader.setLocation(Main.class.getResource("/FXMLFiles/GameOverScreen.fxml"));
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - Game Over");
-                soundEngine.stopMusic();
-                soundEngine.playGameOver();
+                SoundEngine.stopMusic();
+                SoundEngine.playGameOver();
                 if (gameLoop != null) gameLoop.stop();
                 break;
 
@@ -116,8 +104,8 @@ public class Main extends Application {
                 loader.setLocation(Main.class.getResource("/FXMLFiles/WinScreen.fxml"));
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - You Win!");
-                soundEngine.stopMusic();
-                soundEngine.playWin();
+                SoundEngine.stopMusic();
+                SoundEngine.playWin();
                 if (gameLoop != null) gameLoop.stop();
                 break;
 
@@ -125,6 +113,16 @@ public class Main extends Application {
                 loader.setLocation(Main.class.getResource("/FXMLFiles/ShopMenu.fxml"));
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - Upgrade Screen");
+                SoundEngine.stopMusic();
+                SoundEngine.playShopMusic();
+                break;
+
+            case "SettingsScreen":
+                loader.setLocation(Main.class.getResource("/FXMLFiles/SettingsScreen.fxml"));
+                scene = new Scene(loader.load());
+                primaryStage.setTitle("Sanctum of Sorrow - Settings");
+                SoundEngine.stopMusic();
+                SoundEngine.playMainMenuMusic();
                 break;
 
             default:
