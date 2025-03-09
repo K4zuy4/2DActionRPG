@@ -13,6 +13,7 @@ import static javafx.scene.paint.Color.rgb;
 
 public class Slime extends Entity {
     private final ImageView idleGif;
+    private final ImageView idle2Gif;
     private final ImageView rightGif;
     private final ImageView leftGif;
     private final ImageView currentSprite;
@@ -23,6 +24,7 @@ public class Slime extends Entity {
         idleGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-idle.gif"))));
         rightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-right.gif"))));
         leftGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-left.gif"))));
+        idle2Gif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-idle2.gif"))));
 
         this.sprite = idleGif;
         this.currentSprite = idleGif;

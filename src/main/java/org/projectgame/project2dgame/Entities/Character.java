@@ -1,11 +1,13 @@
 package org.projectgame.project2dgame.Entities;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.Main;
@@ -35,14 +37,28 @@ public class Character {
     private final long cooldown = CharacterInfo.getFireRate();
     private boolean isShooting = false;
     private final EntityManagement entityManagement;
+    private final ImageView dyingGif;
+    private final ImageView rightGif;
+    private final ImageView leftGif;
+    private final ImageView idleGif;
+    private final ImageView idle2Gif;
+    private ImageView currentGif;
+    private boolean dead = false;
 
-    public Character(double x, double y, String spritePath, GameField gameField, EntityManagement entityManagement) {
+    public Character(double x, double y, GameField gameField, EntityManagement entityManagement) {
         this.gameField = gameField;
         this.x = x;
         this.y = y;
         this.entityManagement = entityManagement;
 
-        this.sprite = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(spritePath))));
+        this.dyingGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/dying.gif"))));
+        this.rightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/walking_right.gif"))));
+        this.leftGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/walking_left.gif"))));
+        this.idleGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/idle.gif"))));
+        this.idle2Gif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/idle2.gif"))));
+        this.currentGif = idleGif;
+
+        this.sprite = idleGif;
         this.sprite.setFitHeight(gameField.getTileSize() * 1.5);
         this.sprite.setFitWidth(gameField.getTileSize() * 1.5);
         this.sprite.setX(x);
@@ -77,13 +93,15 @@ public class Character {
             Random random = new Random();
             int damage = random.nextInt(5 * 2 + 1) + (_damage - 5);
             health -= damage;
-            if (health < 0){
+            if (health < 0) {
                 health = 0;
                 CharacterInfo.reset();
+                Platform.runLater(() -> this.sprite.setImage(dyingGif.getImage()));
+                dead = true;
                 try {
                     Main.setWindow("GameOver", 0);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException e1) {
+                    throw new RuntimeException(e1);
                 }
                 return;
             }
@@ -96,6 +114,7 @@ public class Character {
             scheduler.shutdown();
         }
     }
+
 
     private void updateHealthBar() {
             double healthProzent = (double) health / maxHealth;
@@ -129,15 +148,54 @@ public class Character {
     }
 
     public void setX(double x) {
+        if (dead) return;
+        double dx = x - this.x;
         this.x = x;
         this.sprite.setX(x);
         updateHitboxPosition();
+
+        this.updateSpriteDirection(dx, 0);
     }
 
     public void setY(double y) {
+        if(dead) return;
+        double dy = y - this.y;
         this.y = y;
         this.sprite.setY(y);
         updateHitboxPosition();
+
+        this.updateSpriteDirection(0, dy);
+    }
+
+    public void updateSpriteDirection(double dx, double dy) {
+        if (dx != 0) {
+            if (dx > 0) {
+                if (currentGif != rightGif) {
+                    this.sprite.setImage(rightGif.getImage());
+                    currentGif = rightGif;
+                }
+            } else if (dx < 0) {
+                if (currentGif != leftGif) {
+                    this.sprite.setImage(leftGif.getImage());
+                    currentGif = leftGif;
+                }
+            }
+        }
+
+        else if (dy != 0) {
+            if (currentGif != rightGif) {
+                this.sprite.setImage(rightGif.getImage());
+                currentGif = rightGif;
+            }
+        }
+    }
+
+
+    public void setSpriteToIdle2() {
+        if (currentGif != idle2Gif) {
+            this.sprite.setImage(idle2Gif.getImage());
+            currentGif = idle2Gif;
+        }
     }
 
     public ImageView getSprite() {

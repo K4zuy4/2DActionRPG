@@ -78,6 +78,7 @@ public class GameLoop extends AnimationTimer {
     private void updateCharacterMovement(double deltaTime) {
         Set<KeyCode> pressedKeys = keyInputHandler.getPressedKeys();
         double distance = character.getCharacterSpeed() * deltaTime;
+        boolean moved = false;
 
         if (entityManagement.getCharacter() != null) {
             entityManagement.getCharacter().updateDirectionQueue(pressedKeys, directionQueue);
@@ -91,16 +92,21 @@ public class GameLoop extends AnimationTimer {
 
             if (pressedKeys.contains(GameSettings.getKeyMap().get("upKey"))) {
                 moveCharacter(0, -distance);
+                moved = true;
             }
             if (pressedKeys.contains(GameSettings.getKeyMap().get("downKey"))) {
                 moveCharacter(0, distance);
+                moved = true;
             }
             if (pressedKeys.contains(GameSettings.getKeyMap().get("leftKey"))) {
                 moveCharacter(-distance, 0);
+                moved = true;
             }
             if (pressedKeys.contains(GameSettings.getKeyMap().get("rightKey"))) {
                 moveCharacter(distance, 0);
+                moved = true;
             }
+
             long currentTime = System.currentTimeMillis();
             if (pressedKeys.contains(GameSettings.getKeyMap().get("shootKey"))) {
                 character.setShooting(true);
@@ -112,7 +118,12 @@ public class GameLoop extends AnimationTimer {
                 character.setShooting(false);
             }
         }
+
+        if (!moved) {
+            character.setSpriteToIdle2();
+        }
     }
+
 
     private void moveCharacter(double dx, double dy) {
         double newX = character.getX() + dx;

@@ -74,7 +74,7 @@ public class EntityManagement {
     }
 
     public void loadCharacter() {
-        character = new Character(100, 300, "/Entities/player.png", this.gameField, this);
+        character = new Character(100, 300, this.gameField, this);
         gamePane.getChildren().add(character.getSprite());
         gamePane.getChildren().add(character.getHitbox());
         gamePane.getChildren().add(character.getHealthBar());
