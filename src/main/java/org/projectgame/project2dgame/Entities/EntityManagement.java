@@ -32,12 +32,29 @@ public class EntityManagement {
 
     // Überarbeitet von ChatGPT, da Problem mit den Gegner, welche in einander spawnen durch zu kleine Verzögerung zwischen den Spawns
     public void loadEntities(CollisionCheck collisionCheck) {
+        int level = Main.getGameField().getLevel();
+        int amount = 0;
+        int slimeHealth;
+
+        if(level == 1) {
+            amount = 7;
+            slimeHealth = 50;
+        } else if(level == 2) {
+            amount = 10;
+            slimeHealth = 60;
+        } else if(level == 3) {
+            amount = 12;
+            slimeHealth = 70;
+        } else {
+            slimeHealth = 50;
+        }
+
         Random random = new Random();
         List<Entity> tempEntities = new ArrayList<>();
 
         Timeline timeline = new Timeline();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < amount; i++) {
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 50), event -> {
                 int x, y;
                 do {
@@ -46,7 +63,7 @@ public class EntityManagement {
                 } while (!collisionCheck.kannSpawnen(x, y, tempEntities));
 
                 if (collisionCheck.kannSpawnen(x, y, tempEntities)) {
-                    Slime entity = new Slime(x, y, gameField, gamePane, this);
+                    Slime entity = new Slime(x, y, slimeHealth, gameField, gamePane, this);
                     tempEntities.add(entity);
                     entities.add(entity);
                     gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
@@ -57,7 +74,7 @@ public class EntityManagement {
     }
 
     public void loadCharacter() {
-        character = new Character(100, 300, 100, "/Entities/player.png", this.gameField, this);
+        character = new Character(100, 300, "/Entities/player.png", this.gameField, this);
         gamePane.getChildren().add(character.getSprite());
         gamePane.getChildren().add(character.getHitbox());
         gamePane.getChildren().add(character.getHealthBar());

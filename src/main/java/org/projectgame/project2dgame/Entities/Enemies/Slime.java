@@ -17,8 +17,8 @@ public class Slime extends Entity {
     private final ImageView leftGif;
     private final ImageView currentSprite;
 
-    public Slime(double x, double y, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
-        super(x, y, 50, 150, gameField, gamePane, entityManagement);
+    public Slime(double x, double y, int health, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
+        super(x, y, health, 150, gameField, gamePane, entityManagement);
 
         idleGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-idle.gif"))));
         rightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-right.gif"))));

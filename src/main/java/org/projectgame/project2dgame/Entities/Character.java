@@ -24,27 +24,25 @@ import static org.projectgame.project2dgame.Main.gameSettings;
 public class Character {
     private double x;
     private double y;
-    private int health;
-    private int maxHealth;
-    private int geld = 0;
+    private int health = CharacterInfo.getHealth();
+    private int maxHealth = CharacterInfo.getMaxHealth();
+    private int geld = CharacterInfo.getMoney();
     private ImageView sprite;
     private final GameField gameField;
-    private int characterSpeed = 200;
+    private int characterSpeed = CharacterInfo.getSpeed();
     private final Rectangle hitbox;
     private boolean invincible = false;
     private final ProgressBar healthBar;
     private String direction = "right";
     private long lastAttack = 0;
-    private final long cooldown = 500;
+    private final long cooldown = CharacterInfo.getFireRate();
     private boolean isShooting = false;
     private final EntityManagement entityManagement;
 
-    public Character(double x, double y, int health, String spritePath, GameField gameField, EntityManagement entityManagement) {
+    public Character(double x, double y, String spritePath, GameField gameField, EntityManagement entityManagement) {
         this.gameField = gameField;
         this.x = x;
         this.y = y;
-        this.health = health;
-        this.maxHealth = health;
         this.entityManagement = entityManagement;
 
         this.sprite = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(spritePath))));
@@ -82,6 +80,7 @@ public class Character {
                     e.printStackTrace();
                 }
             }
+            CharacterInfo.setHealth(health);
             updateHealthBar();
             invincible = true;
 
@@ -215,6 +214,7 @@ public class Character {
 
     public void setGeld(int geld) {
         this.geld = geld;
+        CharacterInfo.setMoney(geld);
         entityManagement.getGeldLabel().setText(""+this.geld);
     }
 

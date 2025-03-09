@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import org.projectgame.project2dgame.Entities.CharacterInfo;
 
 public class GameFieldController {
     @FXML
@@ -15,6 +16,11 @@ public class GameFieldController {
     Label geldLabel;
     @FXML
     ImageView imageView;
+
+    @FXML
+    public void initialize() {
+        geldLabel.setText("" + CharacterInfo.getMoney());
+    }
 
     public Pane getGamePane() {
         return gamePane;

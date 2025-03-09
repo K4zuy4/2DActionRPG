@@ -13,7 +13,7 @@ public class WinScreenController {
     @FXML
     Button levelSelectButton;
     @FXML
-    Button settingsButton;
+    Button upgradeButton;
     @FXML
     Button exitButton;
 
@@ -32,8 +32,12 @@ public class WinScreenController {
     }
 
     @FXML
-    protected void onSettingsButton() {
-
+    protected void onUpgradeButton() {
+        try {
+            Main.setWindow("UpgradeScreen", 0);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

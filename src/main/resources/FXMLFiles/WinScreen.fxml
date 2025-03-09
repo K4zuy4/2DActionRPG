@@ -17,12 +17,12 @@
                 <Font name="Britannic Bold" size="12.0" />
             </font>
         </Button>
-        <Button fx:id="levelSelectButton" layoutX="75.0" layoutY="250.0" mnemonicParsing="false" onAction="#onLevelSelectButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Level Selection">
+        <Button fx:id="upgradeButton" layoutX="75.0" layoutY="250.0" mnemonicParsing="false" onAction="#onUpgradeButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Upgrades">
             <font>
                 <Font name="Britannic Bold" size="12.0" />
             </font>
         </Button>
-        <Button fx:id="settingsButton" layoutX="75.0" layoutY="320.0" mnemonicParsing="false" onAction="#onSettingsButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Settings">
+        <Button fx:id="levelSelectButton" layoutX="75.0" layoutY="320.0" mnemonicParsing="false" onAction="#onLevelSelectButton" prefHeight="52.0" prefWidth="240.0" styleClass="menu-button" text="Level Selection">
             <font>
                 <Font name="Britannic Bold" size="12.0" />
             </font>

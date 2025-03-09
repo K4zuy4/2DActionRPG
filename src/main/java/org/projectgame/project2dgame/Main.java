@@ -121,6 +121,12 @@ public class Main extends Application {
                 if (gameLoop != null) gameLoop.stop();
                 break;
 
+            case "UpgradeScreen":
+                loader.setLocation(Main.class.getResource("/FXMLFiles/ShopMenu.fxml"));
+                scene = new Scene(loader.load());
+                primaryStage.setTitle("Sanctum of Sorrow - Upgrade Screen");
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown window: " + window);
         }
