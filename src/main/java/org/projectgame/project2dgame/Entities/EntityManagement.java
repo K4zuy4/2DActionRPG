@@ -23,16 +23,17 @@ public class EntityManagement {
     private ProjectileManagement projectileManagement;
     private CollisionCheck collisonCheck;
     private final Label geldLabel;
+    private final int level;
 
-    public EntityManagement(Pane gamePane, GameField gameField, Label geldLabel) {
+    public EntityManagement(Pane gamePane, GameField gameField, Label geldLabel, int level) {
         this.gamePane = gamePane;
         this.gameField = gameField;
         this.geldLabel = geldLabel;
+        this.level = level;
     }
 
     // Überarbeitet von ChatGPT, da Problem mit den Gegner, welche in einander spawnen durch zu kleine Verzögerung zwischen den Spawns
     public void loadEntities(CollisionCheck collisionCheck) {
-        int level = CharacterInfo.getLevelDone();
         int amount = 0;
         int slimeHealth;
 

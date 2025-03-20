@@ -20,7 +20,7 @@ public class WinScreenController {
 
     @FXML
     public void initialize() {
-        if (CharacterInfo.getLevelDone() == 3) {
+        if (CharacterInfo.getLevelDone() >= 3) {
             nextButton.setDisable(true);
         }
 

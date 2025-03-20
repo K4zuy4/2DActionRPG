@@ -108,7 +108,8 @@ public class GameLoop extends AnimationTimer {
             }
 
             long currentTime = System.currentTimeMillis();
-            if (pressedKeys.contains(GameSettings.getKeyMap().get("shootKey"))) {
+
+            if (pressedKeys.contains(GameSettings.getKeyMap().get("lookUpKey")) || pressedKeys.contains(GameSettings.getKeyMap().get("lookDownKey")) || pressedKeys.contains(GameSettings.getKeyMap().get("lookRightKey")) || pressedKeys.contains(GameSettings.getKeyMap().get("lookLeftKey"))) {
                 character.setShooting(true);
                 if (character.isShooting() && (currentTime - character.getLastShotTime() >= character.getShootCooldown())) {
                     entityManagement.getProjectileManagement().characterProjectile();

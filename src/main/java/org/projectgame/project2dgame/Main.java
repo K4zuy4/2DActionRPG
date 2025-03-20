@@ -14,6 +14,7 @@ import org.projectgame.project2dgame.Controller.GameFieldController;
 import org.projectgame.project2dgame.Controller.KeyInputHandler;
 import org.projectgame.project2dgame.Controller.SoundEngine;
 import org.projectgame.project2dgame.Data.GameSettings;
+import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.GameField.GameLoop;
@@ -68,7 +69,7 @@ public class Main extends Application {
 
                 TileMap tileMap = levelSelector(level, gameField, gamePane);
 
-                EntityManagement entityManagement = new EntityManagement(gamePane, gameField, geldLabel);
+                EntityManagement entityManagement = new EntityManagement(gamePane, gameField, geldLabel, level);
                 entityManagement.loadCharacter();
 
                 scene = new Scene(root, gameField.getScreenWidth(), gameField.getScreenHeight());
@@ -121,6 +122,7 @@ public class Main extends Application {
                 loader.setLocation(Main.class.getResource("/FXMLFiles/SettingsScreen.fxml"));
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - Settings");
+                scene.getRoot().setFocusTraversable(true);
                 SoundEngine.stopMusic();
                 SoundEngine.playMainMenuMusic();
                 break;

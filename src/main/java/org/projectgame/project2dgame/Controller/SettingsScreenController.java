@@ -26,6 +26,14 @@ public class SettingsScreenController {
     Button sButton;
     @FXML
     Button dButton;
+    @FXML
+    Button obenButton;
+    @FXML
+    Button untenButton;
+    @FXML
+    Button linksButton;
+    @FXML
+    Button rechtsButton;
 
     @FXML
     public void initialize() {
@@ -45,6 +53,10 @@ public class SettingsScreenController {
         aButton.setText(GameSettings.getKeyMap().get("leftKey").toString());
         sButton.setText(GameSettings.getKeyMap().get("downKey").toString());
         dButton.setText(GameSettings.getKeyMap().get("rightKey").toString());
+        obenButton.setText(GameSettings.getKeyMap().get("lookUpKey").toString());
+        untenButton.setText(GameSettings.getKeyMap().get("lookDownKey").toString());
+        linksButton.setText(GameSettings.getKeyMap().get("lookLeftKey").toString());
+        rechtsButton.setText(GameSettings.getKeyMap().get("lookRightKey").toString());
     }
 
     @FXML
@@ -54,6 +66,7 @@ public class SettingsScreenController {
 
     private void changeKey(String key, Button button) {
         button.setText("...");
+        button.getScene().getRoot().requestFocus();
         button.getScene().setOnKeyPressed((KeyEvent e) -> {
             KeyCode newKey = e.getCode();
             button.setText(newKey.toString());
@@ -71,4 +84,8 @@ public class SettingsScreenController {
     @FXML private void onAButton() { changeKey("leftKey", aButton); }
     @FXML private void onSButton() { changeKey("downKey", sButton); }
     @FXML private void onDButton() { changeKey("rightKey", dButton); }
+    @FXML private void onObenButton() { changeKey("lookUpKey", obenButton); }
+    @FXML private void onUntenButton() { changeKey("lookUntenKey", untenButton); }
+    @FXML private void onLinksButton() { changeKey("lookLeftKey", linksButton); }
+    @FXML private void onRechtsButton() { changeKey("lookRightKey", rechtsButton); }
 }

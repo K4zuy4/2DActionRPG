@@ -63,7 +63,6 @@ public class GameSettings {
             keyMap.put("downKey", KeyCode.S);
             keyMap.put("leftKey", KeyCode.A);
             keyMap.put("rightKey", KeyCode.D);
-            keyMap.put("shootKey", KeyCode.SPACE);
             keyMap.put("lookUpKey", KeyCode.UP);
             keyMap.put("lookDownKey", KeyCode.DOWN);
             keyMap.put("lookLeftKey", KeyCode.LEFT);
