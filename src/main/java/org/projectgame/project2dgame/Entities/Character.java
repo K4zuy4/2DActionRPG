@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.projectgame.project2dgame.Controller.SoundEngine;
 import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.Main;
@@ -90,6 +91,7 @@ public class Character {
 
     public void takeDamage(int _damage) {
         if (!invincible) {
+            SoundEngine.playPlayerHitSound();
             Random random = new Random();
             int damage = random.nextInt(5 * 2 + 1) + (_damage - 5);
             health -= damage;

@@ -1,5 +1,6 @@
 package org.projectgame.project2dgame.Controller;
 
+import com.almasb.fxgl.audio.Sound;
 import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
@@ -152,6 +153,7 @@ public class CollisionCheck {
         for (Entity entity : entityManagement.getEntity()) {
             if (projectileHitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
                 entity.takeDamage(CharacterInfo.getDamage());
+                SoundEngine.playEnemyHitSound();
                 return true;
             }
         }

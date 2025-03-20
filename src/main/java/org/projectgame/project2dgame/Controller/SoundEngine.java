@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class SoundEngine {
     private static MediaPlayer backgroundMusicPlayer;
+    private static MediaPlayer soundPlayer;
     private static double lautstaerke = GameSettings.getVolume();
 
     private SoundEngine() {}
@@ -23,6 +24,15 @@ public class SoundEngine {
         backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         backgroundMusicPlayer.setVolume(lautstaerke);
         backgroundMusicPlayer.play();
+    }
+
+    public static void playSound(String soundFilePath) {
+        Media sound = new Media(Objects.requireNonNull(SoundEngine.class.getResource(soundFilePath)).toExternalForm());
+
+        soundPlayer = new MediaPlayer(sound);
+        soundPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        soundPlayer.setVolume(lautstaerke);
+        soundPlayer.play();
     }
 
     public static void playMainMenuMusic() {
@@ -45,6 +55,16 @@ public class SoundEngine {
     public static void playWin() {
         playBackgroundMusic("/Sound/win.mp3");
         backgroundMusicPlayer.setCycleCount(1);
+    }
+
+    public static void playEnemyHitSound() {
+        playSound("/Sound/enemy_hit.mp3");
+        soundPlayer.setCycleCount(1);
+    }
+
+    public static void playPlayerHitSound() {
+        playSound("/Sound/player_hit.mp3");
+        soundPlayer.setCycleCount(1);
     }
 
     public static void stopMusic() {
