@@ -30,7 +30,7 @@ public class SoundEngine {
         Media sound = new Media(Objects.requireNonNull(SoundEngine.class.getResource(soundFilePath)).toExternalForm());
 
         soundPlayer = new MediaPlayer(sound);
-        soundPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        soundPlayer.setCycleCount(1);
         soundPlayer.setVolume(lautstaerke);
         soundPlayer.play();
     }
