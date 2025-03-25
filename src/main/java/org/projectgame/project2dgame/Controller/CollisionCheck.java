@@ -177,7 +177,7 @@ public class CollisionCheck {
             x += stepX;
             y += stepY;
 
-            if (checkCollision(new Rectangle(x, y, 1, 1))) {
+            if (checkCollision(new Rectangle(x, y + 20, 1, 1))) {
                 return true;
             }
         }
