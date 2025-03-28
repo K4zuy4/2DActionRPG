@@ -21,11 +21,11 @@ public class LevelSelectionController {
 
     @FXML
     public void initialize() {
-        if (!CharacterInfo.getLevelDone1().contains(1)) {
+        if (!CharacterInfo.getLevelDone().contains(1)) {
             lvl2Button.setDisable(true);
             lvl3Button.setDisable(true);
         }
-        else if (!CharacterInfo.getLevelDone1().contains(2)) {
+        else if (!CharacterInfo.getLevelDone().contains(2)) {
             lvl3Button.setDisable(true);
         }
     }

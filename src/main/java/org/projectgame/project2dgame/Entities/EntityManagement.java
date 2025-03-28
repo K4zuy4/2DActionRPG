@@ -231,8 +231,8 @@ public class EntityManagement {
         if(entities.isEmpty()) {
             try {
                 Main.safeGameTime(level);
-                if (!CharacterInfo.getLevelDone1().contains(level)) {
-                    CharacterInfo.getLevelDone1().add(level);
+                if (!CharacterInfo.getLevelDone().contains(level)) {
+                    CharacterInfo.getLevelDone().add(level);
                 }
                 Main.setWindow("Win", 0);
             } catch (IOException e) {

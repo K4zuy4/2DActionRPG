@@ -9,8 +9,7 @@ public class CharacterInfo {
     private static int damage = 25;
     private static int speed = 200;
     private static long fireRate = 500;
-    private static ArrayList<Integer> levelDone1 = new ArrayList<>();
-    private static int levelDone = 1;
+    private static ArrayList<Integer> levelDone = new ArrayList<>();
     private static int damagePrice = 40;
     private static int speedPrice = 45;
     private static int fireratePrice = 60;
@@ -23,12 +22,11 @@ public class CharacterInfo {
         damage = 25;
         speed = 200;
         fireRate = 500;
-        levelDone = 1;
         damagePrice = 40;
         speedPrice = 45;
         fireratePrice = 60;
         healPrice = 30;
-        levelDone1 = new ArrayList<>();
+        levelDone = new ArrayList<>();
     }
 
     public static int getMoney() {
@@ -55,12 +53,8 @@ public class CharacterInfo {
         return fireRate;
     }
 
-    public static int getLevelDone() {
+    public static ArrayList<Integer> getLevelDone() {
         return levelDone;
-    }
-
-    public static ArrayList<Integer> getLevelDone1() {
-        return levelDone1;
     }
 
     public static int getDamagePrice() {

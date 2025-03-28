@@ -21,7 +21,7 @@ public class WinScreenController {
 
     @FXML
     public void initialize() {
-        if (CharacterInfo.getLevelDone1().contains(3)) {
+        if (CharacterInfo.getLevelDone().contains(3)) {
             nextButton.setDisable(true);
         }
 
@@ -33,7 +33,7 @@ public class WinScreenController {
 
     @FXML
     protected void onNextButton() throws IOException {
-        ArrayList<Integer> levelDone = CharacterInfo.getLevelDone1();
+        ArrayList<Integer> levelDone = CharacterInfo.getLevelDone();
         if(levelDone.isEmpty()) {
             Main.setWindow("GameField", 1);
         } else if (levelDone.contains(3)) {
