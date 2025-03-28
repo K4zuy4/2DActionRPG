@@ -1,5 +1,7 @@
 package org.projectgame.project2dgame.Entities;
 
+import java.util.ArrayList;
+
 public class CharacterInfo {
     private static int money = 0;
     private static int health = 100;
@@ -7,6 +9,7 @@ public class CharacterInfo {
     private static int damage = 25;
     private static int speed = 200;
     private static long fireRate = 500;
+    private static ArrayList<Integer> levelDone1 = new ArrayList<>();
     private static int levelDone = 1;
     private static int damagePrice = 40;
     private static int speedPrice = 45;
@@ -25,6 +28,7 @@ public class CharacterInfo {
         speedPrice = 45;
         fireratePrice = 60;
         healPrice = 30;
+        levelDone1 = new ArrayList<>();
     }
 
     public static int getMoney() {
@@ -53,6 +57,11 @@ public class CharacterInfo {
 
     public static int getLevelDone() {
         return levelDone;
+    }
+
+    public static ArrayList<Integer> getLevelDone1() {
+        System.out.println(levelDone1);
+        return levelDone1;
     }
 
     public static int getDamagePrice() {
@@ -93,10 +102,6 @@ public class CharacterInfo {
 
     public static void setFireRate(long newFireRate) {
         if((fireRate - newFireRate) > 0) fireRate = newFireRate;
-    }
-
-    public static void setLevelDone(int newLevelDone) {
-        levelDone = newLevelDone;
     }
 
     public static void setDamagePrice(int newDamagePrice) {

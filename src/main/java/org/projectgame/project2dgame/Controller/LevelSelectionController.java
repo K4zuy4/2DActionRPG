@@ -16,17 +16,20 @@ public class LevelSelectionController {
     Button lvl3Button;
     @FXML
     Button backButton;
+    @FXML
+    Button bestenlisteButton;
 
     @FXML
     public void initialize() {
-        if (CharacterInfo.getLevelDone() <= 2) {
-            lvl3Button.setDisable(true);
-        }
-        if(CharacterInfo.getLevelDone() <= 1) {
+        if (!CharacterInfo.getLevelDone1().contains(1)) {
             lvl2Button.setDisable(true);
             lvl3Button.setDisable(true);
         }
+        else if (!CharacterInfo.getLevelDone1().contains(2)) {
+            lvl3Button.setDisable(true);
+        }
     }
+
 
     @FXML
     protected void onLvl1Button() throws IOException {
@@ -50,5 +53,10 @@ public class LevelSelectionController {
 
     private void lvlSelect(int lvl) throws IOException {
         Main.setWindow("GameField", lvl);
+    }
+
+    @FXML
+    private void onBestenlisteButton() {
+        Main.openBestenlisteWindow();
     }
 }

@@ -17,6 +17,7 @@ module org.projectgame.project2dgame {
     requires java.desktop;
     requires annotations;
     requires com.fasterxml.jackson.databind;
+    requires java.sql;
 
     opens org.projectgame.project2dgame to javafx.fxml;
     exports org.projectgame.project2dgame;

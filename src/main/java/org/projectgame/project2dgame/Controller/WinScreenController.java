@@ -7,6 +7,7 @@ import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Main;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class WinScreenController {
     @FXML
@@ -20,7 +21,7 @@ public class WinScreenController {
 
     @FXML
     public void initialize() {
-        if (CharacterInfo.getLevelDone() >= 3) {
+        if (CharacterInfo.getLevelDone1().contains(3)) {
             nextButton.setDisable(true);
         }
 
@@ -32,7 +33,16 @@ public class WinScreenController {
 
     @FXML
     protected void onNextButton() throws IOException {
-        Main.setWindow("GameField", CharacterInfo.getLevelDone());
+        ArrayList<Integer> levelDone = CharacterInfo.getLevelDone1();
+        if(levelDone.isEmpty()) {
+            Main.setWindow("GameField", 1);
+        } else if (levelDone.contains(3)) {
+            Main.setWindow("GameField", 1);
+        } else if (levelDone.contains(2)) {
+            Main.setWindow("GameField", 3);
+        } else if (levelDone.contains(1)) {
+            Main.setWindow("GameField", 2);
+        }
     }
 
     @FXML

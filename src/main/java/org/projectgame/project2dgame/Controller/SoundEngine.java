@@ -83,4 +83,10 @@ public class SoundEngine {
     public static double getVolume() {
         return lautstaerke;
     }
+
+    public static boolean isPlaying() {
+        return backgroundMusicPlayer != null &&
+                backgroundMusicPlayer.getStatus() == MediaPlayer.Status.PLAYING;
+    }
+
 }

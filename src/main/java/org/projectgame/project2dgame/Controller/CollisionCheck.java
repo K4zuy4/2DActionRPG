@@ -11,6 +11,8 @@ import org.projectgame.project2dgame.GameField.TileManagement.TileMap;
 
 import java.util.List;
 
+import static javafx.scene.paint.Color.rgb;
+
 public class CollisionCheck {
     private final TileMap tileMap;
     private final EntityManagement entityManagement;
@@ -94,7 +96,7 @@ public class CollisionCheck {
 
     public boolean kannSpawnen(double spawnX, double spawnY, List<Entity> tempEntities) {
         double spriteSize = entityManagement.getGameField().getTileSize() * 1.5;
-        double hitboxSize = entityManagement.getGameField().getTileSize() * 0.7;
+        double hitboxSize = entityManagement.getGameField().getTileSize() * 0.9;
 
         double adjustedX = spawnX + (spriteSize - hitboxSize) / 2;
         double adjustedY = spawnY + (spriteSize - hitboxSize);

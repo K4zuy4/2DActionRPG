@@ -12,12 +12,12 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.LevelSelectionController">
    <children>
-      <Text fill="#f8f8f8" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Level Selection" textAlignment="CENTER" wrappingWidth="600.0">
+      <Text fill="#f8f8f8" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Level Selection" textAlignment="CENTER" wrappingWidth="600.0">
          <font>
             <Font name="Britannic Bold" size="48.0" />
          </font>
       </Text>
-      <GridPane layoutX="35.0" layoutY="140.0" prefHeight="259.0" prefWidth="529.0">
+      <GridPane layoutX="35.0" layoutY="155.0" prefHeight="240.0" prefWidth="529.0">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -40,5 +40,6 @@
             <Image url="@../Images/undo.png" />
          </image>
       </ImageView>
+      <Button fx:id="bestenlisteButton" layoutX="200.0" layoutY="76.0" mnemonicParsing="false" onAction="#onBestenlisteButton" prefHeight="52.0" prefWidth="201.0" styleClass="menu-button" text="Bestenlisten" />
    </children>
 </AnchorPane>

@@ -78,6 +78,7 @@ public class TileMap {
 
         Main.getGeldLabel().toFront();
         Main.getImageView().toFront();
+        Main.getTimeLabel().toFront();
     }
 
     private Image loadTileImage(int type) throws IOException {

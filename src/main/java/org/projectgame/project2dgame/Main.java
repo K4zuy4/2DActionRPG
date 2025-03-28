@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.Controller.GameFieldController;
@@ -28,6 +29,7 @@ public class Main extends Application {
     private static GameLoop gameLoop;
     private static final GameField gameField = new GameField();
     private static Label geldLabel;
+    private static Label timeLabel;
     private static ImageView imageView;
 
     @Override
@@ -64,8 +66,10 @@ public class Main extends Application {
                 Pane gamePane = controller.getGamePane();
                 geldLabel = controller.getGeldLabel();
                 imageView = controller.getImageView();
+                timeLabel = controller.getTimeLabel();
                 gamePane.getChildren().add(geldLabel);
                 gamePane.getChildren().add(imageView);
+                gamePane.getChildren().add(timeLabel);
 
                 TileMap tileMap = levelSelector(level, gameField, gamePane);
 
@@ -78,7 +82,7 @@ public class Main extends Application {
                 keyInputHandler.addKeyHandlers(scene);
 
                 CollisionCheck collisionCheck = new CollisionCheck(tileMap, entityManagement);
-                gameLoop = new GameLoop(entityManagement, keyInputHandler, collisionCheck);
+                gameLoop = new GameLoop(entityManagement, keyInputHandler, collisionCheck, timeLabel);
                 gameLoop.start();
                 primaryStage.setScene(scene);
                 primaryStage.setTitle("Sanctum of Sorrow - Level " + level);
@@ -90,6 +94,7 @@ public class Main extends Application {
                 loader.setLocation(Main.class.getResource("/FXMLFiles/LevelSelection.fxml"));
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - Level Selection");
+                if(!SoundEngine.isPlaying()) SoundEngine.playMainMenuMusic();
                 break;
 
             case "GameOver":
@@ -135,6 +140,23 @@ public class Main extends Application {
         primaryStage.centerOnScreen();
     }
 
+    public static void openBestenlisteWindow() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/BestenListe.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setTitle("Sanctum of Sorrow - Bestenlisten");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(primaryStage);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static TileMap levelSelector(int level, GameField gameField, Pane gamePane) throws IOException {
         return switch (level) {
             case 1 -> new TileMap("/Tiles/TileMap1.txt", gameField.getTileSize(), gamePane);
@@ -142,6 +164,11 @@ public class Main extends Application {
             case 3 -> new TileMap("/Tiles/TileMap3.txt", gameField.getTileSize(), gamePane);
             default -> throw new IllegalArgumentException("Unknown level: " + level);
         };
+    }
+
+    public static void safeGameTime(int level) throws IOException {
+        Double time = gameLoop.getRawGameTimeSeconds();
+        GameSettings.saveTime(level, time);
     }
 
     @Override
@@ -165,5 +192,9 @@ public class Main extends Application {
 
     public static ImageView getImageView() {
         return imageView;
+    }
+
+    public static Label getTimeLabel() {
+        return timeLabel;
     }
 }

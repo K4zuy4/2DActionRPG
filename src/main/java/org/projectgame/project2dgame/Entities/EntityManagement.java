@@ -56,7 +56,7 @@ public class EntityManagement {
         Timeline timeline = new Timeline();
 
         for (int i = 0; i < amount; i++) {
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 50), event -> {
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 150), event -> {
                 int x, y;
                 do {
                     x = 64 + random.nextInt(800);
@@ -230,8 +230,11 @@ public class EntityManagement {
 
         if(entities.isEmpty()) {
             try {
+                Main.safeGameTime(level);
+                if (!CharacterInfo.getLevelDone1().contains(level)) {
+                    CharacterInfo.getLevelDone1().add(level);
+                }
                 Main.setWindow("Win", 0);
-                CharacterInfo.setLevelDone(CharacterInfo.getLevelDone() + 1);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

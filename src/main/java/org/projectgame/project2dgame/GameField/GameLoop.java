@@ -1,6 +1,7 @@
 package org.projectgame.project2dgame.GameField;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -17,6 +18,9 @@ public class GameLoop extends AnimationTimer {
     private long lastUpdate = 0;
     private int frameCount = 0;
     private long lastFpsUpdate = 0;
+    private double totalGameTime = 0;
+    private double timeSinceLastLabelUpdate = 0;
+    private Label timeLabel;
     private final EntityManagement entityManagement;
     private final KeyInputHandler keyInputHandler;
     private final CollisionCheck collisionCheck;
@@ -25,13 +29,14 @@ public class GameLoop extends AnimationTimer {
     private final Character character;
     private final LinkedList<String> directionQueue = new LinkedList<>();
 
-    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, CollisionCheck collisionCheck) {
+    public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, CollisionCheck collisionCheck, Label timeLabel) {
         this.entityManagement = entityManagement;
         this.keyInputHandler = keyInputHandler;
         this.collisionCheck = collisionCheck;
         this.entityManagement.setCollisonCheck(collisionCheck);
         this.character = entityManagement.getCharacter();
         this.entityManagement.createProjectileManagement();
+        this.timeLabel = timeLabel;
     }
 
     @Override
@@ -64,6 +69,20 @@ public class GameLoop extends AnimationTimer {
     }
 
     public void update(double lastFrame) {
+        totalGameTime += lastFrame;
+        timeSinceLastLabelUpdate += lastFrame;
+
+        if (timeLabel != null && timeSinceLastLabelUpdate >= 1.0) {
+            timeSinceLastLabelUpdate = 0;
+
+            String formattedTime = getFormattedGameTime();
+
+            javafx.application.Platform.runLater(() -> {
+                timeLabel.setText("Zeit: " + formattedTime);
+            });
+        }
+
+
         entityManagement.updateEntities(lastFrame, collisionCheck);
         updateCharacterMovement(lastFrame);
         entityManagement.getProjectileManagement().updateProjectiles(lastFrame);
@@ -139,4 +158,15 @@ public class GameLoop extends AnimationTimer {
             character.setY(newY);
         }
     }
+
+    public String getFormattedGameTime() {
+        int seconds = (int) totalGameTime % 60;
+        int minutes = (int) (totalGameTime / 60);
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public double getRawGameTimeSeconds() {
+        return totalGameTime;
+    }
+
 }

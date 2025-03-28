@@ -16,6 +16,8 @@ public class GameFieldController {
     Label geldLabel;
     @FXML
     ImageView imageView;
+    @FXML
+    Label timeLabel;
 
     @FXML
     public void initialize() {
@@ -27,4 +29,5 @@ public class GameFieldController {
     }
     public Label getGeldLabel() { return geldLabel; }
     public ImageView getImageView() { return imageView; }
+    public Label getTimeLabel() { return timeLabel; }
 }
