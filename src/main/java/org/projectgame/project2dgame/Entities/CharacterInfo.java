@@ -60,7 +60,6 @@ public class CharacterInfo {
     }
 
     public static ArrayList<Integer> getLevelDone1() {
-        System.out.println(levelDone1);
         return levelDone1;
     }
 
