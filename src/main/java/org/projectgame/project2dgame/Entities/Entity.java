@@ -1,5 +1,6 @@
 package org.projectgame.project2dgame.Entities;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
@@ -27,8 +28,10 @@ public abstract class Entity {
     protected long lastRandomMoveTime = 0;
     protected double lastIdleTime = 0;
     protected double durationIdle = 0;
-    protected boolean isIdle = true;
+    protected boolean isIdle = false;
     protected boolean isActive = true;
+    private boolean waiting = false;
+    private PauseTransition currentPause;
 
 
     public Entity(double x, double y, int health, int entitySpeed, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
@@ -98,6 +101,14 @@ public abstract class Entity {
         this.updateSpriteDirection(0, dy);
     }
 
+    public boolean isWaiting() {
+        return waiting;
+    }
+
+    public void setWaiting(boolean waiting) {
+        this.waiting = waiting;
+    }
+
     public double getX() { return x; }
     public double getY() { return y; }
     public int getEntitySpeed() { return entitySpeed; }
@@ -111,9 +122,6 @@ public abstract class Entity {
     public long getLastRandomMoveTime() { return lastRandomMoveTime; }
     public void setLastRandomMoveTime(long lastRandomMoveTime) { this.lastRandomMoveTime = lastRandomMoveTime; }
     public void setIdle(boolean bool) { this.isIdle = bool; }
-    public boolean isIdle() { return isIdle; }
-    public void setLastIdleTime(double lastIdleTime) { this.lastIdleTime = lastIdleTime; }
-    public double getLastIdleTime() { return lastIdleTime; }
-    public double getDurationIdle() { return durationIdle; }
-    public void setDurationIdle(double durationIdle) { this.durationIdle = durationIdle; }
+    public PauseTransition getCurrentPause() { return currentPause;}
+    public void setCurrentPause(PauseTransition pause) { this.currentPause = pause; }
 }

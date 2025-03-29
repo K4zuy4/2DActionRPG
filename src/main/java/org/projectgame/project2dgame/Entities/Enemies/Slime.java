@@ -16,7 +16,8 @@ public class Slime extends Entity {
     private final ImageView idle2Gif;
     private final ImageView rightGif;
     private final ImageView leftGif;
-    private final ImageView currentSprite;
+    private ImageView currentSprite;
+    private boolean isIdle;
 
     public Slime(double x, double y, int health, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, 150, gameField, gamePane, entityManagement);
@@ -40,6 +41,11 @@ public class Slime extends Entity {
     }
 
     @Override
+    public void update(double deltaTime) {
+
+    }
+
+    @Override
     public void updateHitboxPosition() {
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight() - 10));
@@ -48,31 +54,49 @@ public class Slime extends Entity {
     }
 
     @Override
-    public void update(double deltaTime) {
-        double movement = (Math.random() - 0.5) * entitySpeed * deltaTime;
-        setX(getX() + movement);
-    }
-
-    @Override
     public void updateSpriteDirection(double dx, double dy) {
+        this.sprite.setFitWidth(gameField.getTileSize() * 1.7);
+        this.sprite.setFitHeight(gameField.getTileSize() * 1.7);
         if (!isIdle) {
             if (dx > 0) {
                 if (currentSprite != rightGif) {
-                    this.sprite.setImage(rightGif.getImage());
+                    setSprite(rightGif);
                 }
             } else if (dx < 0) {
                 if (currentSprite != leftGif) {
-                    this.sprite.setImage(leftGif.getImage());
-                }
-            } else {
-                if (currentSprite != idleGif) {
-                    this.sprite.setImage(idleGif.getImage());
+                    setSprite(leftGif);
                 }
             }
         } else {
-            if (currentSprite != idleGif) {
-                this.sprite.setImage(idleGif.getImage());
+            if (currentSprite != idle2Gif) {
+                setSprite(idle2Gif);
             }
         }
+    }
+
+    private void setSprite(ImageView newSprite) {
+        if (newSprite == currentSprite) return;
+
+        newSprite.setX(x);
+        newSprite.setY(y);
+        this.sprite.setFitWidth(gameField.getTileSize() * 1.7);
+        this.sprite.setFitHeight(gameField.getTileSize() * 1.7);
+
+        gamePane.getChildren().remove(currentSprite);
+        gamePane.getChildren().add(newSprite);
+
+        this.sprite = newSprite;
+        this.currentSprite = newSprite;
+        this.sprite.setFitWidth(gameField.getTileSize() * 1.7);
+        this.sprite.setFitHeight(gameField.getTileSize() * 1.7);
+    }
+
+    @Override
+    public void setIdle(boolean idle) {
+        isIdle = idle;
+    }
+
+    public boolean isIdle() {
+        return isIdle;
     }
 }

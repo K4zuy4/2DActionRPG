@@ -20,7 +20,7 @@ public class EnemyProjectile {
         this.speed = speed;
 
         this.sprite = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(spritePath))));
-        double angle = Math.toDegrees(Math.atan2(directionY, directionX));
+        double angle = Math.toDegrees(Math.atan2(directionY, directionX)) + 180;
         this.sprite.setRotate(angle);
 
         this.sprite.setX(x);

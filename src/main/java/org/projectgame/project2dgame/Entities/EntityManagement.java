@@ -1,7 +1,9 @@
 package org.projectgame.project2dgame.Entities;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -25,6 +27,7 @@ public class EntityManagement {
     private CollisionCheck collisonCheck;
     private final Label geldLabel;
     private final int level;
+    private long lastMoveTime = System.currentTimeMillis();
 
     public EntityManagement(Pane gamePane, GameField gameField, Label geldLabel, int level) {
         this.gamePane = gamePane;
@@ -114,13 +117,20 @@ public class EntityManagement {
         double playerY = player.getY();
 
         for (Entity entity : entities) {
+            if (entity.isWaiting()) continue;
+
             // Slime
             if (entity instanceof Slime) {
                 if (!isPlayerVisible(entity, player, collisionCheck)) {
                     zufaelligBewegen(entity, deltaTime, collisionCheck);
                     continue;
                 }
-                entity.setIdle(false);
+                if (entity.getCurrentPause() != null) {
+                    entity.getCurrentPause().stop();
+                    entity.setCurrentPause(null);
+                    entity.setWaiting(false);
+                    entity.setIdle(false);
+                }
                 moveTowards(entity, playerX, playerY, deltaTime, collisionCheck);
             }
 
@@ -128,7 +138,6 @@ public class EntityManagement {
             if (entity instanceof Skeleton skeleton) {
                 if (skeleton.isInCooldown()) {
                     if (System.currentTimeMillis() - skeleton.getCooldownStartTime() < skeleton.getCooldownDuration()) {
-
                         continue;
                     } else {
                         skeleton.endCooldown();
@@ -146,16 +155,23 @@ public class EntityManagement {
                     }
                 }
 
-                if (!isPlayerVisible(skeleton, player, collisionCheck)) {
-                    zufaelligBewegen(skeleton, deltaTime, collisionCheck);
+                if (!isPlayerVisible(entity, player, collisionCheck)) {
+                    zufaelligBewegen(entity, deltaTime, collisionCheck);
+
                     continue;
+                }
+
+                if (skeleton.getCurrentPause() != null) {
+                    skeleton.getCurrentPause().stop();
+                    skeleton.setCurrentPause(null);
+                    skeleton.setWaiting(false);
+                    skeleton.setIdle(false);
                 }
 
                 double distance = Math.hypot(playerX - skeleton.getX(), playerY - skeleton.getY());
 
                 if (distance < 400) {
                     if (skeleton.getShotsFired() < 2) {
-                        skeleton.setIdle(true);
                         skeleton.startAttack();
                         skeleton.incrementShotsFired();
                     } else {
@@ -165,11 +181,12 @@ public class EntityManagement {
                     moveTowards(skeleton, playerX, playerY, deltaTime, collisionCheck);
                 }
             }
-
         }
     }
 
+
     private void moveTowards(Entity entity, double targetX, double targetY, double deltaTime, CollisionCheck collisionCheck) {
+       entity.setIdle(false);
         double dx = targetX - entity.getX();
         double dy = targetY - entity.getY();
         double distance = Math.sqrt(dx * dx + dy * dy);
@@ -190,12 +207,12 @@ public class EntityManagement {
             newY += dy;
         }
 
-        entity.setIdle(false);
         entity.setX(newX);
         entity.setY(newY);
     }
 
     private void moveAwayFrom(Entity entity, double fromX, double fromY, double deltaTime, CollisionCheck collisionCheck) {
+        entity.setIdle(false);
         double dx = entity.getX() - fromX;
         double dy = entity.getY() - fromY;
         double distance = Math.sqrt(dx * dx + dy * dy);
@@ -216,43 +233,57 @@ public class EntityManagement {
     }
 
 
-    // Slimes gehen nicht Idle
     private void zufaelligBewegen(Entity entity, double deltaTime, CollisionCheck collisionCheck) {
-        long currentTime = System.currentTimeMillis();
 
-        /*if (currentTime - entity.lastIdleTime > entity.getDurationIdle()) {
-            entity.setIdle(true);
-            entity.lastIdleTime = currentTime;
-            entity.setDurationIdle(2000 + (long) (Math.random() * 2000));
-            return;
-        }*/
-        entity.setIdle(false);
-        entity.setDurationIdle(1000 + (long) (Math.random() * 2000));
+        if (entity.isWaiting()) return;
 
-        if (currentTime - entity.getLastRandomMoveTime() > 2000 + Math.random() * 1000) {
+        if (entity.getRandomDirectionX() == 0 && entity.getRandomDirectionY() == 0) {
             double angle = Math.random() * 2 * Math.PI;
             entity.setRandomDirectionX(Math.cos(angle));
             entity.setRandomDirectionY(Math.sin(angle));
-            entity.setLastRandomMoveTime(currentTime);
         }
 
         double dx = entity.getRandomDirectionX() * entity.getEntitySpeed() * deltaTime;
         double dy = entity.getRandomDirectionY() * entity.getEntitySpeed() * deltaTime;
 
-        double newX = entity.getX();
-        double newY = entity.getY();
+        boolean collisionX = collisionCheck.checkCollisionEntity(entity.getHitbox(), dx, 0);
+        boolean collisionY = collisionCheck.checkCollisionEntity(entity.getHitbox(), 0, dy);
 
-        if (!collisionCheck.checkCollisionEntity(entity.getHitbox(), dx, 0)) {
-            newX += dx;
+        if (collisionX || collisionY) {
+            entity.setIdle(true);
+            entity.setWaiting(true);
+            entity.updateSpriteDirection(0, 0);
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            entity.setCurrentPause(pause);
+            pause.setOnFinished(e -> {
+                entity.setWaiting(false);
+                entity.setIdle(false);
+
+                double angle = Math.random() * 2 * Math.PI;
+                entity.setRandomDirectionX(Math.cos(angle));
+                entity.setRandomDirectionY(Math.sin(angle));
+
+                entity.setWaiting(false);
+                entity.setIdle(false);
+                entity.setCurrentPause(null);
+            });
+
+
+            pause.play();
+            return;
         }
 
-        if (!collisionCheck.checkCollisionEntity(entity.getHitbox(), 0, dy)) {
-            newY += dy;
-        }
+        double newX = entity.getX() + dx;
+        double newY = entity.getY() + dy;
 
         entity.setX(newX);
         entity.setY(newY);
+
+        entity.setIdle(false);
+        entity.updateSpriteDirection(dx, dy);
     }
+
 
 
     private boolean isPlayerVisible(Entity entity, Character player, CollisionCheck collisionCheck) {

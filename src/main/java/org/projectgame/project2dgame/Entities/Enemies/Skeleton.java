@@ -10,6 +10,7 @@ import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.GameField;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class Skeleton extends Entity {
     private final ImageView leftGif;
@@ -25,13 +26,17 @@ public class Skeleton extends Entity {
     private int shotsFired = 0;
     private boolean retreating = false;
     private long retreatStartTime = 0;
-    private final long retreatDuration = 2000;
+    private final long retreatDuration;
     private boolean inCooldown = false;
     private long cooldownStartTime = 0;
-    private final long cooldownDuration = 1000;
+    private final long cooldownDuration;
 
     public Skeleton(double x, double y, int health, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, 70, gameField, gamePane, entityManagement);
+
+        Random ran = new Random();
+        cooldownDuration = ran.nextInt(500, 1000);
+        retreatDuration = ran.nextInt(500, 1000);
 
         leftGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-left.gif"))));
         rightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-right.gif"))));
@@ -102,18 +107,20 @@ public class Skeleton extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
-        if (isAttacking) {
+        if(isIdle) {
+            if (currentSprite != idleGif) {
+                setSprite(idleGif);
+            }
+        } else if (isAttacking) {
             if (dx > 0) {
                 if (currentSprite != attackRightGif) {
                     setSprite(attackRightGif);
                     currentSprite = attackRightGif;
-                    System.out.println("Attack right");
                 }
             } else {
                 if (currentSprite != attackLeftGif) {
                     setSprite(attackLeftGif);
                     currentSprite = attackLeftGif;
-                    System.out.println("Attack left");
                 }
             }
         } else {

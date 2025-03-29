@@ -164,6 +164,8 @@ public class CollisionCheck {
         return false;
     }
 
+
+    // Mit Hilfe von ChatGPT damit der Pfeil selber als Hitbox zählt und keine Collision Bugs auftreten
     public boolean checkEnemyProjectileCollision(Node hitboxNode) {
         Character player = entityManagement.getCharacter();
         if (player == null) return false;
