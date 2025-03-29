@@ -53,12 +53,12 @@ public class BestenListeController {
         }
     }
 
-
-
     private String formatTime(double seconds) {
         int mins = (int) seconds / 60;
         int secs = (int) seconds % 60;
-        return String.format("%02d:%02d", mins, secs);
+        int millis = (int) ((seconds - (int) seconds) * 100);
+
+        return String.format("%02d:%02d:%02d", mins, secs, millis);
     }
 
 }

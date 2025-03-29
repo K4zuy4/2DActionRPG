@@ -43,7 +43,7 @@ public class Main extends Application {
             System.exit(0);
         });
 
-       // Debug debug = new Debug();
+       Debug debug = new Debug();
 
         primaryStage.show();
     }
@@ -115,14 +115,6 @@ public class Main extends Application {
                 if (gameLoop != null) gameLoop.stop();
                 break;
 
-            case "UpgradeScreen":
-                loader.setLocation(Main.class.getResource("/FXMLFiles/ShopMenu.fxml"));
-                scene = new Scene(loader.load());
-                primaryStage.setTitle("Sanctum of Sorrow - Upgrade Screen");
-                SoundEngine.stopMusic();
-                SoundEngine.playShopMusic();
-                break;
-
             case "SettingsScreen":
                 loader.setLocation(Main.class.getResource("/FXMLFiles/SettingsScreen.fxml"));
                 scene = new Scene(loader.load());
@@ -138,6 +130,24 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
+    }
+
+    public static void openUpgradeWindow() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/ShopMenu.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setTitle("Sanctum of Sorrow - Upgrade Screen");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(primaryStage);
+            stage.show();
+            SoundEngine.stopMusic();
+            SoundEngine.playShopMusic();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void openBestenlisteWindow() {

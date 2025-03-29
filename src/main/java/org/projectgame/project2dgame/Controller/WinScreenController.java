@@ -56,11 +56,7 @@ public class WinScreenController {
 
     @FXML
     protected void onUpgradeButton() {
-        try {
-            Main.setWindow("UpgradeScreen", 0);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Main.openUpgradeWindow();
     }
 
     @FXML

@@ -28,6 +28,7 @@ public abstract class Entity {
     protected double lastIdleTime = 0;
     protected double durationIdle = 0;
     protected boolean isIdle = true;
+    protected boolean isActive = true;
 
 
     public Entity(double x, double y, int health, int entitySpeed, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
@@ -53,6 +54,7 @@ public abstract class Entity {
         health -= damage;
         if (health <= 0) {
             health = 0;
+            isActive = false;
             entityManagement.removeEntity(this);
         }
         updateHealthBar();
@@ -84,9 +86,7 @@ public abstract class Entity {
         sprite.setX(x);
         updateHitboxPosition();
 
-        if (this instanceof Slime) {
-            this.updateSpriteDirection(dx, 0);
-        }
+        this.updateSpriteDirection(dx, 0);
     }
 
     public void setY(double y) {
@@ -95,9 +95,7 @@ public abstract class Entity {
         sprite.setY(y);
         updateHitboxPosition();
 
-        if (this instanceof Slime) {
-            this.updateSpriteDirection(0, dy);
-        }
+        this.updateSpriteDirection(0, dy);
     }
 
     public double getX() { return x; }

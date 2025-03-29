@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class Projectile {
     private double x, y;
-    private final double speed = 300;
+    private final double speed = 400;
     private final double directionX;
     private final double directionY;
     private final ImageView sprite;

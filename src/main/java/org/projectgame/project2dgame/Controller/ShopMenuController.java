@@ -1,12 +1,14 @@
 package org.projectgame.project2dgame.Controller;
 
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
-import org.projectgame.project2dgame.Main;
 
 public class ShopMenuController {
     @FXML
@@ -111,11 +113,8 @@ public class ShopMenuController {
     }
 
     @FXML
-    protected void onExitButton() {
-        try {
-            Main.setWindow("Win", 0);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    protected void onExitButton(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 }

@@ -1,6 +1,7 @@
 package org.projectgame.project2dgame.Controller;
 
 import com.almasb.fxgl.audio.Sound;
+import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
@@ -101,7 +102,7 @@ public class CollisionCheck {
         double adjustedX = spawnX + (spriteSize - hitboxSize) / 2;
         double adjustedY = spawnY + (spriteSize - hitboxSize);
 
-        Rectangle tempHitbox = new Rectangle(adjustedX, adjustedY, hitboxSize, hitboxSize);
+        Rectangle tempHitbox = new Rectangle(adjustedX, adjustedY, hitboxSize + 20, hitboxSize + 20);
 
         // Kollision mit Wänden
         for (int y = 0; y < tileMap.getHeight(); y++) {
@@ -162,6 +163,31 @@ public class CollisionCheck {
 
         return false;
     }
+
+    public boolean checkEnemyProjectileCollision(Node hitboxNode) {
+        Character player = entityManagement.getCharacter();
+        if (player == null) return false;
+
+        // Spieler-Kollision
+        if (hitboxNode.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
+            player.takeDamage(10);
+            return true;
+        }
+
+        // Wand-Kollision
+        for (int y = 0; y < tileMap.getHeight(); y++) {
+            for (int x = 0; x < tileMap.getWidth(); x++) {
+                Tile tile = tileMap.getTile(y, x);
+                if (tile.getHitbox() != null && hitboxNode.getBoundsInParent().intersects(tile.getHitbox().getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
 
     public boolean isObstacleBetween(double startX, double startY, double endX, double endY) {
         double dx = endX - startX;

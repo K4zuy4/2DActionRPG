@@ -6,11 +6,13 @@ import org.projectgame.project2dgame.Controller.CollisionCheck;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javafx.scene.paint.Color.rgb;
+
 public class ProjectileManagement {
     private final CollisionCheck collisionCheck;
     private final EntityManagement entityManagement;
     private final List<Projectile> playerProjectiles = new ArrayList<>();
-    // private List<Projectile> enemyProjectiles = new ArrayList<>();
+    private List<EnemyProjectile> enemyProjectiles = new ArrayList<>();
     private final Character character;
 
     public ProjectileManagement(CollisionCheck collisionCheck, EntityManagement entityManagement) {
@@ -73,18 +75,39 @@ public class ProjectileManagement {
                 dirX, dirY,
                 spritePath, entityManagement.getGameField()
         );
-        addPlayerProjectile(projectile);
+        playerProjectiles.add(projectile);
         entityManagement.addProjectileToPane(projectile);
     }
 
+    public void spawnEnemyArrow(double startX, double startY, double targetX, double targetY) {
+        double dx = targetX + 25 - startX;
+        double dy = targetY + 50 - startY;
 
-    public void addPlayerProjectile(Projectile projectile) {
-        playerProjectiles.add(projectile);
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance == 0) return;
+
+        dx /= distance;
+        dy /= distance;
+
+        String spritePath = "/Entities/Skeleton/Arrow.png";
+
+
+        double spawnOffset = 40;
+        double projectileX = startX + dx * spawnOffset;
+        double projectileY = startY + dy * spawnOffset;
+
+
+        EnemyProjectile projectile = new EnemyProjectile(
+                projectileX, projectileY,
+                dx, dy,
+                spritePath,
+                400
+        );
+
+        enemyProjectiles.add(projectile);
+        entityManagement.addEnemyProjectileToPane(projectile);
     }
 
-    /*public List<Projectile> getPlayerProjectiles() {
-        return playerProjectiles;
-    }*/
 
     public void updateProjectiles(double deltaTime) {
         for (Projectile p : new ArrayList<>(playerProjectiles)) {
@@ -99,5 +122,20 @@ public class ProjectileManagement {
                 entityManagement.removeProjectileFromPane(p);
             }
         }
+
+        for (EnemyProjectile p : new ArrayList<>(enemyProjectiles)) {
+            p.update(deltaTime);
+
+            if (collisionCheck.checkEnemyProjectileCollision(p.getHitbox())) {
+                p.deactivate();
+            }
+
+            if (!p.isActive()) {
+                enemyProjectiles.remove(p);
+                entityManagement.removeEnemyProjectileFromPane(p);
+            }
+        }
+
+
     }
 }

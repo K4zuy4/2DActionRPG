@@ -1,5 +1,6 @@
 package org.projectgame.project2dgame;
 
+import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import org.projectgame.project2dgame.Data.GameSettings;
 
@@ -19,7 +20,7 @@ public class Debug {
         new Thread(() -> {
             while (running) {
                 System.out.println("Was willst du tun?" +
-                        "\n1. Keybind ändern");
+                        "\n1. Keybind ändern\n2. Map 3 Laden");
 
                 int choice = scanner.nextInt();
                 scanner.nextLine();
@@ -38,6 +39,18 @@ public class Debug {
                             throw new RuntimeException(e);
                         }
                         break;
+                    case 2:
+                        try {
+                            Platform.runLater(() -> {
+                                try {
+                                    Main.setWindow("GameField", 3);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     default:
                         System.out.println("Ungültige Eingabe");
                         break;
