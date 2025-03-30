@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.Entity;
 import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.GameField;
@@ -28,6 +29,9 @@ public class Bat extends Entity {
     private boolean charging = false;
     private double chargeDirX = 0;
     private double chargeDirY = 0;
+
+    private int slideTicks = 0;
+    private final int maxSlideTicks = 20;
 
     public Bat(double x, double y, int health, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, 100, gameField, gamePane, entityManagement);
@@ -61,16 +65,48 @@ public class Bat extends Entity {
             boolean collisionX = entityManagement.getCollisionCheck().checkCollisionEntity(this.getHitbox(), dx, 0);
             boolean collisionY = entityManagement.getCollisionCheck().checkCollisionEntity(this.getHitbox(), 0, dy);
 
-            if (collisionX || collisionY) {
+            if (collisionX && collisionY) {
+                Character player = entityManagement.getCharacter();
+                if (player != null) {
+                    double yDiff = player.getY() - this.getY();
+                    double slideAmount = 20;
+
+                    if (yDiff < -10) {
+                        this.setY(this.getY() - slideAmount);
+                    } else if (yDiff > 10) {
+                        this.setY(this.getY() + slideAmount);
+                    }
+                }
+
                 stopCharge();
                 updateSpriteDirection(0, 0);
+                slideTicks = 0;
                 return;
             }
 
-            setX(getX() + dx);
-            setY(getY() + dy);
+            if (!collisionX) {
+                setX(getX() + dx);
+            }
+
+            if (!collisionY) {
+                setY(getY() + dy);
+            }
+
+            if (collisionX || collisionY) {
+                slideTicks++;
+            } else {
+                slideTicks = 0;
+            }
+
+            if (slideTicks >= maxSlideTicks) {
+                stopCharge();
+                updateSpriteDirection(0, 0);
+                slideTicks = 0;
+            }
         }
     }
+
+
 
     public void checkStillWaiting() {
         if (waitingAfterCharge) {

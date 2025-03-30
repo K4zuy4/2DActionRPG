@@ -81,7 +81,7 @@ public class ProjectileManagement {
 
     public void spawnEnemyArrow(double startX, double startY, double targetX, double targetY) {
         double dx = targetX + 25 - startX;
-        double dy = targetY + 50 - startY;
+        double dy = targetY + 60 - startY;
 
         double distance = Math.sqrt(dx * dx + dy * dy);
         if (distance == 0) return;

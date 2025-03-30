@@ -209,25 +209,45 @@ public class EntityManagement {
                 bat.checkStillWaiting();
                 if (bat.isWaitingAfterCharge()) continue;
 
-                // Falls gerade stürmt
                 if (bat.isCharging()) {
-                    bat.update(deltaTime); // Bewegung + Kollision wird intern geregelt
+                    bat.update(deltaTime);
                     continue;
                 }
 
-                // Wenn Spieler nicht sichtbar → Zufallsbewegung
                 if (!isPlayerVisible(bat, player, collisionCheck)) {
                     zufaelligBewegen(bat, deltaTime, collisionCheck);
                     continue;
                 }
 
-                // Spieler sichtbar → Sturzflug starten
-                double dx = playerX - bat.getX();
-                double dy = playerY - bat.getY();
+                Rectangle batBox = bat.getHitbox();
+                Rectangle playerBox = player.getHitbox();
+
+                double batCenterX = batBox.getX() + batBox.getWidth() / 2;
+                double batCenterY = batBox.getY() + batBox.getHeight() / 2;
+
+                double playerCenterX = playerBox.getX() + playerBox.getWidth() / 2;
+                double playerCenterY = playerBox.getY() + playerBox.getHeight() / 2;
+
+                double dx = playerCenterX - batCenterX;
+                double dy = playerCenterY - batCenterY;
+
                 double distance = Math.sqrt(dx * dx + dy * dy);
+
                 if (distance > 0) {
                     dx /= distance;
                     dy /= distance;
+
+                    // 🧠 Leichte Korrektur bei "perfekt horizontal oder vertikalem" Anflug
+                    if (Math.abs(dx) > 0.8 && Math.abs(dy) < 0.2) {
+                        dy += (Math.random() < 0.5 ? -1 : 1) * 0.2;
+                    } else if (Math.abs(dy) > 0.8 && Math.abs(dx) < 0.2) {
+                        dx += (Math.random() < 0.5 ? -1 : 1) * 0.2;
+                    }
+
+                    // 🌀 Neu normalisieren
+                    double norm = Math.sqrt(dx * dx + dy * dy);
+                    dx /= norm;
+                    dy /= norm;
                 }
 
                 bat.startCharge(dx, dy);
