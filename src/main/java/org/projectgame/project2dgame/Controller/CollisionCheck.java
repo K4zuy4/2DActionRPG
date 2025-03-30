@@ -213,4 +213,35 @@ public class CollisionCheck {
         }
         return false;
     }
+
+
+    public boolean checkCollisionBat(Rectangle batHitbox) {
+        // Kollision mit Wänden
+        for (int y = 0; y < tileMap.getHeight(); y++) {
+            for (int x = 0; x < tileMap.getWidth(); x++) {
+                Tile tile = tileMap.getTile(y, x);
+                if (tile.getHitbox() != null &&
+                        batHitbox.getBoundsInParent().intersects(tile.getHitbox().getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+
+        // Kollision mit Spieler
+        Character player = entityManagement.getCharacter();
+        if (player != null && batHitbox.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
+            player.takeDamage(20);
+            return true;
+        }
+
+        // Entity-Kollision
+        for (Entity entity : entityManagement.getEntity()) {
+            if (entity.getHitbox() != batHitbox && batHitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
+                return true; //
+            }
+        }
+
+        return false;
+    }
+
 }

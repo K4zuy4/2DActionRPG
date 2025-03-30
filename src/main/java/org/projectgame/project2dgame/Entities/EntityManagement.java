@@ -6,8 +6,10 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
+import org.projectgame.project2dgame.Entities.Enemies.Bat;
 import org.projectgame.project2dgame.Entities.Enemies.Skeleton;
 import org.projectgame.project2dgame.Entities.Enemies.Slime;
 import org.projectgame.project2dgame.GameField.GameField;
@@ -39,32 +41,42 @@ public class EntityManagement {
     // Überarbeitet von ChatGPT, da Problem mit den Gegner, welche in einander spawnen durch zu kleine Verzögerung zwischen den Spawns
     public void loadEntities(CollisionCheck collisionCheck) {
         int slamount;
-        int skamount = 0;
+        int skamount;
+        int bamount;
         int slimeHealth;
         int skeletonHealth;
-
+        int batHealth;
         if(level == 1) {
-            skeletonHealth = 0;
-            slamount = 5;
+            skamount = 2;
+            skeletonHealth = 80;
+            slamount = 3;
             slimeHealth = 50;
+            bamount = 2;
+            batHealth = 70;
         } else if(level == 2) {
-            slamount = 5;
+            slamount = 2;
             skamount = 3;
             slimeHealth = 60;
             skeletonHealth = 100;
+            bamount = 3;
+            batHealth = 85;
         } else if(level == 3) {
-            slamount = 6;
-            skamount = 4;
+            slamount = 0;
+            skamount = 0;
             slimeHealth = 70;
             skeletonHealth = 120;
+            bamount = 5;
+            batHealth = 100;
         } else {
             skeletonHealth = 0;
             slimeHealth = 0;
             slamount = 0;
             skamount = 0;
+            bamount = 0;
+            batHealth = 0;
         }
 
-        int totalAmount = slamount + skamount;
+        int totalAmount = slamount + skamount + bamount;
         Random random = new Random();
         List<Entity> tempEntities = new ArrayList<>();
         Timeline timeline = new Timeline();
@@ -84,8 +96,13 @@ public class EntityManagement {
                         tempEntities.add(entity);
                         entities.add(entity);
                         gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
-                    } else {
+                    } else if (finalI < slamount + skamount) {
                         Skeleton entity = new Skeleton(x, y, skeletonHealth, gameField, gamePane, this);
+                        tempEntities.add(entity);
+                        entities.add(entity);
+                        gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
+                    } else {
+                        Bat entity = new Bat(x, y, batHealth, gameField, gamePane, this);
                         tempEntities.add(entity);
                         entities.add(entity);
                         gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
@@ -102,6 +119,10 @@ public class EntityManagement {
         gamePane.getChildren().add(character.getSprite());
         gamePane.getChildren().add(character.getHitbox());
         gamePane.getChildren().add(character.getHealthBar());
+    }
+
+    public Pane getGamePane() {
+        return gamePane;
     }
 
     // Hilfe von Youtube Tutorials und ChatGPT
@@ -180,6 +201,36 @@ public class EntityManagement {
                 } else {
                     moveTowards(skeleton, playerX, playerY, deltaTime, collisionCheck);
                 }
+            }
+
+
+            // Bat
+            if (entity instanceof Bat bat) {
+                bat.checkStillWaiting();
+                if (bat.isWaitingAfterCharge()) continue;
+
+                // Falls gerade stürmt
+                if (bat.isCharging()) {
+                    bat.update(deltaTime); // Bewegung + Kollision wird intern geregelt
+                    continue;
+                }
+
+                // Wenn Spieler nicht sichtbar → Zufallsbewegung
+                if (!isPlayerVisible(bat, player, collisionCheck)) {
+                    zufaelligBewegen(bat, deltaTime, collisionCheck);
+                    continue;
+                }
+
+                // Spieler sichtbar → Sturzflug starten
+                double dx = playerX - bat.getX();
+                double dy = playerY - bat.getY();
+                double distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance > 0) {
+                    dx /= distance;
+                    dy /= distance;
+                }
+
+                bat.startCharge(dx, dy);
             }
         }
     }
@@ -375,6 +426,10 @@ public class EntityManagement {
 
     public Label getGeldLabel() {
         return geldLabel;
+    }
+
+    public CollisionCheck getCollisionCheck() {
+        return collisonCheck;
     }
 }
 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class CharacterInfo {
     private static int money = 0;
-    private static int health = 100;
-    private static int maxHealth = 100;
+    private static int health = 10000;
+    private static int maxHealth = 10000;
     private static int damage = 25;
     private static int speed = 200;
     private static long fireRate = 500;
