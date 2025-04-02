@@ -43,7 +43,6 @@ public class CollisionCheck {
                 Tile tile = tileMap.getTile(y, x);
                 Rectangle damageBox = tile.getDamageHitbox();
                 if (damageBox != null && playerHitbox.getBoundsInParent().intersects(damageBox.getBoundsInParent())) {
-
                     entityManagement.getCharacter().takeDamage(15);
                     return;
                 }
@@ -63,7 +62,7 @@ public class CollisionCheck {
         );
 
         for (Entity entity : entityManagement.getEntity()) {
-            if (entity != self && movedHitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
+            if (entity != self && movedHitbox.getBoundsInLocal().intersects(entity.getHitbox().getBoundsInLocal())) {
                 return true;
             }
         }

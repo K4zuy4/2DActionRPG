@@ -34,11 +34,7 @@ public class GameOverScreenController {
 
     @FXML
     protected void onSettingsButton() {
-        try {
-            Main.setWindow("SettingsScreen", 0);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Main.openSettingsWindow();
     }
 
     @FXML

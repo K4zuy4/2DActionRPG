@@ -44,28 +44,43 @@ public class EntityManagement {
         int slimeHealth;
         int skeletonHealth;
         int batHealth;
-        if(level == 1) {
+        if (level == 1) {
             skamount = 2;
             skeletonHealth = 80;
             slamount = 3;
             slimeHealth = 50;
             bamount = 2;
             batHealth = 70;
-        } else if(level == 2) {
+        } else if (level == 2) {
             slamount = 2;
             skamount = 3;
             slimeHealth = 60;
             skeletonHealth = 100;
             bamount = 3;
             batHealth = 85;
-        } else if(level == 3) {
-            slamount = 0;
-            skamount = 0;
+        } else if (level == 3) {
+            slamount = 2;
+            skamount = 4;
             slimeHealth = 70;
             skeletonHealth = 120;
-            bamount = 5;
+            bamount = 2;
             batHealth = 100;
+        } else if (level == 4) {
+            slamount = 4;
+            skamount = 2;
+            slimeHealth = 80;
+            skeletonHealth = 140;
+            bamount = 3;
+            batHealth = 110;
+        } else if (level == 5) {
+            slamount = 1;
+            skamount = 5;
+            slimeHealth = 90;
+            skeletonHealth = 160;
+            bamount = 2;
+            batHealth = 120;
         } else {
+            // Debug Level
             skeletonHealth = 0;
             slimeHealth = 0;
             slamount = 0;

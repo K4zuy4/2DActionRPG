@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="300.0" prefWidth="240.0" stylesheets="@../css/MainMenu.css" styleClass="rounded-window" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.PauseMenuController">
+   <children>
+      <Text fill="#f8f8f8" layoutX="19.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pause" textAlignment="CENTER" wrappingWidth="194.0">
+         <font>
+            <Font name="Britannic Bold" size="48.0" />
+         </font>
+      </Text>
+      <Button fx:id="weiterButton" layoutX="50.0" layoutY="80.0" mnemonicParsing="false" onAction="#onWeiterButton" prefHeight="48.0" prefWidth="140.0" styleClass="menu-button2" stylesheets="@../css/MainMenu.css" text="Weiter">
+         <font>
+            <Font name="Britannic Bold" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="settingsButton" layoutX="50.0" layoutY="150.0" mnemonicParsing="false" onAction="#onSettingsButton" prefHeight="48.0" prefWidth="140.0" styleClass="menu-button2" stylesheets="@../css/MainMenu.css" text="Einstellungen" />
+      <Button fx:id="mainButton" layoutX="50.0" layoutY="220.0" mnemonicParsing="false" onAction="#onMainButton" prefHeight="48.0" prefWidth="140.0" styleClass="menu-button2" stylesheets="@../css/MainMenu.css" text="Hauptmenü" />
+   </children>
+</AnchorPane>

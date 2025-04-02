@@ -45,6 +45,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 6, 0.5, 4, 4),
     innershadow(gaussian, rgba(0, 0, 0, 0.5), 4, 0.5, 2, 2);
     -fx-alignment: center;
+    -fx-font-family: "Britannic Bold";
 }
 
 .menu-button2:hover {
@@ -205,6 +206,21 @@
 .combo-box:hover .arrow {
     -fx-background-color: #d4af37;
 }
+
+
+.pausePane {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+}
+
+.rounded-window {
+    -fx-background-color: rgba(30, 30, 30, 0.95);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #555;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, black, 15, 0.2, 0, 5);
+}
+
 
 
 

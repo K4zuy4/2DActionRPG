@@ -11,6 +11,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.Data.TimeWrapper;
+import org.projectgame.project2dgame.GameField.GameField;
 
 import java.util.Comparator;
 import java.util.List;
@@ -27,7 +28,7 @@ public class BestenListeController {
 
     @FXML
     public void initialize() {
-        int anzahlLevel = 3;
+        int anzahlLevel = GameField.getLevelCount();
 
         for (int i = 1; i <= anzahlLevel; i++) {
             levelDropdown.getItems().add("Level " + i);

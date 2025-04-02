@@ -7,13 +7,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.GameFieldController">
+<AnchorPane fx:id="anchorPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.GameFieldController">
    <children>
-      <Label fx:id="timeLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="300.0" layoutY="14.0" prefHeight="30.0" prefWidth="287.0" text="Zeit: 00:00" textFill="WHITE">
-         <font>
-            <Font name="Britannic Bold" size="30.0" />
-         </font>
-      </Label>
+      <Pane fx:id="gamePane" prefHeight="768.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <Label fx:id="geldLabel" layoutX="67.0" layoutY="24.0" prefHeight="27.0" prefWidth="114.0" text="0" textFill="WHITE">
          <font>
             <Font name="Britannic Bold" size="30.0" />
@@ -24,6 +20,11 @@
             <Image url="@../Images/coin.gif" />
          </image>
       </ImageView>
-      <Pane fx:id="gamePane" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Label fx:id="timeLabel" alignment="CENTER" contentDisplay="RIGHT" prefHeight="30.0" prefWidth="1024.0" text="Zeit: 00:00" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Britannic Bold" size="30.0" />
+         </font>
+      </Label>
+      <Pane fx:id="pausePane" prefHeight="768.0" prefWidth="1024.0" styleClass="pausePane" stylesheets="@../css/MainMenu.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>

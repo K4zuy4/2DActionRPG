@@ -1,11 +1,13 @@
 package org.projectgame.project2dgame.Entities;
 
+import org.projectgame.project2dgame.GameField.GameField;
+
 import java.util.ArrayList;
 
 public class CharacterInfo {
     private static int money = 0;
-    private static int health = 100;
-    private static int maxHealth = 100;
+    private static int health;
+    private static int maxHealth;
     private static int damage = 25;
     private static int speed = 200;
     private static long fireRate = 500;
@@ -14,6 +16,16 @@ public class CharacterInfo {
     private static int speedPrice = 45;
     private static int fireratePrice = 60;
     private static int healPrice = 30;
+
+    public static void init() {
+        if (GameField.isDebug()) {
+            health = 9999;
+            maxHealth = 9999;
+        } else {
+            health = 100;
+            maxHealth = 100;
+        }
+    }
 
     public static void reset() {
         money = 0;

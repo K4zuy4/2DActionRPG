@@ -34,6 +34,10 @@ public class Bat extends Entity {
     private int slideTicks = 0;
     private final int maxSlideTicks = 20;
 
+    private boolean spawnIdle = true;
+    private final long spawnIdleDuration = 1000;
+    private long spawnStartTime = System.currentTimeMillis();
+
     public Bat(double x, double y, int health, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, 100, gamePane, entityManagement);
 
@@ -63,6 +67,16 @@ public class Bat extends Entity {
 
     @Override
     public void update(double deltaTime) {
+        if (spawnIdle) {
+            if (System.currentTimeMillis() - spawnStartTime >= spawnIdleDuration) {
+                spawnIdle = false;
+            } else {
+                return;
+            }
+        }
+
+
+
         if (charging) {
             double dx = chargeDirX * getChargeSpeed() * deltaTime;
             double dy = chargeDirY * getChargeSpeed() * deltaTime;
@@ -81,13 +95,35 @@ public class Bat extends Entity {
             if (collisionX && collisionY) {
                 Character player = entityManagement.getCharacter();
                 if (player != null) {
+                    double xDiff = player.getX() - this.getX();
                     double yDiff = player.getY() - this.getY();
                     double slideAmount = 20;
 
-                    if (yDiff < -10) {
-                        this.setY(this.getY() - slideAmount);
-                    } else if (yDiff > 10) {
-                        this.setY(this.getY() + slideAmount);
+                    double newX = getX();
+                    double newY = getY();
+
+                    // Slide in X
+                    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                        if (xDiff < -10) newX -= slideAmount;
+                        else if (xDiff > 10) newX += slideAmount;
+                    }
+
+                    // Slide in Y
+                    if (Math.abs(yDiff) >= Math.abs(xDiff)) {
+                        if (yDiff < -10) newY -= slideAmount;
+                        else if (yDiff > 10) newY += slideAmount;
+                    }
+
+                    // Check X-Slide
+                    if (!collisionCheck.checkCollisionEntity(getHitbox(), newX - getX(), 0) &&
+                            !collisionCheck.checkBatCollisionWithEntity(getHitbox(), this, newX - getX(), 0)) {
+                        setX(newX);
+                    }
+
+                    // Check Y-Slide
+                    if (!collisionCheck.checkCollisionEntity(getHitbox(), 0, newY - getY()) &&
+                            !collisionCheck.checkBatCollisionWithEntity(getHitbox(), this, 0, newY - getY())) {
+                        setY(newY);
                     }
                 }
 
@@ -96,6 +132,7 @@ public class Bat extends Entity {
                 slideTicks = 0;
                 return;
             }
+
 
             if (!collisionX) {
                 setX(getX() + dx);
@@ -203,7 +240,7 @@ public class Bat extends Entity {
     public void updateHitboxPosition() {
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight() - 30));
-        healthBar.setLayoutX(x);
+        healthBar.setLayoutX(x + 20);
         healthBar.setLayoutY(y + 20);
     }
 }

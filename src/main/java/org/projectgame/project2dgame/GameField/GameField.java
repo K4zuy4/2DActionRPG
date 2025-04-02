@@ -13,6 +13,8 @@ public class GameField {
     public static final int SCREEN_WIDTH = TILE_SIZE * MAX_TILES_X;
     public static final int SCREEN_HEIGHT = TILE_SIZE * MAX_TILES_Y;
 
+    public static final int LEVEL_COUNT = 4;
+
     public static final boolean DEBUG = true;
 
     public static int getScreenWidth() {
@@ -29,5 +31,9 @@ public class GameField {
 
     public static boolean isDebug() {
         return DEBUG;
+    }
+
+    public static int getLevelCount() {
+        return LEVEL_COUNT;
     }
 }

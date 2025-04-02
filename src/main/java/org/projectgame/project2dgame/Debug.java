@@ -20,7 +20,7 @@ public class Debug {
         new Thread(() -> {
             while (running) {
                 System.out.println("Was willst du tun?" +
-                        "\n1. Keybind ändern\n2. Map 1 Laden\n3. Map 2 Laden\n4. Map 3 Laden");
+                        "\n1. Keybind ändern\n2. Map laden");
 
                 int choice = scanner.nextInt();
                 scanner.nextLine();
@@ -40,36 +40,13 @@ public class Debug {
                         }
                         break;
                     case 2:
+                        System.out.println("Welche Map laden? ");
+                        int mapChoice = scanner.nextInt();
+                        scanner.nextLine();
                         try {
                             Platform.runLater(() -> {
                                 try {
-                                    Main.setWindow("GameField", 1);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            });
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                        break;
-                    case 3:
-                        try {
-                            Platform.runLater(() -> {
-                                try {
-                                    Main.setWindow("GameField", 2);
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            });
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                        break;
-                    case 4:
-                        try {
-                            Platform.runLater(() -> {
-                                try {
-                                    Main.setWindow("GameField", 3);
+                                    Main.setWindow("GameField", mapChoice);
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }

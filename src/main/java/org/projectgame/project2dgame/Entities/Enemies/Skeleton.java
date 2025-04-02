@@ -108,7 +108,7 @@ public class Skeleton extends Entity {
     public void updateHitboxPosition() {
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight() - 50));
-        healthBar.setLayoutX(x);
+        healthBar.setLayoutX(x + 45);
         healthBar.setLayoutY(y + 20);
     }
 

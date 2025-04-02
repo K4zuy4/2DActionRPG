@@ -1,11 +1,14 @@
 package org.projectgame.project2dgame.Controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.Main;
 
@@ -60,8 +63,9 @@ public class SettingsScreenController {
     }
 
     @FXML
-    protected void onExitButton() throws IOException {
-        Main.setWindow("MainMenu", 0);
+    protected void onExitButton(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     private void changeKey(String key, Button button) {

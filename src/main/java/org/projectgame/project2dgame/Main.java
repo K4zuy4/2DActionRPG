@@ -1,15 +1,20 @@
 package org.projectgame.project2dgame;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.Controller.GameFieldController;
 import org.projectgame.project2dgame.Controller.KeyInputHandler;
@@ -30,9 +35,14 @@ public class Main extends Application {
     private static Label geldLabel;
     private static Label timeLabel;
     private static ImageView imageView;
+    private static Pane pausePane;
+    private static GameFieldController gameFieldController;
+    private static Stage pauseStage;
+
 
     @Override
-    public void start(Stage stage) throws IOException{
+    public void start(Stage stage) throws IOException {
+        CharacterInfo.init();
         primaryStage = stage;
         setWindow("MainMenu", 0);
         primaryStage.show();
@@ -59,13 +69,23 @@ public class Main extends Application {
                 break;
 
             case "GameField":
+                if (gameLoop != null) {
+                    gameLoop.stop();
+                    gameLoop = null;
+                }
+                if (gameFieldController != null){
+                    gameFieldController = null;
+                }
+
                 loader.setLocation(Main.class.getResource("/FXMLFiles/GameField.fxml"));
                 Parent root = loader.load();
-                GameFieldController controller = loader.getController();
-                Pane gamePane = controller.getGamePane();
-                geldLabel = controller.getGeldLabel();
-                imageView = controller.getImageView();
-                timeLabel = controller.getTimeLabel();
+                gameFieldController = loader.getController();
+                Pane gamePane = gameFieldController.getGamePane();
+                geldLabel = gameFieldController.getGeldLabel();
+                imageView = gameFieldController.getImageView();
+                timeLabel = gameFieldController.getTimeLabel();
+                pausePane = gameFieldController.getPausePane();
+
                 gamePane.getChildren().add(geldLabel);
                 gamePane.getChildren().add(imageView);
                 gamePane.getChildren().add(timeLabel);
@@ -102,7 +122,10 @@ public class Main extends Application {
                 primaryStage.setTitle("Sanctum of Sorrow - Game Over");
                 SoundEngine.stopMusic();
                 SoundEngine.playGameOver();
-                if (gameLoop != null) gameLoop.stop();
+                if (gameLoop != null) {
+                    gameLoop.stop();
+                    gameLoop = null;
+                }
                 break;
 
             case "Win":
@@ -111,16 +134,10 @@ public class Main extends Application {
                 primaryStage.setTitle("Sanctum of Sorrow - You Win!");
                 SoundEngine.stopMusic();
                 SoundEngine.playWin();
-                if (gameLoop != null) gameLoop.stop();
-                break;
-
-            case "SettingsScreen":
-                loader.setLocation(Main.class.getResource("/FXMLFiles/SettingsScreen.fxml"));
-                scene = new Scene(loader.load());
-                primaryStage.setTitle("Sanctum of Sorrow - Settings");
-                scene.getRoot().setFocusTraversable(true);
-                SoundEngine.stopMusic();
-                SoundEngine.playMainMenuMusic();
+                if (gameLoop != null) {
+                    gameLoop.stop();
+                    gameLoop = null;
+                }
                 break;
 
             default:
@@ -149,6 +166,26 @@ public class Main extends Application {
         }
     }
 
+    public static void openPauseMenu() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/PauseMenu.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setTitle("Sanctum of Sorrow - Pause Screen");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            scene.setFill(Color.TRANSPARENT);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(primaryStage);
+            pauseStage = stage;
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static void openBestenlisteWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/BestenListe.fxml"));
@@ -165,12 +202,31 @@ public class Main extends Application {
         }
     }
 
+    public static void openSettingsWindow() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/SettingsScreen.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setTitle("Sanctum of Sorrow - Settings Screen");
+            scene.getRoot().setFocusTraversable(true);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.show();
+            if(!SoundEngine.isPlaying()) SoundEngine.playMainMenuMusic();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public static TileMap levelSelector(int level, Pane gamePane) throws IOException {
         return switch (level) {
+            case 0 -> new TileMap("/Tiles/TileMap0.txt", GameField.getTileSize(), gamePane);
             case 1 -> new TileMap("/Tiles/TileMap1.txt", GameField.getTileSize(), gamePane);
             case 2 -> new TileMap("/Tiles/TileMap2.txt", GameField.getTileSize(), gamePane);
             case 3 -> new TileMap("/Tiles/TileMap3.txt", GameField.getTileSize(), gamePane);
+            case 4 -> new TileMap("/Tiles/TileMap4.txt", GameField.getTileSize(), gamePane);
             default -> throw new IllegalArgumentException("Unknown level: " + level);
         };
     }
@@ -201,5 +257,23 @@ public class Main extends Application {
 
     public static Label getTimeLabel() {
         return timeLabel;
+    }
+
+    public static Pane getPausePane() {
+        return pausePane;
+    }
+
+    public static Stage getPauseStage() { return  (Stage) pauseStage; }
+
+    public static void pauseGame() {
+        pauseGameloop(true);
+        pausePane.setVisible(true);
+        openPauseMenu();
+    }
+
+    public static void pauseGameloop(boolean bol) {
+        if (gameLoop != null) {
+            gameLoop.setPaused(bol);
+        }
     }
 }

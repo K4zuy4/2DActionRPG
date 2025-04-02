@@ -10,6 +10,7 @@ import org.projectgame.project2dgame.Controller.KeyInputHandler;
 import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.EntityManagement;
+import org.projectgame.project2dgame.Main;
 
 import java.util.LinkedList;
 import java.util.Set;
@@ -30,6 +31,7 @@ public class GameLoop extends AnimationTimer {
     private final LinkedList<String> directionQueue = new LinkedList<>();
     private long lastSpikeDamageTime = 0;
     private static final long DAMAGE_COOLDOWN_MS = 500;
+    private boolean paused = false;
 
 
     public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, CollisionCheck collisionCheck, Label timeLabel) {
@@ -72,33 +74,34 @@ public class GameLoop extends AnimationTimer {
     }
 
     public void update(double lastFrame) {
-        totalGameTime += lastFrame;
-        timeSinceLastLabelUpdate += lastFrame;
+        if(!paused) {
+            totalGameTime += lastFrame;
+            timeSinceLastLabelUpdate += lastFrame;
 
-        if (timeLabel != null && timeSinceLastLabelUpdate >= 1.0) {
-            timeSinceLastLabelUpdate = 0;
+            if (timeLabel != null && timeSinceLastLabelUpdate >= 1.0) {
+                timeSinceLastLabelUpdate = 0;
 
-            String formattedTime = getFormattedGameTime();
+                String formattedTime = getFormattedGameTime();
 
-            javafx.application.Platform.runLater(() -> {
-                timeLabel.setText("Zeit: " + formattedTime);
-            });
-        }
+                javafx.application.Platform.runLater(() -> {
+                    timeLabel.setText("Zeit: " + formattedTime);
+                });
+            }
 
 
-        entityManagement.updateEntities(lastFrame, collisionCheck);
-        updateCharacterMovement(lastFrame);
-        entityManagement.getProjectileManagement().updateProjectiles(lastFrame);
+            entityManagement.updateEntities(lastFrame, collisionCheck);
+            updateCharacterMovement(lastFrame);
+            entityManagement.getProjectileManagement().updateProjectiles(lastFrame);
 
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastSpikeDamageTime >= DAMAGE_COOLDOWN_MS) {
-            Rectangle playerHitbox = character.getHitbox();
-            if (playerHitbox != null) {
-                collisionCheck.checkDamageTiles(playerHitbox);
-                lastSpikeDamageTime = currentTime;
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastSpikeDamageTime >= DAMAGE_COOLDOWN_MS) {
+                Rectangle playerHitbox = character.getHitbox();
+                if (playerHitbox != null) {
+                    collisionCheck.checkDamageTiles(playerHitbox);
+                    lastSpikeDamageTime = currentTime;
+                }
             }
         }
-
     }
 
     public void render() {
@@ -137,6 +140,10 @@ public class GameLoop extends AnimationTimer {
             if (pressedKeys.contains(GameSettings.getKeyMap().get("rightKey"))) {
                 moveCharacter(distance, 0);
                 moved = true;
+            }
+            if(pressedKeys.contains(KeyCode.ESCAPE)) {
+                Main.pauseGame();
+                pressedKeys.remove(KeyCode.ESCAPE);
             }
 
             long currentTime = System.currentTimeMillis();
@@ -182,4 +189,7 @@ public class GameLoop extends AnimationTimer {
         return totalGameTime;
     }
 
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
 }

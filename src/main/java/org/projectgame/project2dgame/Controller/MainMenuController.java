@@ -28,8 +28,8 @@ public class MainMenuController {
     }
 
     @FXML
-    protected void onSettingsButton() throws IOException {
-        Main.setWindow("SettingsScreen", 0);
+    protected void onSettingsButton(){
+        Main.openSettingsWindow();
     }
 
     @FXML
