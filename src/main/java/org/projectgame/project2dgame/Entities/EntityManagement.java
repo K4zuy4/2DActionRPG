@@ -235,14 +235,14 @@ public class EntityManagement {
                     dx /= distance;
                     dy /= distance;
 
-                    // 🧠 Leichte Korrektur bei "perfekt horizontal oder vertikalem" Anflug
+
+                    // Fix von ChatGPT gegen das festhängen von den Fledermäusen
                     if (Math.abs(dx) > 0.8 && Math.abs(dy) < 0.2) {
                         dy += (Math.random() < 0.5 ? -1 : 1) * 0.2;
                     } else if (Math.abs(dy) > 0.8 && Math.abs(dx) < 0.2) {
                         dx += (Math.random() < 0.5 ? -1 : 1) * 0.2;
                     }
 
-                    // 🌀 Neu normalisieren
                     double norm = Math.sqrt(dx * dx + dy * dy);
                     dx /= norm;
                     dy /= norm;

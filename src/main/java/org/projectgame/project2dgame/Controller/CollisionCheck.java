@@ -44,11 +44,31 @@ public class CollisionCheck {
                 Rectangle damageBox = tile.getDamageHitbox();
                 if (damageBox != null && playerHitbox.getBoundsInParent().intersects(damageBox.getBoundsInParent())) {
 
-                    entityManagement.getCharacter().takeDamage(5); // 🔥 zzzzap!
+                    entityManagement.getCharacter().takeDamage(15);
                     return;
                 }
             }
         }
+    }
+
+
+
+   // Extra Methode nur für die Bat, da sich diese häufiger in andere Entities gebuggt hat
+    public boolean checkBatCollisionWithEntity(Rectangle hitbox, Entity self, double dx, double dy) {
+        Rectangle movedHitbox = new Rectangle(
+                hitbox.getX() + dx,
+                hitbox.getY() + dy,
+                hitbox.getWidth(),
+                hitbox.getHeight()
+        );
+
+        for (Entity entity : entityManagement.getEntity()) {
+            if (entity != self && movedHitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -143,8 +163,7 @@ public class CollisionCheck {
                 return false;
             }
         }
-
-        // Kollision mit neuen Gegnern (Doppelter Check)
+        // Kollision mit temporären Gegnern
         for (Entity entity : tempEntities) {
             if (tempHitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
                 //System.out.println("Kollision mit Gegner (temp Entity)"); debug

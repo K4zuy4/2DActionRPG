@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.Entity;
 import org.projectgame.project2dgame.Entities.EntityManagement;
@@ -66,8 +67,16 @@ public class Bat extends Entity {
             double dx = chargeDirX * getChargeSpeed() * deltaTime;
             double dy = chargeDirY * getChargeSpeed() * deltaTime;
 
-            boolean collisionX = entityManagement.getCollisionCheck().checkCollisionEntity(this.getHitbox(), dx, 0);
-            boolean collisionY = entityManagement.getCollisionCheck().checkCollisionEntity(this.getHitbox(), 0, dy);
+            CollisionCheck collisionCheck = entityManagement.getCollisionCheck();
+
+            boolean collisionTileX = collisionCheck.checkCollisionEntity(this.getHitbox(), dx, 0);
+            boolean collisionTileY = collisionCheck.checkCollisionEntity(this.getHitbox(), 0, dy);
+
+            boolean collisionEntityX = collisionCheck.checkBatCollisionWithEntity(this.getHitbox(), this, dx, 0);
+            boolean collisionEntityY = collisionCheck.checkBatCollisionWithEntity(this.getHitbox(), this, 0, dy);
+
+            boolean collisionX = collisionTileX || collisionEntityX;
+            boolean collisionY = collisionTileY || collisionEntityY;
 
             if (collisionX && collisionY) {
                 Character player = entityManagement.getCharacter();
