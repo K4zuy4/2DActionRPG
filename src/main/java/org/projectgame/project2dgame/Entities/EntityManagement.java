@@ -23,7 +23,6 @@ import java.util.Random;
 public class EntityManagement {
     private final Pane gamePane;
     private Character character;
-    private final GameField gameField;
     private final List<Entity> entities = new ArrayList<>();
     private ProjectileManagement projectileManagement;
     private CollisionCheck collisonCheck;
@@ -31,9 +30,8 @@ public class EntityManagement {
     private final int level;
     private long lastMoveTime = System.currentTimeMillis();
 
-    public EntityManagement(Pane gamePane, GameField gameField, Label geldLabel, int level) {
+    public EntityManagement(Pane gamePane, Label geldLabel, int level) {
         this.gamePane = gamePane;
-        this.gameField = gameField;
         this.geldLabel = geldLabel;
         this.level = level;
     }
@@ -92,17 +90,17 @@ public class EntityManagement {
 
                 if (collisionCheck.kannSpawnen(x, y, tempEntities)) {
                     if (finalI < slamount) {
-                        Slime entity = new Slime(x, y, slimeHealth, gameField, gamePane, this);
+                        Slime entity = new Slime(x, y, slimeHealth, gamePane, this);
                         tempEntities.add(entity);
                         entities.add(entity);
                         gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
                     } else if (finalI < slamount + skamount) {
-                        Skeleton entity = new Skeleton(x, y, skeletonHealth, gameField, gamePane, this);
+                        Skeleton entity = new Skeleton(x, y, skeletonHealth, gamePane, this);
                         tempEntities.add(entity);
                         entities.add(entity);
                         gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
                     } else {
-                        Bat entity = new Bat(x, y, batHealth, gameField, gamePane, this);
+                        Bat entity = new Bat(x, y, batHealth, gamePane, this);
                         tempEntities.add(entity);
                         entities.add(entity);
                         gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
@@ -115,7 +113,7 @@ public class EntityManagement {
     }
 
     public void loadCharacter() {
-        character = new Character(100, 300, this.gameField, this);
+        character = new Character(100, 300, this);
         gamePane.getChildren().add(character.getSprite());
         gamePane.getChildren().add(character.getHitbox());
         gamePane.getChildren().add(character.getHealthBar());
@@ -376,8 +374,6 @@ public class EntityManagement {
             character.render();
         }
     }
-
-    public GameField getGameField() { return gameField; }
 
     public Character getCharacter() {
         return character;

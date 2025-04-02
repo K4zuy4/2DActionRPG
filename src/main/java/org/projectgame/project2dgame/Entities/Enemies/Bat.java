@@ -33,8 +33,8 @@ public class Bat extends Entity {
     private int slideTicks = 0;
     private final int maxSlideTicks = 20;
 
-    public Bat(double x, double y, int health, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
-        super(x, y, health, 100, gameField, gamePane, entityManagement);
+    public Bat(double x, double y, int health, Pane gamePane, EntityManagement entityManagement) {
+        super(x, y, health, 100, gamePane, entityManagement);
 
         idleFirstGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-idle_first.gif"))));
         idleGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-idle.gif"))));
@@ -45,13 +45,17 @@ public class Bat extends Entity {
 
         this.sprite = idleFirstGif;
         this.currentSprite = idleFirstGif;
-        this.sprite.setFitWidth(gameField.getTileSize() * 1.7);
-        this.sprite.setFitHeight(gameField.getTileSize() * 1.7);
+        this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
+        this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
         this.sprite.setX(x);
         this.sprite.setY(y);
 
-        this.hitbox = new Rectangle(x, y, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
-        this.hitbox.setFill(rgb(255, 255, 255, 0));
+        this.hitbox = new Rectangle(x, y, GameField.getTileSize() * 0.7, GameField.getTileSize() * 0.7);
+        if(GameField.isDebug()) {
+            hitbox.setFill(rgb(107, 68, 0, 0.5));
+        } else {
+            hitbox.setFill(rgb(255, 0, 0, 0));
+        }
 
         updateHitboxPosition();
     }
@@ -145,8 +149,8 @@ public class Bat extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
-        this.sprite.setFitWidth(gameField.getTileSize() * 1.7);
-        this.sprite.setFitHeight(gameField.getTileSize() * 1.7);
+        this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
+        this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
 
         if (isCharging()) {
             if (dx > 0 && currentSprite != fastRightGif) {
@@ -176,8 +180,8 @@ public class Bat extends Entity {
 
         newSprite.setX(x);
         newSprite.setY(y);
-        newSprite.setFitWidth(gameField.getTileSize() * 1.7);
-        newSprite.setFitHeight(gameField.getTileSize() * 1.7);
+        newSprite.setFitWidth(GameField.getTileSize() * 1.7);
+        newSprite.setFitHeight(GameField.getTileSize() * 1.7);
 
         gamePane.getChildren().remove(currentSprite);
         gamePane.getChildren().add(newSprite);

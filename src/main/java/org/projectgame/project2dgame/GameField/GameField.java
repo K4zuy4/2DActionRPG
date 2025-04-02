@@ -2,26 +2,32 @@ package org.projectgame.project2dgame.GameField;
 
 public class GameField {
 
-    public final int originaleTileGroesse = 16; //16x16 Pixel
-    final int scale = 4;
+    public static final int ORIGINALE_TILE_GROESSE = 16; // 16x16 Pixel
+    public static final int SCALE = 4;
 
-    final int tileSize = originaleTileGroesse * scale;  //64x64 Pixel
+    public static final int TILE_SIZE = ORIGINALE_TILE_GROESSE * SCALE;  // 64x64 Pixel
 
-    final int maxTilesX = 16;
-    final int maxTilesY = 12;
+    public static final int MAX_TILES_X = 16;
+    public static final int MAX_TILES_Y = 12;
 
-    final int screenHeight = tileSize * maxTilesY;
-    final int screenWidth = tileSize * maxTilesX;
+    public static final int SCREEN_WIDTH = TILE_SIZE * MAX_TILES_X;
+    public static final int SCREEN_HEIGHT = TILE_SIZE * MAX_TILES_Y;
 
-    public int getScreenWidth() {
-        return screenWidth;
+    public static final boolean DEBUG = true;
+
+    public static int getScreenWidth() {
+        return SCREEN_WIDTH;
     }
 
-    public int getScreenHeight() {
-        return screenHeight;
+    public static int getScreenHeight() {
+        return SCREEN_HEIGHT;
     }
 
-    public int getTileSize() {
-        return tileSize;
+    public static int getTileSize() {
+        return TILE_SIZE;
+    }
+
+    public static boolean isDebug() {
+        return DEBUG;
     }
 }

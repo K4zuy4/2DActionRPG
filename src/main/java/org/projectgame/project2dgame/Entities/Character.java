@@ -28,7 +28,6 @@ public class Character {
     private int maxHealth = CharacterInfo.getMaxHealth();
     private int geld = CharacterInfo.getMoney();
     private ImageView sprite;
-    private final GameField gameField;
     private int characterSpeed = CharacterInfo.getSpeed();
     private final Rectangle hitbox;
     private boolean invincible = false;
@@ -46,8 +45,7 @@ public class Character {
     private ImageView currentGif;
     private boolean dead = false;
 
-    public Character(double x, double y, GameField gameField, EntityManagement entityManagement) {
-        this.gameField = gameField;
+    public Character(double x, double y, EntityManagement entityManagement) {
         this.x = x;
         this.y = y;
         this.entityManagement = entityManagement;
@@ -60,17 +58,17 @@ public class Character {
         this.currentGif = idleGif;
 
         this.sprite = idleGif;
-        this.sprite.setFitHeight(gameField.getTileSize() * 1.5);
-        this.sprite.setFitWidth(gameField.getTileSize() * 1.5);
+        this.sprite.setFitHeight(GameField.getTileSize() * 1.5);
+        this.sprite.setFitWidth(GameField.getTileSize() * 1.5);
         this.sprite.setX(x);
         this.sprite.setY(y);
 
-        this.hitbox = new Rectangle(0, 0, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
+        this.hitbox = new Rectangle(0, 0, GameField.getTileSize() * 0.7, GameField.getTileSize() * 0.7);
         this.hitbox.setFill(rgb(255, 0, 0, 0.5));
         this.hitbox.setOpacity(0);
 
         healthBar = new ProgressBar(1);
-        healthBar.setPrefWidth(gameField.getTileSize() * 1.5);
+        healthBar.setPrefWidth(GameField.getTileSize() * 1.5);
         healthBar.setPrefHeight(10);
 
         updateHealthBar();

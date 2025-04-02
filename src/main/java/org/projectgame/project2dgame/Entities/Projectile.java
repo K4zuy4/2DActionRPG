@@ -16,7 +16,7 @@ public class Projectile {
     private final Rectangle hitbox;
     private boolean active = true;
 
-    public Projectile(double x, double y, double directionX, double directionY, String spritePath, GameField gameField) {
+    public Projectile(double x, double y, double directionX, double directionY, String spritePath) {
         this.x = x;
         this.y = y;
         this.directionX = directionX;
@@ -29,11 +29,11 @@ public class Projectile {
         double hitboxWidth, hitboxHeight;
 
         if (directionX != 0) {
-            hitboxWidth = gameField.getTileSize() * 0.85;
-            hitboxHeight = gameField.getTileSize() * 0.45;
+            hitboxWidth = GameField.getTileSize() * 0.85;
+            hitboxHeight = GameField.getTileSize() * 0.45;
         } else {
-            hitboxWidth = gameField.getTileSize() * 0.45;
-            hitboxHeight = gameField.getTileSize() * 0.85;
+            hitboxWidth = GameField.getTileSize() * 0.45;
+            hitboxHeight = GameField.getTileSize() * 0.85;
         }
 
         this.hitbox = new Rectangle(x, y, hitboxWidth, hitboxHeight);

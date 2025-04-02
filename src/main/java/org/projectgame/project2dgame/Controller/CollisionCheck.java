@@ -7,12 +7,11 @@ import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Entities.Entity;
 import org.projectgame.project2dgame.Entities.EntityManagement;
+import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.GameField.TileManagement.Tile;
 import org.projectgame.project2dgame.GameField.TileManagement.TileMap;
 
 import java.util.List;
-
-import static javafx.scene.paint.Color.rgb;
 
 public class CollisionCheck {
     private final TileMap tileMap;
@@ -37,6 +36,21 @@ public class CollisionCheck {
         }
         return false;
     }
+
+    public void checkDamageTiles(Rectangle playerHitbox) {
+        for (int y = 0; y < tileMap.getHeight(); y++) {
+            for (int x = 0; x < tileMap.getWidth(); x++) {
+                Tile tile = tileMap.getTile(y, x);
+                Rectangle damageBox = tile.getDamageHitbox();
+                if (damageBox != null && playerHitbox.getBoundsInParent().intersects(damageBox.getBoundsInParent())) {
+
+                    entityManagement.getCharacter().takeDamage(5); // 🔥 zzzzap!
+                    return;
+                }
+            }
+        }
+    }
+
 
     public boolean checkCollisionEntity(Rectangle entityHitbox, double dx, double dy) {
         // Kollision mit Wänden
@@ -96,8 +110,8 @@ public class CollisionCheck {
     }
 
     public boolean kannSpawnen(double spawnX, double spawnY, List<Entity> tempEntities) {
-        double spriteSize = entityManagement.getGameField().getTileSize() * 1.5;
-        double hitboxSize = entityManagement.getGameField().getTileSize() * 0.9;
+        double spriteSize = GameField.getTileSize() * 1.5;
+        double hitboxSize = GameField.getTileSize() * 0.9;
 
         double adjustedX = spawnX + (spriteSize - hitboxSize) / 2;
         double adjustedY = spawnY + (spriteSize - hitboxSize);

@@ -28,6 +28,9 @@ public class GameLoop extends AnimationTimer {
     private boolean running = true;
     private final Character character;
     private final LinkedList<String> directionQueue = new LinkedList<>();
+    private long lastSpikeDamageTime = 0;
+    private static final long DAMAGE_COOLDOWN_MS = 500;
+
 
     public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, CollisionCheck collisionCheck, Label timeLabel) {
         this.entityManagement = entityManagement;
@@ -86,6 +89,16 @@ public class GameLoop extends AnimationTimer {
         entityManagement.updateEntities(lastFrame, collisionCheck);
         updateCharacterMovement(lastFrame);
         entityManagement.getProjectileManagement().updateProjectiles(lastFrame);
+
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastSpikeDamageTime >= DAMAGE_COOLDOWN_MS) {
+            Rectangle playerHitbox = character.getHitbox();
+            if (playerHitbox != null) {
+                collisionCheck.checkDamageTiles(playerHitbox);
+                lastSpikeDamageTime = currentTime;
+            }
+        }
+
     }
 
     public void render() {

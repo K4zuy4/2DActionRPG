@@ -73,7 +73,7 @@ public class ProjectileManagement {
         Projectile projectile = new Projectile(
                 projectileX, projectileY,
                 dirX, dirY,
-                spritePath, entityManagement.getGameField()
+                spritePath
         );
         playerProjectiles.add(projectile);
         entityManagement.addProjectileToPane(projectile);

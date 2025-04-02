@@ -19,8 +19,8 @@ public class Slime extends Entity {
     private ImageView currentSprite;
     private boolean isIdle;
 
-    public Slime(double x, double y, int health, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
-        super(x, y, health, 150, gameField, gamePane, entityManagement);
+    public Slime(double x, double y, int health, Pane gamePane, EntityManagement entityManagement) {
+        super(x, y, health, 150, gamePane, entityManagement);
 
         idleGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-idle.gif"))));
         rightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-right.gif"))));
@@ -29,13 +29,17 @@ public class Slime extends Entity {
 
         this.sprite = idleGif;
         this.currentSprite = idleGif;
-        this.sprite.setFitWidth(gameField.getTileSize() * 1.7);
-        this.sprite.setFitHeight(gameField.getTileSize() * 1.7);
+        this.sprite.setFitWidth(GameField.getTileSize() * 1.8);
+        this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
         this.sprite.setX(x);
         this.sprite.setY(y);
 
-        this.hitbox = new Rectangle(x, y, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
-        this.hitbox.setFill(rgb(255, 255, 255, 0));
+        this.hitbox = new Rectangle(x, y, GameField.getTileSize() * 0.8, GameField.getTileSize() * 0.8);
+        if(GameField.isDebug()) {
+            hitbox.setFill(rgb(0, 255, 0, 0.5));
+        } else {
+            hitbox.setFill(rgb(255, 0, 0, 0));
+        }
 
         updateHitboxPosition();
     }
@@ -55,8 +59,8 @@ public class Slime extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
-        this.sprite.setFitWidth(gameField.getTileSize() * 1.7);
-        this.sprite.setFitHeight(gameField.getTileSize() * 1.7);
+        this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
+        this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
         if (!isIdle) {
             if (dx > 0) {
                 if (currentSprite != rightGif) {
@@ -79,16 +83,16 @@ public class Slime extends Entity {
 
         newSprite.setX(x);
         newSprite.setY(y);
-        this.sprite.setFitWidth(gameField.getTileSize() * 1.7);
-        this.sprite.setFitHeight(gameField.getTileSize() * 1.7);
+        this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
+        this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
 
         gamePane.getChildren().remove(currentSprite);
         gamePane.getChildren().add(newSprite);
 
         this.sprite = newSprite;
         this.currentSprite = newSprite;
-        this.sprite.setFitWidth(gameField.getTileSize() * 1.7);
-        this.sprite.setFitHeight(gameField.getTileSize() * 1.7);
+        this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
+        this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
     }
 
     @Override

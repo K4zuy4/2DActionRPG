@@ -12,6 +12,8 @@ import org.projectgame.project2dgame.GameField.GameField;
 import java.util.Objects;
 import java.util.Random;
 
+import static javafx.scene.paint.Color.rgb;
+
 public class Skeleton extends Entity {
     private final ImageView leftGif;
     private final ImageView rightGif;
@@ -31,8 +33,8 @@ public class Skeleton extends Entity {
     private long cooldownStartTime = 0;
     private final long cooldownDuration;
 
-    public Skeleton(double x, double y, int health, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
-        super(x, y, health, 70, gameField, gamePane, entityManagement);
+    public Skeleton(double x, double y, int health, Pane gamePane, EntityManagement entityManagement) {
+        super(x, y, health, 70, gamePane, entityManagement);
 
         Random ran = new Random();
         cooldownDuration = ran.nextInt(500, 1000);
@@ -47,13 +49,18 @@ public class Skeleton extends Entity {
         currentSprite = idleFirstGif;
 
         this.sprite = currentSprite;
-        this.sprite.setFitWidth(gameField.getTileSize() * 2.5);
-        this.sprite.setFitHeight(gameField.getTileSize() * 2.5);
+        this.sprite.setFitWidth(GameField.getTileSize() * 2.5);
+        this.sprite.setFitHeight(GameField.getTileSize() * 2.5);
         this.sprite.setX(x);
         this.sprite.setY(y);
 
-        this.hitbox = new Rectangle(x, y, gameField.getTileSize() * 0.7, gameField.getTileSize() * 0.7);
-        this.hitbox.setOpacity(0);
+        this.hitbox = new Rectangle(x, y, GameField.getTileSize() * 0.7, GameField.getTileSize() * 0.7);
+
+        if(GameField.isDebug()) {
+            hitbox.setFill(rgb(255, 255, 255, 0.5));
+        } else {
+            hitbox.setFill(rgb(255, 0, 0, 0));
+        }
 
         updateHitboxPosition();
     }
@@ -145,8 +152,8 @@ public class Skeleton extends Entity {
 
         newSprite.setX(x);
         newSprite.setY(y);
-        newSprite.setFitWidth(gameField.getTileSize() * 2.5);
-        newSprite.setFitHeight(gameField.getTileSize() * 2.5);
+        newSprite.setFitWidth(GameField.getTileSize() * 2.5);
+        newSprite.setFitHeight(GameField.getTileSize() * 2.5);
 
         gamePane.getChildren().remove(currentSprite);
         gamePane.getChildren().add(newSprite);

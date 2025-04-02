@@ -18,7 +18,6 @@ public abstract class Entity {
     protected int maxHealth;
     protected int entitySpeed;
     protected ImageView sprite;
-    protected GameField gameField;
     protected EntityManagement entityManagement;
     protected Pane gamePane;
     protected Rectangle hitbox;
@@ -34,18 +33,17 @@ public abstract class Entity {
     private PauseTransition currentPause;
 
 
-    public Entity(double x, double y, int health, int entitySpeed, GameField gameField, Pane gamePane, EntityManagement entityManagement) {
+    public Entity(double x, double y, int health, int entitySpeed, Pane gamePane, EntityManagement entityManagement) {
         this.x = x;
         this.y = y;
         this.health = health;
         this.maxHealth = health;
         this.entitySpeed = entitySpeed;
         this.entityManagement = entityManagement;
-        this.gameField = gameField;
         this.gamePane = gamePane;
 
         healthBar = new ProgressBar(1);
-        healthBar.setPrefWidth(gameField.getTileSize());
+        healthBar.setPrefWidth(GameField.getTileSize());
         healthBar.setPrefHeight(10);
     }
 

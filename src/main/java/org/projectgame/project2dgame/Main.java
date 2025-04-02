@@ -27,7 +27,6 @@ public class Main extends Application {
 
     private static Stage primaryStage;
     private static GameLoop gameLoop;
-    private static final GameField gameField = new GameField();
     private static Label geldLabel;
     private static Label timeLabel;
     private static ImageView imageView;
@@ -71,12 +70,12 @@ public class Main extends Application {
                 gamePane.getChildren().add(imageView);
                 gamePane.getChildren().add(timeLabel);
 
-                TileMap tileMap = levelSelector(level, gameField, gamePane);
+                TileMap tileMap = levelSelector(level, gamePane);
 
-                EntityManagement entityManagement = new EntityManagement(gamePane, gameField, geldLabel, level);
+                EntityManagement entityManagement = new EntityManagement(gamePane, geldLabel, level);
                 entityManagement.loadCharacter();
 
-                scene = new Scene(root, gameField.getScreenWidth(), gameField.getScreenHeight());
+                scene = new Scene(root, GameField.getScreenWidth(), GameField.getScreenHeight());
 
                 KeyInputHandler keyInputHandler = new KeyInputHandler();
                 keyInputHandler.addKeyHandlers(scene);
@@ -167,11 +166,11 @@ public class Main extends Application {
     }
 
 
-    public static TileMap levelSelector(int level, GameField gameField, Pane gamePane) throws IOException {
+    public static TileMap levelSelector(int level, Pane gamePane) throws IOException {
         return switch (level) {
-            case 1 -> new TileMap("/Tiles/TileMap1.txt", gameField.getTileSize(), gamePane);
-            case 2 -> new TileMap("/Tiles/TileMap2.txt", gameField.getTileSize(), gamePane);
-            case 3 -> new TileMap("/Tiles/TileMap3.txt", gameField.getTileSize(), gamePane);
+            case 1 -> new TileMap("/Tiles/TileMap1.txt", GameField.getTileSize(), gamePane);
+            case 2 -> new TileMap("/Tiles/TileMap2.txt", GameField.getTileSize(), gamePane);
+            case 3 -> new TileMap("/Tiles/TileMap3.txt", GameField.getTileSize(), gamePane);
             default -> throw new IllegalArgumentException("Unknown level: " + level);
         };
     }
@@ -190,10 +189,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch();
-    }
-
-    public static GameField getGameField() {
-        return gameField;
     }
 
     public static Label getGeldLabel() {
