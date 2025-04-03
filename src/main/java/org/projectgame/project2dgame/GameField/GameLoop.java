@@ -31,7 +31,7 @@ public class GameLoop extends AnimationTimer {
     private final LinkedList<String> directionQueue = new LinkedList<>();
     private long lastSpikeDamageTime = 0;
     private static final long DAMAGE_COOLDOWN_MS = 500;
-    private boolean paused = false;
+    private boolean paused = true;
 
 
     public GameLoop(EntityManagement entityManagement, KeyInputHandler keyInputHandler, CollisionCheck collisionCheck, Label timeLabel) {

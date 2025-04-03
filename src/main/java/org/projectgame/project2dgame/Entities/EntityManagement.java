@@ -125,6 +125,9 @@ public class EntityManagement {
         }
 
         timeline.play();
+        timeline.setOnFinished(event -> {
+            Main.getGameLoop().setPaused(false);
+        });
     }
 
     public void loadCharacter() {

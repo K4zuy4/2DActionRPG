@@ -1,13 +1,16 @@
 package org.projectgame.project2dgame;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -44,6 +47,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         CharacterInfo.init();
         primaryStage = stage;
+        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/Images/icon.png")));
         setWindow("MainMenu", 0);
         primaryStage.show();
         primaryStage.setResizable(false);
@@ -66,6 +70,8 @@ public class Main extends Application {
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - Main Menu");
                 SoundEngine.playMainMenuMusic();
+                primaryStage.setScene(scene);
+                primaryStage.centerOnScreen();
                 break;
 
             case "GameField":
@@ -76,8 +82,10 @@ public class Main extends Application {
                 if (gameFieldController != null){
                     gameFieldController = null;
                 }
+                scene = null;
+                loadGameFieldAsync(level);
 
-                loader.setLocation(Main.class.getResource("/FXMLFiles/GameField.fxml"));
+                /*loader.setLocation(Main.class.getResource("/FXMLFiles/GameField.fxml"));
                 Parent root = loader.load();
                 gameFieldController = loader.getController();
                 Pane gamePane = gameFieldController.getGamePane();
@@ -106,7 +114,7 @@ public class Main extends Application {
                 primaryStage.setScene(scene);
                 primaryStage.setTitle("Sanctum of Sorrow - Level " + level);
                 SoundEngine.playFightMusic();
-                entityManagement.loadEntities(collisionCheck);
+                entityManagement.loadEntities(collisionCheck);*/
                 break;
 
             case "LevelSelect":
@@ -114,6 +122,8 @@ public class Main extends Application {
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - Level Selection");
                 if(!SoundEngine.isPlaying()) SoundEngine.playMainMenuMusic();
+                primaryStage.setScene(scene);
+                primaryStage.centerOnScreen();
                 break;
 
             case "GameOver":
@@ -126,6 +136,8 @@ public class Main extends Application {
                     gameLoop.stop();
                     gameLoop = null;
                 }
+                primaryStage.setScene(scene);
+                primaryStage.centerOnScreen();
                 break;
 
             case "Win":
@@ -138,15 +150,78 @@ public class Main extends Application {
                     gameLoop.stop();
                     gameLoop = null;
                 }
+                primaryStage.setScene(scene);
+                primaryStage.centerOnScreen();
                 break;
 
             default:
                 throw new IllegalArgumentException("Unknown window: " + window);
         }
-
-        primaryStage.setScene(scene);
-        primaryStage.centerOnScreen();
     }
+
+    // GameField asynchron laden
+    public static void loadGameFieldAsync(int level) {
+        Task<Void> loadTask = new Task<>() {
+            private Parent root;
+            private Scene scene;
+            private TileMap tileMap;
+            private EntityManagement entityManagement;
+            private CollisionCheck collisionCheck;
+            private KeyInputHandler keyInputHandler;
+
+            @Override
+            protected Void call() throws Exception {
+                FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/GameField.fxml"));
+                root = loader.load();
+                gameFieldController = loader.getController();
+
+                Pane gamePane = gameFieldController.getGamePane();
+                geldLabel = gameFieldController.getGeldLabel();
+                imageView = gameFieldController.getImageView();
+                timeLabel = gameFieldController.getTimeLabel();
+                pausePane = gameFieldController.getPausePane();
+
+                tileMap = levelSelector(level, gamePane);
+
+                entityManagement = new EntityManagement(gamePane, geldLabel, level);
+                entityManagement.loadCharacter();
+
+                collisionCheck = new CollisionCheck(tileMap, entityManagement);
+                keyInputHandler = new KeyInputHandler();
+
+                scene = new Scene(root, GameField.getScreenWidth(), GameField.getScreenHeight());
+                keyInputHandler.addKeyHandlers(scene);
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                gameLoop = new GameLoop(entityManagement, keyInputHandler, collisionCheck, timeLabel);
+                entityManagement.setCollisonCheck(collisionCheck);
+                entityManagement.createProjectileManagement();
+
+                gameLoop.start();
+
+                Pane gamePane = gameFieldController.getGamePane();
+                gamePane.getChildren().addAll(geldLabel, imageView, timeLabel);
+
+                primaryStage.setScene(scene);
+                primaryStage.centerOnScreen();
+                primaryStage.setTitle("Sanctum of Sorrow - Level " + level);
+                SoundEngine.playFightMusic();
+
+                PauseTransition delay = new PauseTransition(Duration.millis(200));
+                delay.setOnFinished(e -> {
+                    entityManagement.loadEntities(collisionCheck);
+                });
+                delay.play();
+            }
+        };
+
+        new Thread(loadTask).start();
+    }
+
 
     public static void openUpgradeWindow() {
         try {
@@ -245,6 +320,10 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public static GameLoop getGameLoop() {
+        return gameLoop;
     }
 
     public static Label getGeldLabel() {
