@@ -128,21 +128,13 @@ public class CollisionCheck {
         return false;
     }
 
-    public boolean kannSpawnen(double spawnX, double spawnY, List<Entity> tempEntities) {
-        double spriteSize = GameField.getTileSize() * 1.5;
-        double hitboxSize = GameField.getTileSize() * 0.9;
-
-        double adjustedX = spawnX + (spriteSize - hitboxSize) / 2;
-        double adjustedY = spawnY + (spriteSize - hitboxSize);
-
-        Rectangle tempHitbox = new Rectangle(adjustedX, adjustedY, hitboxSize + 20, hitboxSize + 20);
-
+    public boolean kannSpawnen(Rectangle hitbox, List<Entity> tempEntities) {
         // Kollision mit Wänden
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
                 Tile tile = tileMap.getTile(y, x);
-                if (tile.getHitbox() != null && tempHitbox.getBoundsInParent().intersects(tile.getHitbox().getBoundsInParent())) {
-                    //System.out.println("Kollision mit Wand"); debug
+                if (tile.getHitbox() != null &&
+                        hitbox.getBoundsInParent().intersects(tile.getHitbox().getBoundsInParent())) {
                     return false;
                 }
             }
@@ -150,28 +142,27 @@ public class CollisionCheck {
 
         // Kollision mit Spieler
         Character player = entityManagement.getCharacter();
-        if (player != null && tempHitbox.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
-            //System.out.println("Kollision mit Spieler"); debug
+        if (player != null && hitbox.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
             return false;
         }
 
-        // Kollision mit existierenden Gegnern
+        // Kollision mit bereits gespawnten Gegnern
         for (Entity entity : entityManagement.getEntity()) {
-            if (tempHitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
-                //System.out.println("Kollision mit Gegner (bestehende Entity)"); debug
+            if (hitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
                 return false;
             }
         }
+
         // Kollision mit temporären Gegnern
         for (Entity entity : tempEntities) {
-            if (tempHitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
-                //System.out.println("Kollision mit Gegner (temp Entity)"); debug
+            if (hitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
                 return false;
             }
         }
 
         return true;
     }
+
 
     public boolean checkCollisionProjectile(Rectangle projectileHitbox) {
         // Kollision mit Wänden

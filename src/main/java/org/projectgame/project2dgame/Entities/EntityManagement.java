@@ -3,8 +3,9 @@ package org.projectgame.project2dgame.Entities;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -12,13 +13,10 @@ import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.Entities.Enemies.Bat;
 import org.projectgame.project2dgame.Entities.Enemies.Skeleton;
 import org.projectgame.project2dgame.Entities.Enemies.Slime;
-import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.Main;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class EntityManagement {
     private final Pane gamePane;
@@ -28,13 +26,44 @@ public class EntityManagement {
     private CollisionCheck collisonCheck;
     private final Label geldLabel;
     private final int level;
-    private long lastMoveTime = System.currentTimeMillis();
+    private static final Map<String, ImageView> cache = new HashMap<>();
 
     public EntityManagement(Pane gamePane, Label geldLabel, int level) {
         this.gamePane = gamePane;
         this.geldLabel = geldLabel;
         this.level = level;
     }
+
+    public void loadImageCache() {
+        cache.put("slime-idle", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-idle.gif")))));
+        cache.put("slime-right", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-right.gif")))));
+        cache.put("slime-left", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-left.gif")))));
+        cache.put("slime-idle_first", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-idle2.gif")))));
+
+        cache.put("skeleton-idle", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-idle.gif")))));
+        cache.put("skeleton-right", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-right.gif")))));
+        cache.put("skeleton-left", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-left.gif")))));
+        cache.put("skeleton-attack_right", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-attack_right.gif")))));
+        cache.put("skeleton-attack_left", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-attack_left.gif")))));
+        cache.put("skeleton-idle_first", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-idle_first.gif")))));
+
+        cache.put("bat-idle", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-idle.gif")))));
+        cache.put("bat-idle_first", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-idle_first.gif")))));
+        cache.put("bat-right", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-right.gif")))));
+        cache.put("bat-left", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-left.gif")))));
+        cache.put("bat-right-fast", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-right-fast.gif")))));
+        cache.put("bat-left-fast", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-left-fast.gif")))));
+    }
+
+    public static ImageView getImage(String key) {
+        ImageView original = cache.get(key);
+        if (original == null) throw new RuntimeException("Image not found: " + key);
+
+        ImageView clone = new ImageView(original.getImage());
+        clone.setPreserveRatio(true);
+        return clone;
+    }
+
 
     // Überarbeitet von ChatGPT, da Problem mit den Gegner, welche in einander spawnen durch zu kleine Verzögerung zwischen den Spawns
     public void loadEntities(CollisionCheck collisionCheck) {
@@ -83,9 +112,9 @@ public class EntityManagement {
             // Debug Level
             skeletonHealth = 0;
             slimeHealth = 0;
-            slamount = 0;
-            skamount = 0;
-            bamount = 0;
+            slamount = 20;
+            skamount = 20;
+            bamount = 20;
             batHealth = 0;
         }
 
@@ -97,31 +126,26 @@ public class EntityManagement {
         for (int i = 0; i < totalAmount; i++) {
             int finalI = i;
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 150), event -> {
+                Entity entity = null;
                 int x, y;
                 do {
                     x = 64 + random.nextInt(800);
                     y = 64 + random.nextInt(550);
-                } while (!collisionCheck.kannSpawnen(x, y, tempEntities));
 
-                if (collisionCheck.kannSpawnen(x, y, tempEntities)) {
                     if (finalI < slamount) {
-                        Slime entity = new Slime(x, y, slimeHealth, gamePane, this);
-                        tempEntities.add(entity);
-                        entities.add(entity);
-                        gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
+                        entity = new Slime(x, y, slimeHealth, gamePane, this);
                     } else if (finalI < slamount + skamount) {
-                        Skeleton entity = new Skeleton(x, y, skeletonHealth, gamePane, this);
-                        tempEntities.add(entity);
-                        entities.add(entity);
-                        gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
+                        entity = new Skeleton(x, y, skeletonHealth, gamePane, this);
                     } else {
-                        Bat entity = new Bat(x, y, batHealth, gamePane, this);
-                        tempEntities.add(entity);
-                        entities.add(entity);
-                        gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
+                        entity = new Bat(x, y, batHealth, gamePane, this);
                     }
-                }
+                } while (!collisionCheck.kannSpawnen(entity.getHitbox(), tempEntities));
+
+                entities.add(entity);
+                tempEntities.add(entity);
+                gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
             }));
+
         }
 
         timeline.play();

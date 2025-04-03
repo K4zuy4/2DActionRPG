@@ -41,12 +41,12 @@ public class Bat extends Entity {
     public Bat(double x, double y, int health, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, 100, gamePane, entityManagement);
 
-        idleFirstGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-idle_first.gif"))));
-        idleGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-idle.gif"))));
-        rightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-right.gif"))));
-        leftGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-left.gif"))));
-        fastRightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-right-fast.gif"))));
-        fastLeftGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-left-fast.gif"))));
+        idleFirstGif = EntityManagement.getImage("bat-idle_first");
+        idleGif = EntityManagement.getImage("bat-idle");
+        rightGif = EntityManagement.getImage("bat-right");
+        leftGif = EntityManagement.getImage("bat-left");
+        fastRightGif = EntityManagement.getImage("bat-right-fast");
+        fastLeftGif = EntityManagement.getImage("bat-left-fast");
 
         this.sprite = idleFirstGif;
         this.currentSprite = idleFirstGif;

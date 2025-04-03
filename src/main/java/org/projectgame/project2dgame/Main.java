@@ -184,6 +184,7 @@ public class Main extends Application {
                 tileMap = levelSelector(level, gamePane);
 
                 entityManagement = new EntityManagement(gamePane, geldLabel, level);
+                entityManagement.loadImageCache();
                 entityManagement.loadCharacter();
 
                 collisionCheck = new CollisionCheck(tileMap, entityManagement);
@@ -201,8 +202,6 @@ public class Main extends Application {
                 entityManagement.setCollisonCheck(collisionCheck);
                 entityManagement.createProjectileManagement();
 
-                gameLoop.start();
-
                 Pane gamePane = gameFieldController.getGamePane();
                 gamePane.getChildren().addAll(geldLabel, imageView, timeLabel);
 
@@ -216,6 +215,8 @@ public class Main extends Application {
                     entityManagement.loadEntities(collisionCheck);
                 });
                 delay.play();
+
+                gameLoop.start();
             }
         };
 

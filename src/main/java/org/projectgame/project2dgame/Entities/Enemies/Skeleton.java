@@ -40,12 +40,12 @@ public class Skeleton extends Entity {
         cooldownDuration = ran.nextInt(500, 1000);
         retreatDuration = ran.nextInt(500, 1000);
 
-        leftGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-left.gif"))));
-        rightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-right.gif"))));
-        attackRightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-attack_right.gif"))));
-        attackLeftGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-attack_left.gif"))));
-        idleGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-idle.gif"))));
-        idleFirstGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-idle_first.gif"))));
+        leftGif = EntityManagement.getImage("skeleton-left");
+        rightGif = EntityManagement.getImage("skeleton-right");
+        attackRightGif = EntityManagement.getImage("skeleton-attack_right");
+        attackLeftGif = EntityManagement.getImage("skeleton-attack_left");
+        idleGif = EntityManagement.getImage("skeleton-idle");
+        idleFirstGif = EntityManagement.getImage("skeleton-idle_first");
         currentSprite = idleFirstGif;
 
         this.sprite = currentSprite;

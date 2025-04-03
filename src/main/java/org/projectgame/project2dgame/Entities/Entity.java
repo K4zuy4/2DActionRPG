@@ -25,8 +25,6 @@ public abstract class Entity {
     protected double randomDirectionX = 0;
     protected double randomDirectionY = 0;
     protected long lastRandomMoveTime = 0;
-    protected double lastIdleTime = 0;
-    protected double durationIdle = 0;
     protected boolean isIdle = false;
     protected boolean isActive = true;
     private boolean waiting = false;
