@@ -84,37 +84,6 @@ public class Main extends Application {
                 }
                 scene = null;
                 loadGameFieldAsync(level);
-
-                /*loader.setLocation(Main.class.getResource("/FXMLFiles/GameField.fxml"));
-                Parent root = loader.load();
-                gameFieldController = loader.getController();
-                Pane gamePane = gameFieldController.getGamePane();
-                geldLabel = gameFieldController.getGeldLabel();
-                imageView = gameFieldController.getImageView();
-                timeLabel = gameFieldController.getTimeLabel();
-                pausePane = gameFieldController.getPausePane();
-
-                gamePane.getChildren().add(geldLabel);
-                gamePane.getChildren().add(imageView);
-                gamePane.getChildren().add(timeLabel);
-
-                TileMap tileMap = levelSelector(level, gamePane);
-
-                EntityManagement entityManagement = new EntityManagement(gamePane, geldLabel, level);
-                entityManagement.loadCharacter();
-
-                scene = new Scene(root, GameField.getScreenWidth(), GameField.getScreenHeight());
-
-                KeyInputHandler keyInputHandler = new KeyInputHandler();
-                keyInputHandler.addKeyHandlers(scene);
-
-                CollisionCheck collisionCheck = new CollisionCheck(tileMap, entityManagement);
-                gameLoop = new GameLoop(entityManagement, keyInputHandler, collisionCheck, timeLabel);
-                gameLoop.start();
-                primaryStage.setScene(scene);
-                primaryStage.setTitle("Sanctum of Sorrow - Level " + level);
-                SoundEngine.playFightMusic();
-                entityManagement.loadEntities(collisionCheck);*/
                 break;
 
             case "LevelSelect":

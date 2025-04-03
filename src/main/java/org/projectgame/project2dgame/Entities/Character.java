@@ -64,8 +64,11 @@ public class Character {
         this.sprite.setY(y);
 
         this.hitbox = new Rectangle(0, 0, GameField.getTileSize() * 0.7, GameField.getTileSize() * 0.7);
-        this.hitbox.setFill(rgb(255, 0, 0, 0.5));
-        this.hitbox.setOpacity(0);
+        if(GameField.isDebug()) {
+            hitbox.setFill(rgb(255, 0, 0, 0.3));
+        } else {
+            hitbox.setFill(rgb(255, 0, 0, 0));
+        }
 
         healthBar = new ProgressBar(1);
         healthBar.setPrefWidth(GameField.getTileSize() * 1.5);
