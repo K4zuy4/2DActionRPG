@@ -192,4 +192,8 @@ public class GameLoop extends AnimationTimer {
     public void setPaused(boolean paused) {
         this.paused = paused;
     }
+
+    public boolean isPaused() {
+        return paused;
+    }
 }

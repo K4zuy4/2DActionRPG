@@ -1,13 +1,16 @@
 package org.projectgame.project2dgame.Entities.Enemies;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import org.projectgame.project2dgame.Entities.Entity;
 import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.GameField;
+import org.projectgame.project2dgame.Main;
 
 import java.util.Objects;
 import java.util.Random;
@@ -20,7 +23,7 @@ public class Skeleton extends Entity {
     private final ImageView attackRightGif;
     private final ImageView attackLeftGif;
     private final ImageView idleGif;
-    private final ImageView idleFirstGif;
+    private final ImageView spawnGif;
     private ImageView currentSprite;
     private boolean isAttacking = false;
     private long lastAttackTime = 0;
@@ -45,10 +48,18 @@ public class Skeleton extends Entity {
         attackRightGif = EntityManagement.getImage("skeleton-attack_right");
         attackLeftGif = EntityManagement.getImage("skeleton-attack_left");
         idleGif = EntityManagement.getImage("skeleton-idle");
-        idleFirstGif = EntityManagement.getImage("skeleton-idle_first");
-        currentSprite = idleFirstGif;
+        spawnGif = EntityManagement.getImage("skeleton-spawn");
 
-        this.sprite = currentSprite;
+        this.sprite = spawnGif;
+        this.currentSprite = spawnGif;
+
+        PauseTransition spawnDelay = new PauseTransition(Duration.seconds(1.2));
+        spawnDelay.setOnFinished(e -> {
+            this.sprite.setImage(idleGif.getImage());
+            this.currentSprite = idleGif;
+        });
+        spawnDelay.play();
+
         this.sprite.setFitWidth(GameField.getTileSize() * 2.5);
         this.sprite.setFitHeight(GameField.getTileSize() * 2.5);
         this.sprite.setX(x);
@@ -114,34 +125,36 @@ public class Skeleton extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
-        if(isIdle) {
-            if (currentSprite != idleGif) {
-                setSprite(idleGif);
-            }
-        } else if (isAttacking) {
-            if (dx > 0) {
-                if (currentSprite != attackRightGif) {
-                    setSprite(attackRightGif);
-                    currentSprite = attackRightGif;
-                }
-            } else {
-                if (currentSprite != attackLeftGif) {
-                    setSprite(attackLeftGif);
-                    currentSprite = attackLeftGif;
-                }
-            }
-        } else {
-            if (dx > 0) {
-                if (currentSprite != rightGif) {
-                    setSprite(rightGif);
-                }
-            } else if (dx < 0) {
-                if (currentSprite != leftGif) {
-                    setSprite(leftGif);
-                }
-            } else if (inCooldown){
+        if(!Main.isGameLoopPaused()) {
+            if (isIdle) {
                 if (currentSprite != idleGif) {
                     setSprite(idleGif);
+                }
+            } else if (isAttacking) {
+                if (dx > 0) {
+                    if (currentSprite != attackRightGif) {
+                        setSprite(attackRightGif);
+                        currentSprite = attackRightGif;
+                    }
+                } else {
+                    if (currentSprite != attackLeftGif) {
+                        setSprite(attackLeftGif);
+                        currentSprite = attackLeftGif;
+                    }
+                }
+            } else {
+                if (dx > 0) {
+                    if (currentSprite != rightGif) {
+                        setSprite(rightGif);
+                    }
+                } else if (dx < 0) {
+                    if (currentSprite != leftGif) {
+                        setSprite(leftGif);
+                    }
+                } else if (inCooldown) {
+                    if (currentSprite != idleGif) {
+                        setSprite(idleGif);
+                    }
                 }
             }
         }
@@ -155,6 +168,7 @@ public class Skeleton extends Entity {
         newSprite.setFitWidth(GameField.getTileSize() * 2.5);
         newSprite.setFitHeight(GameField.getTileSize() * 2.5);
 
+        if(sprite != null) gamePane.getChildren().remove(sprite);
         gamePane.getChildren().remove(currentSprite);
         gamePane.getChildren().add(newSprite);
 

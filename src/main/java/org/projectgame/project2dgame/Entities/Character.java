@@ -41,7 +41,7 @@ public class Character {
     private final ImageView rightGif;
     private final ImageView leftGif;
     private final ImageView idleGif;
-    private final ImageView idle2Gif;
+    private final ImageView spawnGif;
     private ImageView currentGif;
     private boolean dead = false;
 
@@ -54,10 +54,18 @@ public class Character {
         this.rightGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/walking_right.gif"))));
         this.leftGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/walking_left.gif"))));
         this.idleGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/idle.gif"))));
-        this.idle2Gif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/idle2.gif"))));
-        this.currentGif = idleGif;
+        this.spawnGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/spawn.gif"))));
+        this.currentGif = spawnGif;
 
-        this.sprite = idleGif;
+        this.sprite = spawnGif;
+
+        PauseTransition spawnDelay = new PauseTransition(Duration.seconds(2.1));
+        spawnDelay.setOnFinished(e -> {
+            this.sprite.setImage(idleGif.getImage());
+            this.currentGif = idleGif;
+        });
+        spawnDelay.play();
+
         this.sprite.setFitHeight(GameField.getTileSize() * 1.5);
         this.sprite.setFitWidth(GameField.getTileSize() * 1.5);
         this.sprite.setX(x);
@@ -171,33 +179,37 @@ public class Character {
     }
 
     public void updateSpriteDirection(double dx, double dy) {
-        if (dx != 0) {
-            if (dx > 0) {
+        if(!Main.isGameLoopPaused()) {
+            if (dx != 0) {
+                if (dx > 0) {
+                    if (currentGif != rightGif) {
+                        this.sprite.setImage(rightGif.getImage());
+                        currentGif = rightGif;
+                    }
+                } else if (dx < 0) {
+                    if (currentGif != leftGif) {
+                        this.sprite.setImage(leftGif.getImage());
+                        currentGif = leftGif;
+                    }
+                }
+            }
+
+            else if (dy != 0) {
                 if (currentGif != rightGif) {
                     this.sprite.setImage(rightGif.getImage());
                     currentGif = rightGif;
                 }
-            } else if (dx < 0) {
-                if (currentGif != leftGif) {
-                    this.sprite.setImage(leftGif.getImage());
-                    currentGif = leftGif;
-                }
-            }
-        }
-
-        else if (dy != 0) {
-            if (currentGif != rightGif) {
-                this.sprite.setImage(rightGif.getImage());
-                currentGif = rightGif;
             }
         }
     }
 
 
     public void setSpriteToIdle2() {
-        if (currentGif != idle2Gif) {
-            this.sprite.setImage(idle2Gif.getImage());
-            currentGif = idle2Gif;
+        if (!Main.isGameLoopPaused()) {
+            if (currentGif != idleGif) {
+                this.sprite.setImage(idleGif.getImage());
+                currentGif = idleGif;
+            }
         }
     }
 

@@ -325,4 +325,8 @@ public class Main extends Application {
             gameLoop.setPaused(bol);
         }
     }
+
+    public static boolean isGameLoopPaused() {
+        return gameLoop.isPaused();
+    }
 }

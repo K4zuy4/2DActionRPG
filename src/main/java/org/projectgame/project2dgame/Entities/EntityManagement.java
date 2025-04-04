@@ -15,7 +15,10 @@ import org.projectgame.project2dgame.Entities.Enemies.Skeleton;
 import org.projectgame.project2dgame.Entities.Enemies.Slime;
 import org.projectgame.project2dgame.Main;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class EntityManagement {
@@ -26,7 +29,7 @@ public class EntityManagement {
     private CollisionCheck collisonCheck;
     private final Label geldLabel;
     private final int level;
-    private static final Map<String, ImageView> cache = new HashMap<>();
+    private static final HashMap<String, byte[]> imageBytesCache = new HashMap<>();
 
     public EntityManagement(Pane gamePane, Label geldLabel, int level) {
         this.gamePane = gamePane;
@@ -34,34 +37,57 @@ public class EntityManagement {
         this.level = level;
     }
 
+
+    // Die Sprites der Entities werden in Byte Form vorgeladen. Man könnte auch direkt in ImageViews vorladen allerdings
+    // allerdings wird das Gif so jedes mal von dem momentane Stand im ImageView abgespielt und nicht von Anfang an der Animation
+
     public void loadImageCache() {
-        cache.put("slime-idle", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-idle.gif")))));
-        cache.put("slime-right", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-right.gif")))));
-        cache.put("slime-left", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-left.gif")))));
-        cache.put("slime-idle_first", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Slime 1/slime1-idle2.gif")))));
+        imageBytesCache.put("slime-idle", getBytesFromStream("/Entities/Slime 1/slime1-idle.gif"));
+        imageBytesCache.put("slime-right", getBytesFromStream("/Entities/Slime 1/slime1-right.gif"));
+        imageBytesCache.put("slime-left", getBytesFromStream("/Entities/Slime 1/slime1-left.gif"));
+        imageBytesCache.put("slime-spawn", getBytesFromStream("/Entities/Slime 1/slime1-spawn.gif"));
 
-        cache.put("skeleton-idle", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-idle.gif")))));
-        cache.put("skeleton-right", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-right.gif")))));
-        cache.put("skeleton-left", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-left.gif")))));
-        cache.put("skeleton-attack_right", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-attack_right.gif")))));
-        cache.put("skeleton-attack_left", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-attack_left.gif")))));
-        cache.put("skeleton-idle_first", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Skeleton/skeleton-idle_first.gif")))));
+        imageBytesCache.put("skeleton-idle", getBytesFromStream("/Entities/Skeleton/skeleton-idle.gif"));
+        imageBytesCache.put("skeleton-right", getBytesFromStream("/Entities/Skeleton/skeleton-right.gif"));
+        imageBytesCache.put("skeleton-left", getBytesFromStream("/Entities/Skeleton/skeleton-left.gif"));
+        imageBytesCache.put("skeleton-attack_right", getBytesFromStream("/Entities/Skeleton/skeleton-attack_right.gif"));
+        imageBytesCache.put("skeleton-attack_left", getBytesFromStream("/Entities/Skeleton/skeleton-attack_left.gif"));
+        imageBytesCache.put("skeleton-spawn", getBytesFromStream("/Entities/Skeleton/skeleton-spawn.gif"));
 
-        cache.put("bat-idle", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-idle.gif")))));
-        cache.put("bat-idle_first", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-idle_first.gif")))));
-        cache.put("bat-right", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-right.gif")))));
-        cache.put("bat-left", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-left.gif")))));
-        cache.put("bat-right-fast", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-right-fast.gif")))));
-        cache.put("bat-left-fast", new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Bat/bat-left-fast.gif")))));
+        imageBytesCache.put("bat-idle", getBytesFromStream("/Entities/Bat/bat-idle.gif"));
+        imageBytesCache.put("bat-right", getBytesFromStream("/Entities/Bat/bat-right.gif"));
+        imageBytesCache.put("bat-left", getBytesFromStream("/Entities/Bat/bat-left.gif"));
+        imageBytesCache.put("bat-right-fast", getBytesFromStream("/Entities/Bat/bat-right-fast.gif"));
+        imageBytesCache.put("bat-left-fast", getBytesFromStream("/Entities/Bat/bat-left-fast.gif"));
+        imageBytesCache.put("bat-spawn", getBytesFromStream("/Entities/Bat/bat-spawn.gif"));
+    }
+
+    private byte[] getBytesFromStream(String path) {
+        try (InputStream is = getClass().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new RuntimeException("Image not found: " + path);
+            }
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] data = new byte[16384];
+            int nRead;
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+            return buffer.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Fehler beim Laden des Bildes: " + path, e);
+        }
     }
 
     public static ImageView getImage(String key) {
-        ImageView original = cache.get(key);
-        if (original == null) throw new RuntimeException("Image not found: " + key);
-
-        ImageView clone = new ImageView(original.getImage());
-        clone.setPreserveRatio(true);
-        return clone;
+        byte[] bytes = imageBytesCache.get(key);
+        if (bytes == null) throw new RuntimeException("Image bytes not found: " + key);
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        Image image = new Image(bais);
+        ImageView imageView = new ImageView(image);
+        imageView.setPreserveRatio(true);
+        return imageView;
     }
 
 
@@ -141,16 +167,22 @@ public class EntityManagement {
                     }
                 } while (!collisionCheck.kannSpawnen(entity.getHitbox(), tempEntities));
 
-                entities.add(entity);
-                tempEntities.add(entity);
-                gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
+                if (collisionCheck.kannSpawnen(entity.getHitbox(), tempEntities)) {
+                    entities.add(entity);
+                    tempEntities.add(entity);
+                    gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
+                }
             }));
 
         }
 
         timeline.play();
         timeline.setOnFinished(event -> {
-            Main.getGameLoop().setPaused(false);
+            PauseTransition delay = new PauseTransition(Duration.millis(2000));
+            delay.setOnFinished(e -> {
+                Main.getGameLoop().setPaused(false);
+            });
+            delay.play();
         });
     }
 

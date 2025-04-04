@@ -1,14 +1,17 @@
 package org.projectgame.project2dgame.Entities.Enemies;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.Entity;
 import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.GameField;
+import org.projectgame.project2dgame.Main;
 
 import java.util.Objects;
 
@@ -16,12 +19,12 @@ import static javafx.scene.paint.Color.rgb;
 
 public class Bat extends Entity {
     private final ImageView idleGif;
-    private final ImageView idleFirstGif;
     private final ImageView rightGif;
     private final ImageView leftGif;
     private final ImageView fastRightGif;
     private final ImageView fastLeftGif;
     private ImageView currentSprite;
+    private final ImageView spawnGif;
 
     private boolean waitingAfterCharge = false;
     private long waitStartTime = 0;
@@ -41,15 +44,23 @@ public class Bat extends Entity {
     public Bat(double x, double y, int health, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, 100, gamePane, entityManagement);
 
-        idleFirstGif = EntityManagement.getImage("bat-idle_first");
         idleGif = EntityManagement.getImage("bat-idle");
         rightGif = EntityManagement.getImage("bat-right");
         leftGif = EntityManagement.getImage("bat-left");
         fastRightGif = EntityManagement.getImage("bat-right-fast");
         fastLeftGif = EntityManagement.getImage("bat-left-fast");
+        spawnGif = EntityManagement.getImage("bat-spawn");
 
-        this.sprite = idleFirstGif;
-        this.currentSprite = idleFirstGif;
+        this.sprite = spawnGif;
+        this.currentSprite = spawnGif;
+
+        PauseTransition spawnDelay = new PauseTransition(Duration.seconds(1.5));
+        spawnDelay.setOnFinished(e -> {
+            this.sprite.setImage(idleGif.getImage());
+            this.currentSprite = idleGif;
+        });
+        spawnDelay.play();
+
         this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
         this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
         this.sprite.setX(x);
@@ -195,27 +206,29 @@ public class Bat extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
-        this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
-        this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
+        if (!Main.isGameLoopPaused()) {
+            this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
+            this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
 
-        if (isCharging()) {
-            if (dx > 0 && currentSprite != fastRightGif) {
-                setSprite(fastRightGif);
-            } else if (dx < 0 && currentSprite != fastLeftGif) {
-                setSprite(fastLeftGif);
+            if (isCharging()) {
+                if (dx > 0 && currentSprite != fastRightGif) {
+                    setSprite(fastRightGif);
+                } else if (dx < 0 && currentSprite != fastLeftGif) {
+                    setSprite(fastLeftGif);
+                }
+                return;
             }
-            return;
-        }
 
-        if (!isWaitingAfterCharge()) {
-            if (dx > 0 && currentSprite != rightGif) {
-                setSprite(rightGif);
-            } else if (dx < 0 && currentSprite != leftGif) {
-                setSprite(leftGif);
-            }
-        } else {
-            if (currentSprite != idleGif) {
-                setSprite(idleGif);
+            if (!isWaitingAfterCharge()) {
+                if (dx > 0 && currentSprite != rightGif) {
+                    setSprite(rightGif);
+                } else if (dx < 0 && currentSprite != leftGif) {
+                    setSprite(leftGif);
+                }
+            } else {
+                if (currentSprite != idleGif) {
+                    setSprite(idleGif);
+                }
             }
         }
     }
@@ -229,6 +242,7 @@ public class Bat extends Entity {
         newSprite.setFitWidth(GameField.getTileSize() * 1.7);
         newSprite.setFitHeight(GameField.getTileSize() * 1.7);
 
+        if(sprite != null) gamePane.getChildren().remove(sprite);
         gamePane.getChildren().remove(currentSprite);
         gamePane.getChildren().add(newSprite);
 
