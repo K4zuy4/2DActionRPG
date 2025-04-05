@@ -1,6 +1,5 @@
 package org.projectgame.project2dgame.Entities.Enemies;
 
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
@@ -26,7 +25,7 @@ public class DeathBoss extends Entity {
     private final double summonDelay = 1.0;      // Verzögerung vor der Beschwörung
 
     // Distanz, ab der der Boss angreift (in Pixeln)
-    private final double attackRange = 100;
+    private final double attackRange = 30;
 
     // Timing-Konstanten für den Teleport-Delay (in Sekunden)
     private final double teleportPreDelay = 1.2;
@@ -99,7 +98,6 @@ public class DeathBoss extends Entity {
 
                 updateSpriteDirection(dx, dy);
 
-                // Erhöhe den Chase-Timer – 100% Verfolgungsenergie!
                 chaseTimer += deltaTime;
 
                 // Falls der Boss zu lange gejagt hat, wird er in die Nähe des Spielers teleportieren
@@ -161,6 +159,20 @@ public class DeathBoss extends Entity {
 
 
             case SUMMONING: {
+                if(teleportNearPlayer) {
+                    // Teleportiere den Boss in die Nähe des Spielers
+                    double dx = player.getX() - this.x;
+                    double dy = player.getY() - this.y;
+                    double distance = Math.sqrt(dx * dx + dy * dy);
+                    double moveX = (dx / distance) * entitySpeed * deltaTime;
+                    double moveY = (dy / distance) * entitySpeed * deltaTime;
+                    this.x += moveX;
+                    this.y += moveY;
+                    sprite.setX(this.x);
+                    sprite.setY(this.y);
+                    updateHitboxPosition();
+                    teleportNearPlayer = false;
+                }
                 if (stateTimer >= summonDelay) {
                     int skeletonCount = 0;
                     for(Entity e : entityManagement.getEntity()) {
