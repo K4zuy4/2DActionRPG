@@ -205,7 +205,7 @@ public class Character {
 
 
     public void setSpriteToIdle2() {
-        if (!Main.isGameLoopPaused()) {
+        if (Main.getGameLoop() != null && !Main.isGameLoopPaused()) {
             if (currentGif != idleGif) {
                 this.sprite.setImage(idleGif.getImage());
                 currentGif = idleGif;
