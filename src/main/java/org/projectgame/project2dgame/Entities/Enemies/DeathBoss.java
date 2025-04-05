@@ -25,7 +25,7 @@ public class DeathBoss extends Entity {
     private final double summonDelay = 1.0;      // Verzögerung vor der Beschwörung
 
     // Distanz, ab der der Boss angreift (in Pixeln)
-    private final double attackRange = 30;
+    private final double attackRange = 60;
 
     // Timing-Konstanten für den Teleport-Delay (in Sekunden)
     private final double teleportPreDelay = 1.2;
@@ -68,8 +68,8 @@ public class DeathBoss extends Entity {
         this.healthBar.setPrefWidth(GameField.getTileSize() * 2);
         this.healthBar.setPrefHeight(20);
 
-        double damageWidth = hitbox.getWidth() * 1.7;
-        double damageHeight = hitbox.getHeight() * 1.7;
+        double damageWidth = hitbox.getWidth() * 2;
+        double damageHeight = hitbox.getHeight() * 2;
         this.damageHitbox = new Rectangle(x, y, damageWidth, damageHeight);
         if(GameField.isDebug()) {
             damageHitbox.setFill(rgb(255, 0, 0, 0.5));
@@ -223,8 +223,8 @@ public class DeathBoss extends Entity {
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight()) / 2);
 
-        double damageWidth = hitbox.getWidth() * 1.7;
-        double damageHeight = hitbox.getHeight() * 1.7;
+        double damageWidth = hitbox.getWidth() * 2;
+        double damageHeight = hitbox.getHeight() * 2;
         damageHitbox.setWidth(damageWidth);
         damageHitbox.setHeight(damageHeight);
         damageHitbox.setX(x + (sprite.getFitWidth() - damageWidth) / 2);
@@ -251,7 +251,7 @@ public class DeathBoss extends Entity {
         int offsetY = random.nextInt(100) - 50;
         int spawnX = (int) this.x + offsetX;
         int spawnY = (int) this.y + offsetY;
-        int skeletonHealth = 160;  // Beispielwert für Level 5
+        int skeletonHealth = 120;  // Beispielwert für Level 5
         Skeleton skeleton = new Skeleton(spawnX, spawnY, skeletonHealth, gamePane, entityManagement);
         entityManagement.getEntity().add(skeleton);
         gamePane.getChildren().addAll(skeleton.getSprite(), skeleton.getHitbox(), skeleton.getHealthBar());

@@ -104,7 +104,11 @@ public class ShopMenuController {
         if(CharacterInfo.getMoney() >= CharacterInfo.getHealPrice()) {
 
             CharacterInfo.setMoney(CharacterInfo.getMoney() - CharacterInfo.getHealPrice());
-            CharacterInfo.setHealPrice(CharacterInfo.getHealPrice() * 2);
+            if(CharacterInfo.getHealPrice() * 2 < 150) {
+                CharacterInfo.setHealPrice(CharacterInfo.getHealPrice() * 2);
+            } else {
+                CharacterInfo.setHealPrice(150);
+            }
             CharacterInfo.setHealth(CharacterInfo.getMaxHealth());
             healLabel.setText("Heilung - " + CharacterInfo.getHealPrice() +"$");
             setGeldLabel();

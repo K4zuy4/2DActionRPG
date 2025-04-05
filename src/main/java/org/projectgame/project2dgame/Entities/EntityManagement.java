@@ -104,7 +104,7 @@ public class EntityManagement {
             // Boss spawnt in Level 5
             int bossX = GameField.getScreenWidth() / 2 + 80;
             int bossY = GameField.getScreenHeight() / 2 - 150;
-            DeathBoss boss = new DeathBoss(bossX, bossY, 600, 250, gamePane, this);
+            DeathBoss boss = new DeathBoss(bossX, bossY, 1600, 300, gamePane, this);
             entities.add(boss);
             gamePane.getChildren().addAll(boss.getSprite(), boss.getHitbox(), boss.getHealthBar());
 
@@ -113,6 +113,7 @@ public class EntityManagement {
                 Main.getGameLoop().setPaused(false);
             });
             delay.play();
+
         } else {
             int slamount;
             int skamount;
@@ -523,6 +524,12 @@ public class EntityManagement {
                 character.setGeld(character.getGeld() + geld);
             } else if(entity instanceof Skeleton) {
                 geld = random.nextInt(5 * 2 + 1) + (15 - 3);
+                character.setGeld(character.getGeld() + geld);
+            } else if(entity instanceof Bat) {
+                geld = random.nextInt(5 * 2 + 1) + (20 - 3);
+                character.setGeld(character.getGeld() + geld);
+            } else if(entity instanceof DeathBoss) {
+                geld = random.nextInt(5 * 2 + 1) + (100 - 3);
                 character.setGeld(character.getGeld() + geld);
             }
             character.setGeld(character.getGeld() + geld);
