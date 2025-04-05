@@ -15,7 +15,7 @@ public class GameField {
 
     public static final int LEVEL_COUNT = 4;
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     public static int getScreenWidth() {
         return SCREEN_WIDTH;

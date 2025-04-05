@@ -125,7 +125,7 @@ public class Skeleton extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
-        if(!Main.isGameLoopPaused() && Main.getGameLoop() != null) {
+        if(Main.getGameLoop() != null && !Main.isGameLoopPaused()) {
             if (isIdle) {
                 if (currentSprite != idleGif) {
                     setSprite(idleGif);

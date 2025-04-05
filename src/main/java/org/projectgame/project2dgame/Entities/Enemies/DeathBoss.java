@@ -40,6 +40,9 @@ public class DeathBoss extends Entity {
 
     private String currentAnimation = "";
 
+    // Extra Hitbox für den Attack des Bosses
+    private Rectangle damageHitbox;
+
     public DeathBoss(double x, double y, int health, int entitySpeed, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, entitySpeed, gamePane, entityManagement);
         this.state = BossState.CHASING;
@@ -58,13 +61,25 @@ public class DeathBoss extends Entity {
         // Hitbox des Bosses
         this.hitbox = new Rectangle(x, y, GameField.getTileSize() * 3, GameField.getTileSize() * 3);
         if(GameField.isDebug()) {
-            hitbox.setFill(rgb(0, 255, 0, 0.5));
+            hitbox.setFill(rgb(255, 255, 255, 0.5));
         } else {
             hitbox.setFill(rgb(255, 0, 0, 0));
         }
 
         this.healthBar.setPrefWidth(GameField.getTileSize() * 2);
         this.healthBar.setPrefHeight(20);
+
+        double damageWidth = hitbox.getWidth() * 1.7;
+        double damageHeight = hitbox.getHeight() * 1.7;
+        this.damageHitbox = new Rectangle(x, y, damageWidth, damageHeight);
+        if(GameField.isDebug()) {
+            damageHitbox.setFill(rgb(255, 0, 0, 0.5));
+        } else {
+            damageHitbox.setFill(rgb(255, 0, 0, 0));
+        }
+
+        entityManagement.getGamePane().getChildren().add(damageHitbox);
+
         updateHitboxPosition();
     }
 
@@ -127,24 +142,24 @@ public class DeathBoss extends Entity {
                 if (stateTimer >= attackInterval) {
                     attackCount++;
                     stateTimer = 0;
-                    // Füge dem Player Schaden zu, wenn er in range ist
-                    if (Math.hypot(player.getX() - this.x, player.getY() - this.y) <= attackRange) {
+                    // Verwende die DamageHitbox für die Treffererkennung
+                    if (damageHitbox.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
                         player.takeDamage(30, true);
                     }
                     if (attackCount >= 2) {
-                        // Nach 2 Schlägen wechselt er in den Beschwörungsmodus
                         state = BossState.SUMMONING;
                         stateTimer = 0;
                         currentAnimation = "deathboss-summon";
                         sprite.setImage(EntityManagement.getImage("deathboss-summon").getImage());
                     } else {
-                        // Falls es der zweite Schlag wird, halte die Attack-Animation nochmal kurz
                         currentAnimation = "deathboss-attack";
                         sprite.setImage(EntityManagement.getImage("deathboss-attack").getImage());
                     }
                 }
                 break;
             }
+
+
             case SUMMONING: {
                 if (stateTimer >= summonDelay) {
                     int skeletonCount = 0;
@@ -195,7 +210,14 @@ public class DeathBoss extends Entity {
         // Positioniere die Hitbox zentriert zum Boss-Sprite
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight()) / 2);
-        // HealthBar oberhalb des Bosses
+
+        double damageWidth = hitbox.getWidth() * 1.7;
+        double damageHeight = hitbox.getHeight() * 1.7;
+        damageHitbox.setWidth(damageWidth);
+        damageHitbox.setHeight(damageHeight);
+        damageHitbox.setX(x + (sprite.getFitWidth() - damageWidth) / 2);
+        damageHitbox.setY(y + (sprite.getFitHeight() - damageHeight) / 2);
+
         healthBar.setLayoutX(x + sprite.getFitWidth() / 2 - healthBar.getPrefWidth() / 2);
         healthBar.setLayoutY(y - 20);
     }
