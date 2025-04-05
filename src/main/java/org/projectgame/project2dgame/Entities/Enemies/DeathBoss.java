@@ -1,5 +1,6 @@
 package org.projectgame.project2dgame.Entities.Enemies;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
@@ -23,10 +24,21 @@ public class DeathBoss extends Entity {
     // Timing-Konstanten (in Sekunden)
     private final double attackInterval = 0.7;   // Zeit zwischen den Angriffen
     private final double summonDelay = 1.0;      // Verzögerung vor der Beschwörung
-    private final double teleportDelay = 0.5;    // Verzögerung während Teleportation
 
     // Distanz, ab der der Boss angreift (in Pixeln)
     private final double attackRange = 100;
+
+    // Timing-Konstanten für den Teleport-Delay (in Sekunden)
+    private final double teleportPreDelay = 1.2;
+    private final double teleportPostDelay = 0.7;
+    private boolean hasTeleported = false;
+
+    // Timing-Konstanten damit der Chase nicht zu lange dauert
+    private final double maxChaseDuration = 5.0;
+    private double chaseTimer = 0;
+    private boolean teleportNearPlayer = false;
+
+    private String currentAnimation = "";
 
     public DeathBoss(double x, double y, int health, int entitySpeed, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, entitySpeed, gamePane, entityManagement);
@@ -35,9 +47,13 @@ public class DeathBoss extends Entity {
         this.attackCount = 0;
 
         // Setze initial das Idle-Sprite
+        currentAnimation = "deathboss-idle";
         this.sprite = EntityManagement.getImage("deathboss-idle");
-        this.sprite.setFitWidth(GameField.getTileSize() * 4);
-        this.sprite.setFitHeight(GameField.getTileSize() * 4);
+        this.sprite.setFitWidth(GameField.getTileSize() * 4.6);
+        this.sprite.setFitHeight(GameField.getTileSize() * 4.6);
+
+        sprite.setX(this.x);
+        sprite.setY(this.y);
 
         // Hitbox des Bosses
         this.hitbox = new Rectangle(x, y, GameField.getTileSize() * 3, GameField.getTileSize() * 3);
@@ -46,6 +62,10 @@ public class DeathBoss extends Entity {
         } else {
             hitbox.setFill(rgb(255, 0, 0, 0));
         }
+
+        this.healthBar.setPrefWidth(GameField.getTileSize() * 2);
+        this.healthBar.setPrefHeight(20);
+        updateHitboxPosition();
     }
 
     @Override
@@ -60,32 +80,48 @@ public class DeathBoss extends Entity {
             case CHASING: {
                 double dx = player.getX() - this.x;
                 double dy = player.getY() - this.y;
+                double distance = Math.sqrt(dx * dx + dy * dy);
 
                 updateSpriteDirection(dx, dy);
 
-                double distance = Math.sqrt(dx * dx + dy * dy);
+                // Erhöhe den Chase-Timer – 100% Verfolgungsenergie!
+                chaseTimer += deltaTime;
+
+                // Falls der Boss zu lange gejagt hat, wird er in die Nähe des Spielers teleportieren
+                if (chaseTimer >= maxChaseDuration) {
+                    state = BossState.TELEPORTING;
+                    stateTimer = 0;
+                    chaseTimer = 0; // Reset für den nächsten Lauf
+                    teleportNearPlayer = true;
+                    currentAnimation = "deathboss-teleport";
+                    sprite.setImage(EntityManagement.getImage("deathboss-teleport").getImage());
+                    break;
+                }
+
                 if (distance > attackRange) {
                     double moveX = (dx / distance) * entitySpeed * deltaTime;
                     double moveY = (dy / distance) * entitySpeed * deltaTime;
-                    // Prüfen, ob sich der Boss mit diesem Offset kollidiert
-                        this.x += moveX;
-                        this.y += moveY;
-                        // Sprite und Hitbox synchronisieren
-                        this.sprite.setX(this.x);
-                        this.sprite.setY(this.y);
-                        updateHitboxPosition();
-                    // Setze das Idle-Sprite
-                    if (!sprite.getImage().equals(EntityManagement.getImage("deathboss-idle").getImage())) {
+                    this.x += moveX;
+                    this.y += moveY;
+                    sprite.setX(this.x);
+                    sprite.setY(this.y);
+                    updateHitboxPosition();
+                    if (!"deathboss-idle".equals(currentAnimation)) {
+                        currentAnimation = "deathboss-idle";
                         sprite.setImage(EntityManagement.getImage("deathboss-idle").getImage());
                     }
                 } else {
+                    // Wenn der Spieler nah genug ist, starte den Angriff – und reset den chaseTimer
                     state = BossState.ATTACKING;
                     stateTimer = 0;
                     attackCount = 0;
+                    chaseTimer = 0;
+                    currentAnimation = "deathboss-attack";
                     sprite.setImage(EntityManagement.getImage("deathboss-attack").getImage());
                 }
                 break;
             }
+
 
             case ATTACKING: {
                 if (stateTimer >= attackInterval) {
@@ -93,15 +129,17 @@ public class DeathBoss extends Entity {
                     stateTimer = 0;
                     // Füge dem Player Schaden zu, wenn er in range ist
                     if (Math.hypot(player.getX() - this.x, player.getY() - this.y) <= attackRange) {
-                        player.takeDamage(30);
+                        player.takeDamage(30, true);
                     }
                     if (attackCount >= 2) {
                         // Nach 2 Schlägen wechselt er in den Beschwörungsmodus
                         state = BossState.SUMMONING;
                         stateTimer = 0;
+                        currentAnimation = "deathboss-summon";
                         sprite.setImage(EntityManagement.getImage("deathboss-summon").getImage());
                     } else {
                         // Falls es der zweite Schlag wird, halte die Attack-Animation nochmal kurz
+                        currentAnimation = "deathboss-attack";
                         sprite.setImage(EntityManagement.getImage("deathboss-attack").getImage());
                     }
                 }
@@ -121,20 +159,34 @@ public class DeathBoss extends Entity {
                     // Nach der Beschwörung teleportiert sich der Boss
                     state = BossState.TELEPORTING;
                     stateTimer = 0;
+                    currentAnimation = "deathboss-teleport";
                     sprite.setImage(EntityManagement.getImage("deathboss-teleport").getImage());
                 }
                 break;
             }
             case TELEPORTING: {
-                if (stateTimer >= teleportDelay) {
-                    teleport();
-                    // Nach dem Teleport kehrt er in den Chasing-Modus zurück
-                    state = BossState.CHASING;
-                    stateTimer = 0;
-                    sprite.setImage(EntityManagement.getImage("deathboss-idle").getImage());
+                // Wenn der Boss noch nicht teleportiert hat, warte bis teleportPreDelay erreicht ist
+                if (!hasTeleported) {
+                    if (stateTimer >= teleportPreDelay) {
+                        teleport();
+                        hasTeleported = true;
+                        stateTimer = 0;
+                    }
+                } else {
+                    // Nach dem Teleport bleibt der Boss an der neuen Position stehen, bis teleportPostDelay abgelaufen ist
+                    if (stateTimer >= teleportPostDelay) {
+                        state = BossState.CHASING;
+                        stateTimer = 0;
+                        hasTeleported = false;
+                        if (!"deathboss-idle".equals(currentAnimation)) {
+                            currentAnimation = "deathboss-idle";
+                            sprite.setImage(EntityManagement.getImage("deathboss-idle").getImage());
+                        }
+                    }
                 }
                 break;
             }
+
         }
     }
 

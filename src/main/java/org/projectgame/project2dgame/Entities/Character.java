@@ -98,8 +98,8 @@ public class Character {
         healthBar.setLayoutY(y - 20);
     }
 
-    public void takeDamage(int _damage) {
-        if (!invincible) {
+    public void takeDamage(int _damage, boolean bossDamage) {
+        if (!invincible || bossDamage) {
             SoundEngine.playPlayerHitSound();
             Random random = new Random();
             int damage = random.nextInt(5 * 2 + 1) + (_damage - 5);

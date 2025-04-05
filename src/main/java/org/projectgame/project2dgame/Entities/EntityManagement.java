@@ -101,10 +101,10 @@ public class EntityManagement {
     // Überarbeitet von ChatGPT, da Problem mit den Gegner, welche in einander spawnen durch zu kleine Verzögerung zwischen den Spawns
     public void loadEntities(CollisionCheck collisionCheck) {
         if(level == 5) {
-            // Boss spawnt in Level 5 – der finale Endgegner, der 100% Boss-Modus aktiviert!
-            int bossX = GameField.getScreenWidth() / 2;
-            int bossY = GameField.getScreenHeight() / 2;
-            DeathBoss boss = new DeathBoss(bossX, bossY, 500, 75, gamePane, this); // Werte anpassen, wie du es brauchst
+            // Boss spawnt in Level 5
+            int bossX = GameField.getScreenWidth() / 2 + 80;
+            int bossY = GameField.getScreenHeight() / 2 - 150;
+            DeathBoss boss = new DeathBoss(bossX, bossY, 600, 250, gamePane, this);
             entities.add(boss);
             gamePane.getChildren().addAll(boss.getSprite(), boss.getHitbox(), boss.getHealthBar());
 

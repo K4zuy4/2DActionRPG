@@ -44,7 +44,7 @@ public class CollisionCheck {
                 Tile tile = tileMap.getTile(y, x);
                 Rectangle damageBox = tile.getDamageHitbox();
                 if (damageBox != null && playerHitbox.getBoundsInParent().intersects(damageBox.getBoundsInParent())) {
-                    entityManagement.getCharacter().takeDamage(15);
+                    entityManagement.getCharacter().takeDamage(15, false);
                     return;
                 }
             }
@@ -106,7 +106,7 @@ public class CollisionCheck {
             );
 
             if (newHitbox.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
-                player.takeDamage(15);
+                player.takeDamage(15, false);
                 return true;
             }
         }
@@ -197,7 +197,7 @@ public class CollisionCheck {
 
         // Spieler-Kollision
         if (hitboxNode.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
-            player.takeDamage(10);
+            player.takeDamage(10, false);
             return true;
         }
 
@@ -255,7 +255,7 @@ public class CollisionCheck {
         // Kollision mit Spieler
         Character player = entityManagement.getCharacter();
         if (player != null && batHitbox.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
-            player.takeDamage(20);
+            player.takeDamage(20, false);
             return true;
         }
 
