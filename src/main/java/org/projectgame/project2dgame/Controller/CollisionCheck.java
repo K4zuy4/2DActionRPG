@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
 import org.projectgame.project2dgame.Entities.Character;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
+import org.projectgame.project2dgame.Entities.Enemies.DeathBoss;
 import org.projectgame.project2dgame.Entities.Entity;
 import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.GameField;
@@ -112,6 +113,7 @@ public class CollisionCheck {
 
         // Kollision mit Gegnern
         for (Entity entity : entityManagement.getEntity()) {
+            if(entity instanceof DeathBoss) continue;
             if (entity.getHitbox() != entityHitbox) {
                 Rectangle newHitbox = new Rectangle(
                         entityHitbox.getX() + dx,

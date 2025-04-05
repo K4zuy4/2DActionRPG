@@ -11,8 +11,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
 import org.projectgame.project2dgame.Entities.Enemies.Bat;
+import org.projectgame.project2dgame.Entities.Enemies.DeathBoss;
 import org.projectgame.project2dgame.Entities.Enemies.Skeleton;
 import org.projectgame.project2dgame.Entities.Enemies.Slime;
+import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.Main;
 
 import java.io.ByteArrayInputStream;
@@ -60,6 +62,11 @@ public class EntityManagement {
         imageBytesCache.put("bat-right-fast", getBytesFromStream("/Entities/Bat/bat-right-fast.gif"));
         imageBytesCache.put("bat-left-fast", getBytesFromStream("/Entities/Bat/bat-left-fast.gif"));
         imageBytesCache.put("bat-spawn", getBytesFromStream("/Entities/Bat/bat-spawn.gif"));
+
+        imageBytesCache.put("deathboss-idle", getBytesFromStream("/Entities/DeathBoss/deathboss-idle.gif"));
+        imageBytesCache.put("deathboss-attack", getBytesFromStream("/Entities/DeathBoss/deathboss-attack.gif"));
+        imageBytesCache.put("deathboss-summon", getBytesFromStream("/Entities/DeathBoss/deathboss-summon.gif"));
+        imageBytesCache.put("deathboss-teleport", getBytesFromStream("/Entities/DeathBoss/deathboss-teleport.gif"));
     }
 
     private byte[] getBytesFromStream(String path) {
@@ -93,97 +100,112 @@ public class EntityManagement {
 
     // Überarbeitet von ChatGPT, da Problem mit den Gegner, welche in einander spawnen durch zu kleine Verzögerung zwischen den Spawns
     public void loadEntities(CollisionCheck collisionCheck) {
-        int slamount;
-        int skamount;
-        int bamount;
-        int slimeHealth;
-        int skeletonHealth;
-        int batHealth;
-        if (level == 1) {
-            skamount = 2;
-            skeletonHealth = 80;
-            slamount = 3;
-            slimeHealth = 50;
-            bamount = 2;
-            batHealth = 70;
-        } else if (level == 2) {
-            slamount = 2;
-            skamount = 3;
-            slimeHealth = 60;
-            skeletonHealth = 100;
-            bamount = 3;
-            batHealth = 85;
-        } else if (level == 3) {
-            slamount = 2;
-            skamount = 4;
-            slimeHealth = 70;
-            skeletonHealth = 120;
-            bamount = 2;
-            batHealth = 100;
-        } else if (level == 4) {
-            slamount = 4;
-            skamount = 2;
-            slimeHealth = 80;
-            skeletonHealth = 140;
-            bamount = 3;
-            batHealth = 110;
-        } else if (level == 5) {
-            slamount = 1;
-            skamount = 5;
-            slimeHealth = 90;
-            skeletonHealth = 160;
-            bamount = 2;
-            batHealth = 120;
-        } else {
-            // Debug Level
-            skeletonHealth = 0;
-            slimeHealth = 0;
-            slamount = 20;
-            skamount = 20;
-            bamount = 20;
-            batHealth = 0;
-        }
+        if(level == 5) {
+            // Boss spawnt in Level 5 – der finale Endgegner, der 100% Boss-Modus aktiviert!
+            int bossX = GameField.getScreenWidth() / 2;
+            int bossY = GameField.getScreenHeight() / 2;
+            DeathBoss boss = new DeathBoss(bossX, bossY, 500, 75, gamePane, this); // Werte anpassen, wie du es brauchst
+            entities.add(boss);
+            gamePane.getChildren().addAll(boss.getSprite(), boss.getHitbox(), boss.getHealthBar());
 
-        int totalAmount = slamount + skamount + bamount;
-        Random random = new Random();
-        List<Entity> tempEntities = new ArrayList<>();
-        Timeline timeline = new Timeline();
-
-        for (int i = 0; i < totalAmount; i++) {
-            int finalI = i;
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 150), event -> {
-                Entity entity = null;
-                int x, y;
-                do {
-                    x = 64 + random.nextInt(800);
-                    y = 64 + random.nextInt(550);
-
-                    if (finalI < slamount) {
-                        entity = new Slime(x, y, slimeHealth, gamePane, this);
-                    } else if (finalI < slamount + skamount) {
-                        entity = new Skeleton(x, y, skeletonHealth, gamePane, this);
-                    } else {
-                        entity = new Bat(x, y, batHealth, gamePane, this);
-                    }
-                } while (!collisionCheck.kannSpawnen(entity.getHitbox(), tempEntities));
-
-                if (collisionCheck.kannSpawnen(entity.getHitbox(), tempEntities)) {
-                    entities.add(entity);
-                    tempEntities.add(entity);
-                    gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
-                }
-            }));
-
-        }
-
-        timeline.play();
-        timeline.setOnFinished(event -> {
             PauseTransition delay = new PauseTransition(Duration.millis(2000));
             delay.setOnFinished(e -> {
                 Main.getGameLoop().setPaused(false);
             });
             delay.play();
-        });
+        } else {
+            int slamount;
+            int skamount;
+            int bamount;
+            int slimeHealth;
+            int skeletonHealth;
+            int batHealth;
+            if (level == 1) {
+                skamount = 2;
+                skeletonHealth = 80;
+                slamount = 3;
+                slimeHealth = 50;
+                bamount = 2;
+                batHealth = 70;
+            } else if (level == 2) {
+                slamount = 2;
+                skamount = 3;
+                slimeHealth = 60;
+                skeletonHealth = 100;
+                bamount = 3;
+                batHealth = 85;
+            } else if (level == 3) {
+                slamount = 2;
+                skamount = 4;
+                slimeHealth = 70;
+                skeletonHealth = 120;
+                bamount = 2;
+                batHealth = 100;
+            } else if (level == 4) {
+                slamount = 4;
+                skamount = 2;
+                slimeHealth = 80;
+                skeletonHealth = 140;
+                bamount = 3;
+                batHealth = 110;
+            } else if (level == 5) {
+                slamount = 1;
+                skamount = 5;
+                slimeHealth = 90;
+                skeletonHealth = 160;
+                bamount = 2;
+                batHealth = 120;
+            } else {
+                // Debug Level
+                skeletonHealth = 0;
+                slimeHealth = 0;
+                slamount = 20;
+                skamount = 20;
+                bamount = 20;
+                batHealth = 0;
+            }
+
+            int totalAmount = slamount + skamount + bamount;
+            Random random = new Random();
+            List<Entity> tempEntities = new ArrayList<>();
+            Timeline timeline = new Timeline();
+
+            for (int i = 0; i < totalAmount; i++) {
+                int finalI = i;
+                timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 150), event -> {
+                    Entity entity = null;
+                    int x, y;
+                    do {
+                        x = 64 + random.nextInt(800);
+                        y = 64 + random.nextInt(550);
+
+                        if (finalI < slamount) {
+                            entity = new Slime(x, y, slimeHealth, gamePane, this);
+                        } else if (finalI < slamount + skamount) {
+                            entity = new Skeleton(x, y, skeletonHealth, gamePane, this);
+                        } else {
+                            entity = new Bat(x, y, batHealth, gamePane, this);
+                        }
+                    } while (!collisionCheck.kannSpawnen(entity.getHitbox(), tempEntities));
+
+                    if (collisionCheck.kannSpawnen(entity.getHitbox(), tempEntities)) {
+                        entities.add(entity);
+                        tempEntities.add(entity);
+                        gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
+                    }
+                }));
+
+            }
+
+            timeline.play();
+            timeline.setOnFinished(event -> {
+                PauseTransition delay = new PauseTransition(Duration.millis(2000));
+                delay.setOnFinished(e -> {
+                    Main.getGameLoop().setPaused(false);
+                });
+                delay.play();
+            });
+        }
     }
 
     public void loadCharacter() {
@@ -199,7 +221,7 @@ public class EntityManagement {
 
     // Hilfe von Youtube Tutorials und ChatGPT
     public void updateEntities(double deltaTime, CollisionCheck collisionCheck) {
-        for (Entity entity : entities) {
+        for (Entity entity : new ArrayList<>(entities)) {
             entity.updateHitboxPosition();
         }
 
@@ -209,8 +231,12 @@ public class EntityManagement {
         double playerX = player.getX();
         double playerY = player.getY();
 
-        for (Entity entity : entities) {
+        for (Entity entity : new ArrayList<>(entities)) {
             if (entity.isWaiting()) continue;
+
+            if(entity instanceof DeathBoss) {
+                entity.update(deltaTime);
+            }
 
             // Slime
             if (entity instanceof Slime) {

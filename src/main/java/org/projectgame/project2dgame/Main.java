@@ -272,6 +272,7 @@ public class Main extends Application {
             case 2 -> new TileMap("/Tiles/TileMap2.txt", GameField.getTileSize(), gamePane);
             case 3 -> new TileMap("/Tiles/TileMap3.txt", GameField.getTileSize(), gamePane);
             case 4 -> new TileMap("/Tiles/TileMap4.txt", GameField.getTileSize(), gamePane);
+            case 5 -> new TileMap("/Tiles/TileMap5.txt", GameField.getTileSize(), gamePane);
             default -> throw new IllegalArgumentException("Unknown level: " + level);
         };
     }
