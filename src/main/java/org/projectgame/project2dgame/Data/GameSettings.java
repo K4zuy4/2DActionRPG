@@ -17,6 +17,7 @@ public class GameSettings {
 
     private static final Map<String, KeyCode> keyMap = new HashMap<>();
     private static final List<TimeWrapper> times = new ArrayList<>();
+    private static final List<WaveWrapper> waves = new ArrayList<>();
     private static final String DATEN_PFAD = getAppDataPath("/Sanctum_of_Sorrow/data.json");
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static double volume = 0.5;
@@ -36,7 +37,7 @@ public class GameSettings {
     }
 
     public static void savedata() throws IOException {
-        Wrapper wrapper = new Wrapper(keyMap, volume, times);
+        Wrapper wrapper = new Wrapper(keyMap, volume, times, waves);
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(DATEN_PFAD), wrapper);
     }
 
@@ -81,6 +82,8 @@ public class GameSettings {
         volume = wrapper.getVolume();
         times.clear();
         times.addAll(wrapper.getTimes());
+        waves.clear();
+        waves.addAll(wrapper.getWaves());
     }
 
     public static void changeKey(String key, KeyCode keyCode) throws IOException {
@@ -96,4 +99,14 @@ public class GameSettings {
     public static List<TimeWrapper> getAllTimes() {
         return times;
     }
+
+    public static void saveWave(int wave, double time) throws IOException {
+        waves.add(new WaveWrapper(wave, time, LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm - dd.MM.yyyy"))));
+        savedata();
+    }
+
+    public static List<WaveWrapper> getAllWaves() {
+        return waves;
+    }
+
 }

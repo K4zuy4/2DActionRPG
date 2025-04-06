@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.projectgame.project2dgame.Controller.SoundEngine;
 import org.projectgame.project2dgame.Data.GameSettings;
+import org.projectgame.project2dgame.GameField.EndlessGameManager;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.Main;
 
@@ -34,7 +35,7 @@ public class Character {
     private final ProgressBar healthBar;
     private String direction = "right";
     private long lastAttack = 0;
-    private final long cooldown = CharacterInfo.getFireRate();
+    private long cooldown = CharacterInfo.getFireRate();
     private boolean isShooting = false;
     private final EntityManagement entityManagement;
     private final ImageView dyingGif;
@@ -100,6 +101,17 @@ public class Character {
         scheduler.shutdown();
     }
 
+    public void reload() {
+        cooldown = CharacterInfo.getFireRate();
+        characterSpeed = CharacterInfo.getSpeed();
+        health = CharacterInfo.getHealth();
+        maxHealth = CharacterInfo.getMaxHealth();
+        geld = CharacterInfo.getMoney();
+
+        updateHitboxPosition();
+        updateHealthBar();
+    }
+
     public void updateHitboxPosition() {
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight()));
@@ -113,18 +125,29 @@ public class Character {
             Random random = new Random();
             int damage = random.nextInt(5 * 2 + 1) + (_damage - 5);
             health -= damage;
-            if (health < 0) {
+            if (health <= 0) {
                 health = 0;
-                CharacterInfo.reset();
-                Platform.runLater(() -> this.sprite.setImage(dyingGif.getImage()));
                 dead = true;
+                Platform.runLater(() -> this.sprite.setImage(dyingGif.getImage()));
+
                 try {
-                    Main.setWindow("GameOver", 0);
-                } catch (IOException e1) {
-                    throw new RuntimeException(e1);
+                    CharacterInfo.reset();
+                    if (Main.endlessMode()) {
+                        Main.safeEndlessGameTime(EndlessGameManager.getWaveCount() - 1);
+
+                        Main.resetEndlessMode();
+
+                        Main.setWindow("GameOverEndless", 0);
+                    } else {
+                        Main.setWindow("GameOver", 0);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
+
                 return;
             }
+
             CharacterInfo.setHealth(health);
             updateHealthBar();
             invincible = true;
@@ -134,6 +157,7 @@ public class Character {
             scheduler.shutdown();
         }
     }
+
 
     public void setSpawnStill() {
         spawnDelay.stop();

@@ -18,19 +18,18 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import org.projectgame.project2dgame.Controller.CollisionCheck;
-import org.projectgame.project2dgame.Controller.GameFieldController;
-import org.projectgame.project2dgame.Controller.KeyInputHandler;
-import org.projectgame.project2dgame.Controller.SoundEngine;
+import org.projectgame.project2dgame.Controller.*;
 import org.projectgame.project2dgame.Data.GameSettings;
 import org.projectgame.project2dgame.Data.StoryCutscene;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Entities.EntityManagement;
+import org.projectgame.project2dgame.GameField.EndlessGameManager;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.GameField.GameLoop;
 import org.projectgame.project2dgame.GameField.TileManagement.TileMap;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class Main extends Application {
 
@@ -42,6 +41,9 @@ public class Main extends Application {
     private static Pane pausePane;
     private static GameFieldController gameFieldController;
     private static Stage pauseStage;
+    private static EndlessGameManager endlessGameManager;
+    private static boolean endlessMode = false;
+    private static EntityManagement entityManagement;
 
 
     @Override
@@ -97,8 +99,25 @@ public class Main extends Application {
                 break;
 
             case "GameOver":
+                GameOverEndlessScreenController controller = new GameOverEndlessScreenController();
                 loader.setLocation(Main.class.getResource("/FXMLFiles/GameOverScreen.fxml"));
                 scene = new Scene(loader.load());
+                primaryStage.setTitle("Sanctum of Sorrow - Game Over");
+                SoundEngine.stopMusic();
+                SoundEngine.playGameOver();
+                if (gameLoop != null) {
+                    gameLoop.stop();
+                    gameLoop = null;
+                }
+                primaryStage.setScene(scene);
+                primaryStage.centerOnScreen();
+                break;
+
+            case "GameOverEndless":
+                loader.setLocation(Main.class.getResource("/FXMLFiles/GameOverEndless.fxml"));
+                scene = new Scene(loader.load());
+                GameOverEndlessScreenController gameOverEndlessScreenController = loader.getController();
+                gameOverEndlessScreenController.setWaveCount(EndlessGameManager.getWaveCount());
                 primaryStage.setTitle("Sanctum of Sorrow - Game Over");
                 SoundEngine.stopMusic();
                 SoundEngine.playGameOver();
@@ -214,6 +233,68 @@ public class Main extends Application {
         new Thread(loadTask).start();
     }
 
+    public static void startEndlessMode() throws IOException {
+        endlessMode = true;
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/GameField.fxml"));
+        Parent root = loader.load();
+        gameFieldController = loader.getController();
+
+        geldLabel = gameFieldController.getGeldLabel();
+        imageView = gameFieldController.getImageView();
+        timeLabel = gameFieldController.getTimeLabel();
+        pausePane = gameFieldController.getPausePane();
+
+        Pane gamePane = gameFieldController.getGamePane();
+
+        Random ran = new Random();
+        TileMap tileMap = new TileMap("/Tiles/TileMap" + (ran.nextInt(5) + 1) +".txt", GameField.getTileSize(), gamePane);
+
+        EntityManagement entityManagement = new EntityManagement(gamePane, geldLabel, 0);
+        entityManagement.loadImageCache();
+        entityManagement.loadCharacter();
+        CollisionCheck collisionCheck = new CollisionCheck(tileMap, entityManagement);
+        KeyInputHandler keyInputHandler = new KeyInputHandler();
+
+        Scene scene = new Scene(root, GameField.getScreenWidth(), GameField.getScreenHeight());
+        keyInputHandler.addKeyHandlers(scene);
+
+        primaryStage.setScene(scene);
+        primaryStage.centerOnScreen();
+        primaryStage.setTitle("Sanctum of Sorrow - Endless Mode");
+
+        gameLoop = new GameLoop(entityManagement, keyInputHandler, collisionCheck, timeLabel);
+        endlessGameManager = new EndlessGameManager(entityManagement);
+
+        entityManagement.setCollisonCheck(collisionCheck);
+        entityManagement.createProjectileManagement();
+        gamePane.getChildren().addAll(geldLabel, imageView, timeLabel);
+
+        gameLoop.start();
+        gameLoop.setPaused(true);
+
+        entityManagement.getCharacter().setSpawnStill();
+        entityManagement.getCharacter().updateHitboxPosition();
+
+        PauseTransition spawnDelay = new PauseTransition(Duration.millis(500));
+        spawnDelay.setOnFinished(e -> {
+            entityManagement.getCharacter().playSpawnAnimation();
+            Main.getEndlessGameManager().startNextWave();
+
+            PauseTransition startWaveDelay = new PauseTransition(Duration.millis(2000));
+            startWaveDelay.setOnFinished(event -> {
+                SoundEngine.playFightMusic();
+            });
+            startWaveDelay.play();
+        });
+        spawnDelay.play();
+
+        SoundEngine.playAmbientSound();
+    }
+
+    public static EndlessGameManager getEndlessGameManager() {
+        return endlessGameManager;
+    }
+
 
     public static void openUpgradeWindow() {
         try {
@@ -226,6 +307,17 @@ public class Main extends Application {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(primaryStage);
             stage.show();
+            stage.setOnCloseRequest(event -> {
+                if (Main.getEndlessGameManager() != null) {
+                    Main.getEndlessGameManager().setWaitingForUpgrade(false);
+                    SoundEngine.playFightMusic();
+                    Main.pauseGameloop(false);
+                }
+
+                if (EndlessGameManager.getEntityManagement() != null) {
+                    EndlessGameManager.getEntityManagement().reloadCharacter();
+                }
+            });
             SoundEngine.stopMusic();
             SoundEngine.playShopMusic();
         } catch (IOException e) {
@@ -304,12 +396,24 @@ public class Main extends Application {
         GameSettings.saveTime(level, time);
     }
 
+    public static void safeEndlessGameTime(int wave) throws IOException {
+        Double time = gameLoop.getRawGameTimeSeconds();
+        GameSettings.saveWave(wave, time);
+    }
+
     @Override
     public void stop() {
         if(gameLoop != null) {
             gameLoop.stop();
         }
     }
+
+    public static void resetEndlessMode() {
+        endlessMode = false;
+        endlessGameManager = null;
+        entityManagement = null;
+    }
+
 
     public static void main(String[] args) {
         launch();
@@ -351,5 +455,21 @@ public class Main extends Application {
 
     public static boolean isGameLoopPaused() {
         return gameLoop.isPaused();
+    }
+
+    public static boolean isEndlessMode() {
+        return endlessMode;
+    }
+
+    public static Pane getGamePane() {
+        return gameFieldController.getGamePane();
+    }
+
+    public static boolean endlessMode() {
+        return endlessMode;
+    }
+
+    public static void setEndlessMode(boolean endlessMode) {
+        Main.endlessMode = endlessMode;
     }
 }

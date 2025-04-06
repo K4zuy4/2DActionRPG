@@ -102,6 +102,14 @@ public class GameLoop extends AnimationTimer {
                 }
             }
         }
+
+        if (Main.getEndlessGameManager() != null) {
+            if(Main.getEndlessGameManager().isWaitingForUpgrade()) {
+                Set<KeyCode> pressedKeys = keyInputHandler.getPressedKeys();
+                pressedKeys.clear();
+            }
+            Main.getEndlessGameManager().checkWaveEnd();
+        }
     }
 
     public void render() {

@@ -16,6 +16,7 @@ import org.projectgame.project2dgame.Entities.Enemies.Bat;
 import org.projectgame.project2dgame.Entities.Enemies.DeathBoss;
 import org.projectgame.project2dgame.Entities.Enemies.Skeleton;
 import org.projectgame.project2dgame.Entities.Enemies.Slime;
+import org.projectgame.project2dgame.GameField.EndlessGameManager;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.Main;
 
@@ -212,6 +213,55 @@ public class EntityManagement {
             });
         }
     }
+
+    public void spawnEndlessEntities(int slamount, int skamount, int bamount, int slimeHealth, int skeletonHealth, int batHealth) {
+        Main.pauseGameloop(true);
+
+        Random random = new Random();
+        int totalAmount = slamount + skamount + bamount;
+        List<Entity> tempEntities = new ArrayList<>();
+        Timeline timeline = new Timeline();
+
+        for (int i = 0; i < totalAmount; i++) {
+            int finalI = i;
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(i * 150), event -> {
+                Entity entity = null;
+                int x, y;
+                do {
+                    x = 64 + random.nextInt(800);
+                    y = 64 + random.nextInt(550);
+
+                    if (finalI < slamount) {
+                        entity = new Slime(x, y, slimeHealth, gamePane, this);
+                    } else if (finalI < slamount + skamount) {
+                        entity = new Skeleton(x, y, skeletonHealth, gamePane, this);
+                    } else {
+                        entity = new Bat(x, y, batHealth, gamePane, this);
+                    }
+                } while (!collisonCheck.kannSpawnen(entity.getHitbox(), tempEntities));
+
+                entities.add(entity);
+                tempEntities.add(entity);
+                gamePane.getChildren().addAll(entity.getSprite(), entity.getHitbox(), entity.getHealthBar());
+            }));
+        }
+
+        timeline.play();
+
+        timeline.setOnFinished(event -> {
+            PauseTransition delay = new PauseTransition(Duration.millis(2000));
+            delay.setOnFinished(e -> {
+                Main.pauseGameloop(false);
+                EndlessGameManager.setWaiting(false);
+            });
+            delay.play();
+        });
+    }
+
+    public void reloadCharacter() {
+        character.reload();
+    }
+
 
     public void loadCharacter() {
         character = new Character(100, 300, this);
@@ -518,51 +568,58 @@ public class EntityManagement {
 
     public void removeEntity(Entity entity) {
         entities.remove(entity);
-            gamePane.getChildren().remove(entity.getSprite());
-            gamePane.getChildren().remove(entity.getHitbox());
-            gamePane.getChildren().remove(entity.getHealthBar());
-            Random random = new Random();
-            int geld = 0;
-            if(entity instanceof Slime) {
-                geld = random.nextInt(5 * 2 + 1) + (10 - 3);
-                character.setGeld(character.getGeld() + geld);
-            } else if(entity instanceof Skeleton) {
-                geld = random.nextInt(5 * 2 + 1) + (15 - 3);
-                character.setGeld(character.getGeld() + geld);
-            } else if(entity instanceof Bat) {
-                geld = random.nextInt(5 * 2 + 1) + (20 - 3);
-                character.setGeld(character.getGeld() + geld);
-            } else if(entity instanceof DeathBoss) {
-                geld = random.nextInt(5 * 2 + 1) + (100 - 3);
-                character.setGeld(character.getGeld() + geld);
-            }
-            character.setGeld(character.getGeld() + geld);
+        gamePane.getChildren().remove(entity.getSprite());
+        gamePane.getChildren().remove(entity.getHitbox());
+        gamePane.getChildren().remove(entity.getHealthBar());
 
-        if(entities.isEmpty()) {
-            try {
-                Main.safeGameTime(level);
-                if (!CharacterInfo.getLevelDone().contains(level)) {
-                    CharacterInfo.getLevelDone().add(level);
-                }
-                if (level != 5) {
-                    Main.setWindow("Win", 0);
-                } else {
-                    SoundEngine.playAmbientSound();
-                    EndCutscene endCutscene = new EndCutscene(getGamePane());
-                    endCutscene.setOnFinished(() -> {
-                        try {
-                            Main.setWindow("MainMenu", 0);
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    });
+        // Geld-Belohnung
+        Random random = new Random();
+        int geld = 0;
+        if (entity instanceof Slime) {
+            geld = random.nextInt(5 * 2 + 1) + (10 - 3);
+        } else if (entity instanceof Skeleton) {
+            geld = random.nextInt(5 * 2 + 1) + (15 - 3);
+        } else if (entity instanceof Bat) {
+            geld = random.nextInt(5 * 2 + 1) + (20 - 3);
+        } else if (entity instanceof DeathBoss) {
+            geld = random.nextInt(5 * 2 + 1) + (100 - 3);
+        }
+        character.setGeld(character.getGeld() + geld);
 
+        // Prüfen ob alle Gegner tot sind
+        if (entities.isEmpty()) {
+            if (Main.isEndlessMode()) {
+                // Nächste Welle starten
+                Main.getEndlessGameManager().checkWaveEnd();
+            } else {
+                // Level abschließen
+                try {
+                    Main.safeGameTime(level);
+
+                    if (!CharacterInfo.getLevelDone().contains(level)) {
+                        CharacterInfo.getLevelDone().add(level);
+                    }
+
+                    if (level != 5) {
+                        Main.setWindow("Win", 0);
+                    } else {
+                        SoundEngine.playAmbientSound();
+                        EndCutscene endCutscene = new EndCutscene(getGamePane());
+                        endCutscene.setOnFinished(() -> {
+                            try {
+                                Main.setWindow("MainMenu", 0);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         }
     }
+
 
     public Label getGeldLabel() {
         return geldLabel;

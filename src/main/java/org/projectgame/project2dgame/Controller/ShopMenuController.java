@@ -9,6 +9,8 @@ import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
+import org.projectgame.project2dgame.GameField.EndlessGameManager;
+import org.projectgame.project2dgame.Main;
 
 public class ShopMenuController {
     @FXML
@@ -118,6 +120,16 @@ public class ShopMenuController {
 
     @FXML
     protected void onExitButton(ActionEvent event) {
+        if(Main.getEndlessGameManager() != null) {
+            Main.getEndlessGameManager().setWaitingForUpgrade(false);
+            Main.pauseGameloop(false);
+            SoundEngine.playFightMusic();
+        }
+
+        if(EndlessGameManager.getEntityManagement() != null) {
+            EndlessGameManager.getEntityManagement().reloadCharacter();
+        }
+
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }

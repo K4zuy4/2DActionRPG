@@ -10,13 +10,15 @@ public class Wrapper {
     private Map<String, KeyCode> keyMap;
     private double volume;
     private List<TimeWrapper> times;
+    private List<WaveWrapper> waves;
 
     public Wrapper() {}
 
-    public Wrapper(Map<String, KeyCode> keyMap, double volume, List<TimeWrapper> times) {
+    public Wrapper(Map<String, KeyCode> keyMap, double volume, List<TimeWrapper> times, List<WaveWrapper> waves) {
         this.keyMap = keyMap;
         this.volume = volume;
         this.times = times;
+        this.waves = waves;
     }
 
     public Map<String, KeyCode> getKeyMap() {
@@ -41,5 +43,13 @@ public class Wrapper {
 
     public void setTimes(List<TimeWrapper> times) {
         this.times = times;
+    }
+
+    public List<WaveWrapper> getWaves() {
+        return waves;
+    }
+
+    public void setWaves(List<WaveWrapper> waves) {
+        this.waves = waves;
     }
 }

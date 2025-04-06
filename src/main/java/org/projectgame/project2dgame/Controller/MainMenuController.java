@@ -24,8 +24,13 @@ public class MainMenuController {
 
     @FXML
     protected void onEndlessModeButton() {
-
+        try {
+            Main.startEndlessMode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     protected void onSettingsButton(){
