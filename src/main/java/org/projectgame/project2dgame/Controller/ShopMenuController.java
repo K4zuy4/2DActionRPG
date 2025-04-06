@@ -34,6 +34,7 @@ public class ShopMenuController {
 
     @FXML
     public void initialize() {
+        // Geldstand und Preise setzen
         geldLabel.setText("" + CharacterInfo.getMoney());
         disableButtons();
         damageLabel.setText("Schaden - " + CharacterInfo.getDamagePrice() +"$");
@@ -43,6 +44,7 @@ public class ShopMenuController {
     }
 
     public void disableButtons() {
+        // Buttons deaktivieren, wenn der Spieler nicht genug Geld hat
 
         if(CharacterInfo.getMoney() < CharacterInfo.getHealPrice()) {
             healButton.setDisable(true);
@@ -62,11 +64,13 @@ public class ShopMenuController {
     }
 
     public void setGeldLabel() {
+        // Aktualisiert die Geldanzeige
         geldLabel.setText("" + CharacterInfo.getMoney());
     }
 
     @FXML
     protected void onDamageButton() {
+        // Erhöht Schaden und Preis bei Kauf
         if(CharacterInfo.getMoney() >= CharacterInfo.getDamagePrice()) {
             CharacterInfo.setMoney(CharacterInfo.getMoney() - CharacterInfo.getDamagePrice());
             CharacterInfo.setDamagePrice(CharacterInfo.getDamagePrice() * 2);
@@ -79,6 +83,7 @@ public class ShopMenuController {
 
     @FXML
     protected void onSpeedButton() {
+        // Erhöht Bewegungsgeschwindigkeit und Preis bei Kauf
         if(CharacterInfo.getMoney() >= CharacterInfo.getSpeedPrice()) {
             CharacterInfo.setMoney(CharacterInfo.getMoney() - CharacterInfo.getSpeedPrice());
             CharacterInfo.setSpeedPrice(CharacterInfo.getSpeedPrice() * 2);
@@ -91,6 +96,7 @@ public class ShopMenuController {
 
     @FXML
     protected void onFirerateButton() {
+        // Verschnellert die Firerate und erhöht Preis
         if(CharacterInfo.getMoney() >= CharacterInfo.getFireratePrice()) {
             CharacterInfo.setMoney(CharacterInfo.getMoney() - CharacterInfo.getFireratePrice());
             CharacterInfo.setFireratePrice(CharacterInfo.getFireratePrice() * 2);
@@ -103,6 +109,7 @@ public class ShopMenuController {
 
     @FXML
     protected void onHealButton() {
+        // Heilt den Spieler und passt den Preis an
         if(CharacterInfo.getMoney() >= CharacterInfo.getHealPrice()) {
 
             CharacterInfo.setMoney(CharacterInfo.getMoney() - CharacterInfo.getHealPrice());
@@ -120,6 +127,7 @@ public class ShopMenuController {
 
     @FXML
     protected void onExitButton(ActionEvent event) {
+        // Schließt das Shop-Fenster und setzt den Endless-Modus fort
         if(Main.getEndlessGameManager() != null) {
             Main.getEndlessGameManager().setWaitingForUpgrade(false);
             Main.pauseGameloop(false);

@@ -15,16 +15,20 @@ import java.util.Objects;
 import static javafx.scene.paint.Color.rgb;
 
 public class Slime extends Entity {
+    // Animationen des Skeletts für verschiedene Zustände
     private final ImageView idleGif;
     private final ImageView rightGif;
     private final ImageView leftGif;
     private ImageView currentSprite;
     private final ImageView spawnGif;
+
+    // Statusvariablen
     private boolean isIdle;
 
     public Slime(double x, double y, int health, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, 150, gamePane, entityManagement);
 
+        // Animationen laden
         idleGif = EntityManagement.getImage("slime-idle");
         rightGif = EntityManagement.getImage("slime-right");
         leftGif = EntityManagement.getImage("slime-left");
@@ -33,6 +37,7 @@ public class Slime extends Entity {
         this.sprite = spawnGif;
         this.currentSprite = spawnGif;
 
+        // Nach Spawn-Delay in Idle wechseln
         PauseTransition spawnDelay = new PauseTransition(Duration.seconds(1.5));
         spawnDelay.setOnFinished(e -> {
             this.sprite.setImage(idleGif.getImage());
@@ -40,6 +45,7 @@ public class Slime extends Entity {
         });
         spawnDelay.play();
 
+        // Sprite und Hitbox konfigurieren
         this.sprite.setFitWidth(GameField.getTileSize() * 3);
         this.sprite.setFitHeight(GameField.getTileSize() * 3);
         this.sprite.setX(x);
@@ -57,11 +63,12 @@ public class Slime extends Entity {
 
     @Override
     public void update(double deltaTime) {
-
+        // Update-Logik wird in der EntityManagement behandelt
     }
 
     @Override
     public void updateHitboxPosition() {
+        // Aktualisiert Hitbox-Position relativ zur Sprite-Position
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight()) - 73);
         healthBar.setLayoutX(x + 60);
@@ -70,6 +77,7 @@ public class Slime extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
+        // Wählt und setzt die passende Animation je nach Status und Bewegungsrichtung
         if (Main.getGameLoop() != null && !Main.isGameLoopPaused()) {
             this.sprite.setFitWidth(GameField.getTileSize() * 3);
             this.sprite.setFitHeight(GameField.getTileSize() * 3);
@@ -92,6 +100,7 @@ public class Slime extends Entity {
     }
 
     private void setSprite(ImageView newSprite) {
+        // Hilfsmethode zum Wechseln des aktuellen Sprites
         if (newSprite == currentSprite) return;
 
         newSprite.setX(x);

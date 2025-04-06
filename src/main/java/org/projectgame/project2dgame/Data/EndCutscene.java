@@ -33,7 +33,7 @@ public class EndCutscene {
     private int currentIndex = 0;
 
     public EndCutscene(Pane parentPane) {
-        // Erstelle ein StackPane, das den gesamten Bildschirm abdeckt
+        // Erstelle ein StackPane, mit der Größe des Windows
         cutscenePane = new StackPane();
         cutscenePane.setStyle("-fx-background-color: linear-gradient(to bottom, #1a1a1a, #000000);");
         cutscenePane.setPrefSize(GameField.getScreenWidth(), GameField.getScreenHeight());
@@ -44,16 +44,15 @@ public class EndCutscene {
         storyLabel.setFont(new Font("Britannic Bold", 28));
         storyLabel.setWrapText(true);
         storyLabel.setMaxWidth(GameField.getScreenWidth() - 100);
-        storyLabel.setAlignment(Pos.CENTER);          // Zentriert den Text im Label
-        storyLabel.setTextAlignment(TextAlignment.CENTER); // Zentriert mehrzeiligen Text
+        storyLabel.setAlignment(Pos.CENTER);
+        storyLabel.setTextAlignment(TextAlignment.CENTER);
 
-        // Füge den Label zum StackPane hinzu – er wird automatisch in der Mitte platziert
+        // Füge den Label zum StackPane hinzu
         cutscenePane.getChildren().add(storyLabel);
 
         // Füge das StackPane dem übergeordneten Pane hinzu
         parentPane.getChildren().add(cutscenePane);
 
-        // Restliche Logik bleibt unverändert:
         showNextText();
 
         cutscenePane.setOnMouseClicked(event -> showNextText());
@@ -63,10 +62,10 @@ public class EndCutscene {
             }
         });
 
+        //Label für Aufforderung eine Taste zu drücken
         Label continueLabel = new Label("Drücke die Leertaste oder eine Maustaste, um fortzufahren...");
         continueLabel.setTextFill(Color.GRAY);
         continueLabel.setFont(new Font("Consolas", 18));
-        // Positioniere das Continue-Label unten (alternativ in ein BorderPane oder ähnliches einbetten)
         continueLabel.setTranslateY(GameField.getScreenHeight() / 2 - 50);
         cutscenePane.getChildren().add(continueLabel);
 
@@ -74,6 +73,7 @@ public class EndCutscene {
     }
 
     private void showNextText() {
+        // Nächsten Storyteil abspielen
         if (currentIndex < storyTexts.length) {
             storyLabel.setText(storyTexts[currentIndex]);
             currentIndex++;
@@ -83,6 +83,7 @@ public class EndCutscene {
     }
 
     public void endCutscene() {
+        //Wenn der Story Text fertig ist die Cutscene beenden
         cutscenePane.setOnKeyPressed(null);
         cutscenePane.setOnMouseClicked(null);
 

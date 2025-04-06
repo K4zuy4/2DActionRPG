@@ -6,6 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+ * Wrapper zum Speichern aller Daten
+ */
+
+
+
 public class Wrapper {
     private Map<String, KeyCode> keyMap;
     private double volume;

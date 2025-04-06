@@ -15,6 +15,7 @@ public class SoundEngine {
     private SoundEngine() {}
 
     public static void playBackgroundMusic(String musicFilePath) {
+        // Spielt Hintergrundmusik und stoppt vorherige Hintergrund- oder Ambient-Musik
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.stop();
         }
@@ -32,6 +33,7 @@ public class SoundEngine {
     }
 
     public static void playSound(String soundFilePath) {
+        // Spielt Soundeffekt
         Media sound = new Media(Objects.requireNonNull(SoundEngine.class.getResource(soundFilePath)).toExternalForm());
 
         soundPlayer = new MediaPlayer(sound);
@@ -41,6 +43,7 @@ public class SoundEngine {
     }
 
     public static void playAmbientSound(String soundFilePath) {
+        // Spielt Ambient-Sound
         if (AmbientSoundPlayer != null) {
             AmbientSoundPlayer.stop();
         }

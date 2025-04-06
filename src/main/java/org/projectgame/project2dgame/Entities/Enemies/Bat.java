@@ -18,6 +18,7 @@ import java.util.Objects;
 import static javafx.scene.paint.Color.rgb;
 
 public class Bat extends Entity {
+    // Verschiedene Animationen der Fledermaus
     private final ImageView idleGif;
     private final ImageView rightGif;
     private final ImageView leftGif;
@@ -26,6 +27,7 @@ public class Bat extends Entity {
     private ImageView currentSprite;
     private final ImageView spawnGif;
 
+    // Statusvariablen für das Verhalten der Fledermaus
     private boolean waitingAfterCharge = false;
     private long waitStartTime = 0;
     private final long waitDuration = 1000;
@@ -44,6 +46,7 @@ public class Bat extends Entity {
     public Bat(double x, double y, int health, Pane gamePane, EntityManagement entityManagement) {
         super(x, y, health, 100, gamePane, entityManagement);
 
+        // Lade Animationen
         idleGif = EntityManagement.getImage("bat-idle");
         rightGif = EntityManagement.getImage("bat-right");
         leftGif = EntityManagement.getImage("bat-left");
@@ -54,6 +57,7 @@ public class Bat extends Entity {
         this.sprite = spawnGif;
         this.currentSprite = spawnGif;
 
+        // Nach 1.5 Sekunden in Idle wechseln
         PauseTransition spawnDelay = new PauseTransition(Duration.seconds(1.5));
         spawnDelay.setOnFinished(e -> {
             this.sprite.setImage(idleGif.getImage());
@@ -61,11 +65,13 @@ public class Bat extends Entity {
         });
         spawnDelay.play();
 
+        // Größe und Position setzen
         this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
         this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
         this.sprite.setX(x);
         this.sprite.setY(y);
 
+        // Hitbox erstellen
         this.hitbox = new Rectangle(x, y, GameField.getTileSize() * 0.7, GameField.getTileSize() * 0.7);
         if(GameField.isDebug()) {
             hitbox.setFill(rgb(107, 68, 0, 0.5));
@@ -78,6 +84,9 @@ public class Bat extends Entity {
 
     @Override
     public void update(double deltaTime) {
+        // Update-Logik für das Verhalten
+
+        // Warten während Spawn-Animation
         if (spawnIdle) {
             if (System.currentTimeMillis() - spawnStartTime >= spawnIdleDuration) {
                 spawnIdle = false;
@@ -87,7 +96,7 @@ public class Bat extends Entity {
         }
 
 
-
+        // Charging-Logik
         if (charging) {
             double dx = chargeDirX * getChargeSpeed() * deltaTime;
             double dy = chargeDirY * getChargeSpeed() * deltaTime;
@@ -170,6 +179,7 @@ public class Bat extends Entity {
 
 
     public void checkStillWaiting() {
+        // Überprüft, ob die Wartezeit nach dem Charge abgelaufen ist
         if (waitingAfterCharge) {
             if (System.currentTimeMillis() - waitStartTime >= waitDuration) {
                 waitingAfterCharge = false;
@@ -179,6 +189,7 @@ public class Bat extends Entity {
     }
 
     public void startCharge(double dirX, double dirY) {
+        // Startet den Charge auf ein Ziel
         charging = true;
         isIdle = false;
         chargeDirX = dirX;
@@ -187,6 +198,7 @@ public class Bat extends Entity {
     }
 
     public void stopCharge() {
+        // Stoppt den Charge und aktiviert kurze Wartephase
         charging = false;
         waitingAfterCharge = true;
         waitStartTime = System.currentTimeMillis();
@@ -206,6 +218,7 @@ public class Bat extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
+        // Aktualisiert das Sprite je nach Bewegungsrichtung und Status
         if (Main.getGameLoop() != null && !Main.isGameLoopPaused()) {
             this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
             this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
@@ -235,6 +248,7 @@ public class Bat extends Entity {
 
 
     private void setSprite(ImageView newSprite) {
+        // Sprite wechseln und aktualisieren
         if (newSprite == currentSprite) return;
 
         newSprite.setX(x);
@@ -252,6 +266,7 @@ public class Bat extends Entity {
 
     @Override
     public void updateHitboxPosition() {
+        // Aktualisiert Hitbox-Position relativ zum Sprite
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight() - 30));
         healthBar.setLayoutX(x + 20);

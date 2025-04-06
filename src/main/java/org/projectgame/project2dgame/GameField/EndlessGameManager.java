@@ -20,14 +20,27 @@ public class EndlessGameManager {
         this.entityManagement = entityManagement;
     }
 
+    public static void reset() {
+        // Reset-Methoden für die Wellen
+
+        waveCount = 0;
+        waitingForUpgrade = false;
+        waiting = false;
+        openedUpgradeWindow = false;
+        entityManagement = null;
+    }
+
     public static int getWaveCount() {
         return waveCount;
     }
 
     public void startNextWave() {
+        // Wenn das Upgrade-Fenster geöffnet ist, keine neue Welle starten
         if (waiting || waitingForUpgrade) {
             return;
         }
+
+        // Neue Welle starten
 
         int temp = waveCount + 1;
         if (temp % 3 == 0 && temp != 0 && !openedUpgradeWindow) {
@@ -50,6 +63,8 @@ public class EndlessGameManager {
     }
 
     private void spawnWave() {
+        // Spawn-Logik für die Gegner
+
         int slimes = 2 + waveCount / 2;
         int skeletons = 1 + waveCount / 4;
         int bats = (waveCount >= 5) ? 1 + (waveCount - 4) / 5 : 0;
@@ -62,6 +77,7 @@ public class EndlessGameManager {
     }
 
     public void checkWaveEnd() {
+        // Überprüfen, ob alle Gegner besiegt sind
         if (!waitingForUpgrade && entityManagement.getEntity().isEmpty()) {
             PauseTransition delay = new PauseTransition(Duration.seconds(1));
             delay.setOnFinished(e -> startNextWave());
@@ -84,6 +100,7 @@ public class EndlessGameManager {
     }
 
     private void showWaveLabel(int waveNumber) {
+        // Label für die aktuelle Welle erstellen
         Label waveLabel = new Label("Welle " + waveNumber);
         waveLabel.setStyle(
                 "-fx-font-size: 60px;" +
@@ -106,7 +123,7 @@ public class EndlessGameManager {
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
 
-        // Pause (sichtbar bleiben)
+        // Pause
         PauseTransition visiblePause = new PauseTransition(Duration.seconds(1.5));
 
         // Fade-Out
@@ -114,7 +131,6 @@ public class EndlessGameManager {
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
 
-        // Danach Label entfernen
         fadeOut.setOnFinished(event -> Main.getGamePane().getChildren().remove(waveLabel));
 
         // Reihenfolge abspielen

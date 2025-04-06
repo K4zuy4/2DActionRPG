@@ -10,9 +10,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="500.0" prefWidth="380.0" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.BestenListeController">
+<AnchorPane fx:id="anchorPane" prefHeight="500.0" prefWidth="428.0" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.BestenListeController">
 
-    <Text fill="#f8f8f8" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bestenlisten" textAlignment="CENTER" wrappingWidth="381.0" AnchorPane.leftAnchor="0.0">
+    <Text fill="#f8f8f8" layoutX="24.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bestenlisten" textAlignment="CENTER" wrappingWidth="381.0" AnchorPane.leftAnchor="24.0">
         <font>
             <Font name="Britannic Bold" size="48.0" />
         </font>

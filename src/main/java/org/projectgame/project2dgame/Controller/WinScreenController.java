@@ -22,10 +22,13 @@ public class WinScreenController {
 
     @FXML
     public void initialize() {
+        // Deaktiviert "Next"-Button, wenn letztes Level abgeschlossen ist
+
         if (CharacterInfo.getLevelDone().contains(GameField.getLevelCount())) {
             nextButton.setDisable(true);
         }
 
+        // Verhindert Fokus auf Buttons beim Öffnen
         nextButton.setFocusTraversable(false);
         levelSelectButton.setFocusTraversable(false);
         upgradeButton.setFocusTraversable(false);
@@ -34,6 +37,7 @@ public class WinScreenController {
 
     @FXML
     protected void onNextButton() throws IOException {
+        // Lädt das nächste noch nicht abgeschlossene Level
         ArrayList<Integer> levelDone = CharacterInfo.getLevelDone();
         int max = levelDone.get(0);
         for (int zahl : levelDone) {
@@ -46,6 +50,7 @@ public class WinScreenController {
 
     @FXML
     protected void onLevelSelectButton() {
+        // Öffnet die Levelauswahl
         try {
             Main.setWindow("LevelSelect", 0);
         } catch (IOException e) {

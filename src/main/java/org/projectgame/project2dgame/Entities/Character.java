@@ -23,34 +23,38 @@ import java.util.concurrent.TimeUnit;
 import static javafx.scene.paint.Color.rgb;
 
 public class Character {
-    private double x;
-    private double y;
+    // --- Basisattribute ---
+    private double x, y;
     private int health = CharacterInfo.getHealth();
     private int maxHealth = CharacterInfo.getMaxHealth();
     private int geld = CharacterInfo.getMoney();
-    private ImageView sprite;
     private int characterSpeed = CharacterInfo.getSpeed();
-    private final Rectangle hitbox;
     private boolean invincible = false;
-    private final ProgressBar healthBar;
-    private String direction = "right";
+    private boolean dead = false;
+    private boolean isSpawning = false;
+
     private long lastAttack = 0;
     private long cooldown = CharacterInfo.getFireRate();
     private boolean isShooting = false;
+
+    private String direction = "right";
     private final EntityManagement entityManagement;
-    private final ImageView dyingGif;
-    private final ImageView rightGif;
-    private final ImageView leftGif;
-    private final ImageView idleGif;
-    private final ImageView spawnGif;
-    private final ImageView spawnGif2;
-    private final ImageView spawnStill;
+
+    // --- Grafiken & Animationen ---
+    private ImageView sprite;
+    private final ImageView dyingGif, rightGif, leftGif, idleGif, spawnGif, spawnGif2, spawnStill;
     private ImageView currentGif;
-    private boolean dead = false;
-    private boolean isSpawning = false;
     private PauseTransition spawnDelay;
 
+    // --- Hitbox & Lebensanzeige ---
+    private final Rectangle hitbox;
+    private final ProgressBar healthBar;
+
     public Character(double x, double y, EntityManagement entityManagement) {
+        // Initialisiert Position, Entity-Management, Lade Grafiken & Setup Hitbox
+        // Startet Spawn-Animation und Unverwundbarkeit
+
+
         this.x = x;
         this.y = y;
         this.entityManagement = entityManagement;
@@ -102,6 +106,8 @@ public class Character {
     }
 
     public void reload() {
+        // Setzt Werte nach einem Level- oder Upgrade-Reset neu
+
         cooldown = CharacterInfo.getFireRate();
         characterSpeed = CharacterInfo.getSpeed();
         health = CharacterInfo.getHealth();
@@ -113,6 +119,7 @@ public class Character {
     }
 
     public void updateHitboxPosition() {
+        // Aktualisiert Hitbox- und Healthbar-Position anhand von Spielerposition
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight()));
         healthBar.setLayoutX(x);
@@ -120,22 +127,22 @@ public class Character {
     }
 
     public void takeDamage(int _damage, boolean bossDamage) {
-        if (!invincible || bossDamage) {
+        // Verarbeitet Schaden: reduziert HP, startet Tod oder Unverwundbarkeit
+        if ((!invincible || bossDamage) && !dead) {
             SoundEngine.playPlayerHitSound();
             Random random = new Random();
             int damage = random.nextInt(5 * 2 + 1) + (_damage - 5);
             health -= damage;
-            if (health <= 0) {
+            if (health <= 0 && !dead) {
                 health = 0;
                 dead = true;
                 Platform.runLater(() -> this.sprite.setImage(dyingGif.getImage()));
 
                 try {
                     CharacterInfo.reset();
-                    if (Main.endlessMode()) {
+                    reload();
+                    if (Main.isEndlessMode()) {
                         Main.safeEndlessGameTime(EndlessGameManager.getWaveCount() - 1);
-
-                        Main.resetEndlessMode();
 
                         Main.setWindow("GameOverEndless", 0);
                     } else {
@@ -160,12 +167,14 @@ public class Character {
 
 
     public void setSpawnStill() {
+        // Zeigt stillstehende Spawn-Grafik an
         spawnDelay.stop();
         this.currentGif = spawnGif2;
         this.sprite.setImage(spawnStill.getImage());
     }
 
     public void playSpawnAnimation() {
+        // Spielt Spawn-Animation und geht danach in Idle-Animation über
         isSpawning = true;
         this.currentGif = spawnGif2;
         this.sprite.setImage(EntityManagement.getImage("player-spawn").getImage());
@@ -182,6 +191,7 @@ public class Character {
 
 
     private void updateHealthBar() {
+        // Aktualisiert Lebensanzeige visuell je nach aktuellem HP-Wert
             double healthProzent = (double) health / maxHealth;
 
             healthBar.setProgress(healthProzent);
@@ -200,6 +210,7 @@ public class Character {
     }
 
     public void render() {
+        // Synchronisiert Sprite-Position mit Spielerposition
         sprite.setX(x);
         sprite.setY(y);
     }
@@ -233,6 +244,7 @@ public class Character {
     }
 
     public void updateSpriteDirection(double dx, double dy) {
+        // Hält die aktuelle Tastenreihenfolge aktuell (für Blickrichtung unabhängig von Bewegung)
         if(!Main.isGameLoopPaused()) {
             if (dx != 0) {
                 if (dx > 0) {
@@ -306,6 +318,7 @@ public class Character {
     }
 
     public void updateDirectionQueue(Set<KeyCode> pressedKeys, LinkedList<String> directionQueue) {
+        // Hält die aktuelle Tastenreihenfolge aktuell (für Blickrichtung unabhängig von Bewegung)
         Map<KeyCode, String> keyToDirection = Map.of(
                 GameSettings.getKeyMap().get("lookUpKey"), "up",
                 GameSettings.getKeyMap().get("lookDownKey"), "down",

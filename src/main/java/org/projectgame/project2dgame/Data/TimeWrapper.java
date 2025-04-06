@@ -1,3 +1,8 @@
+/*
+    * Wrapper zum Speichern der Zeiten für die Level
+ */
+
+
 package org.projectgame.project2dgame.Data;
 
 public class TimeWrapper {

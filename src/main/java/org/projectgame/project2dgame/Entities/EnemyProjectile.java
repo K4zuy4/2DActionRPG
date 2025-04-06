@@ -13,6 +13,7 @@ public class EnemyProjectile {
     private boolean active = true;
 
     public EnemyProjectile(double x, double y, double directionX, double directionY, String spritePath, double speed) {
+        // Initialisiert Position, Richtung, Bild und Drehung des Projektils basierend auf Flugrichtung
         this.x = x;
         this.y = y;
         this.directionX = directionX;
@@ -30,6 +31,7 @@ public class EnemyProjectile {
     }
 
     public void update(double deltaTime) {
+        // Aktualisiert die Position basierend auf Richtung, Geschwindigkeit und vergangener Zeit
         x += directionX * speed * deltaTime;
         y += directionY * speed * deltaTime;
         sprite.setX(x);

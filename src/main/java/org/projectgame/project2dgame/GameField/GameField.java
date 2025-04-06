@@ -2,6 +2,10 @@ package org.projectgame.project2dgame.GameField;
 
 public class GameField {
 
+    /// Konstanten für die Spielfeldgröße
+    /// Die Größe des Spielfelds wird in Pixeln angegeben.
+    /// Die Standardgröße ist 16x12 Felder mit einer Größe von 64x64 Pixeln pro Feld.
+
     public static final int ORIGINALE_TILE_GROESSE = 16; // 16x16 Pixel
     public static final int SCALE = 4;
 
@@ -15,6 +19,7 @@ public class GameField {
 
     public static final int LEVEL_COUNT = 5;
 
+    // Aktiviert unendlich HP und zeigt Hitboxen
     public static final boolean DEBUG = false;
 
     public static int getScreenWidth() {

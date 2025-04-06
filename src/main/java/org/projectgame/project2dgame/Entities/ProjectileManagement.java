@@ -23,6 +23,7 @@ public class ProjectileManagement {
 
     //Ebenso von ChatGPT überarbeitet, da die Projektile nicht richtig gespawnt wurden
     public void characterProjectile() {
+        // Erstellt und feuert ein Projektil basierend auf der Blickrichtung des Spielers. Prüft, ob Platz zum Spawnen ist.
         String direction = character.getDirection();
 
         double dirX = 0, dirY = 0;
@@ -78,6 +79,7 @@ public class ProjectileManagement {
     }
 
     public void spawnEnemyArrow(double startX, double startY, double targetX, double targetY) {
+        // Erstellt ein feindliches Projektil, das in Richtung des Spielers fliegt. Spawnt leicht versetzt.
         double dx = targetX + 25 - startX;
         double dy = targetY + 60 - startY;
 
@@ -107,6 +109,10 @@ public class ProjectileManagement {
     }
 
 
+    // Aktualisiert alle Spieler- und Feind-Projektile:
+    // - Bewegt sie basierend auf ihrer Geschwindigkeit
+    // - Prüft auf Kollisionen
+    // - Entfernt Projektile, die deaktiviert wurden
     public void updateProjectiles(double deltaTime) {
         for (Projectile p : new ArrayList<>(playerProjectiles)) {
            p.update(deltaTime);

@@ -1,3 +1,16 @@
+/* * Abstrakte Basisklasse für alle Gegner- und Spieler-Entities im Spiel.
+ *
+ * Diese Klasse definiert grundlegende Eigenschaften und Methoden wie:
+ * - Position (x, y)
+ * - Lebenspunkte (health, maxHealth)
+ * - Geschwindigkeit (entitySpeed)
+ * - Sprite und Hitbox
+ * - Lebensanzeige (healthBar)
+ */
+
+
+
+
 package org.projectgame.project2dgame.Entities;
 
 import javafx.animation.PauseTransition;
@@ -6,7 +19,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import org.projectgame.project2dgame.Entities.Enemies.Slime;
 import org.projectgame.project2dgame.GameField.GameField;
 
 import java.util.Random;
@@ -45,11 +57,14 @@ public abstract class Entity {
         healthBar.setPrefHeight(10);
     }
 
+    // Muss von Unterklassen implementiert werden: Steuert das Verhalten pro Frame (z.B. Bewegung, Angriff)
     public abstract void update(double deltaTime);
 
     public void takeDamage(int _damage) {
+        // Schadensberechnung und Tod der Entity
         Random random = new Random();
         int damage = random.nextInt(5 * 2 + 1) + (_damage - 5);
+        // Zufälliger Streuschaden
         health -= damage;
         if (health <= 0) {
             health = 0;
@@ -60,6 +75,7 @@ public abstract class Entity {
     }
 
     protected void updateHealthBar() {
+        // Aktualisiert die Lebensanzeige grafisch und farblich je nach Lebensstand
         double healthPercent = (double) health / maxHealth;
         healthBar.setProgress(healthPercent);
 
@@ -76,10 +92,13 @@ public abstract class Entity {
         });
     }
 
+    // Muss von Unterklassen implementiert werden: Aktualisiert die Hitbox-Position bei Bewegung
     public abstract void updateHitboxPosition();
+    // Muss von Unterklassen implementiert werden: Wechselt Animation/Sprite je nach Bewegungsrichtung
     protected abstract void updateSpriteDirection(double dx, double dy);
 
     public void setX(double x) {
+        // Bewegt die Entity auf der X-Achse unter Berücksichtigung von Sprite-Änderungen
         double dx = x - this.x;
         this.x = x;
         sprite.setX(x);
@@ -89,6 +108,7 @@ public abstract class Entity {
     }
 
     public void setY(double y) {
+        // Bewegt die Entity auf der Y-Achse unter Berücksichtigung von Sprite-Änderungen
         double dy = y - this.y;
         this.y = y;
         sprite.setY(y);
@@ -97,14 +117,13 @@ public abstract class Entity {
         this.updateSpriteDirection(0, dy);
     }
 
+    // --- Getter und Setter für Entity-Zustände ---
     public boolean isWaiting() {
         return waiting;
     }
-
     public void setWaiting(boolean waiting) {
         this.waiting = waiting;
     }
-
     public double getX() { return x; }
     public double getY() { return y; }
     public int getEntitySpeed() { return entitySpeed; }

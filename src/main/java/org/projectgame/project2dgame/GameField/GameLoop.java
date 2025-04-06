@@ -46,6 +46,8 @@ public class GameLoop extends AnimationTimer {
 
     @Override
     public void handle(long now) {
+        // Haupt-Update-Logik pro Frame: Berechnet Delta-Zeit, FPS und ruft Update-Logik auf.
+
         if (!running) {
             stop();
             return;
@@ -73,6 +75,7 @@ public class GameLoop extends AnimationTimer {
     }
 
     public void update(double lastFrame) {
+        // Führt alle Spiellogiken aus: Timer aktualisieren, Entities bewegen, Projektile prüfen etc.
         if(!paused) {
             render();
             totalGameTime += lastFrame;
@@ -113,12 +116,14 @@ public class GameLoop extends AnimationTimer {
     }
 
     public void render() {
+        // Rendert die Entities und den Spieler auf der Oberfläche neu.
         entityManagement.renderEntities();
         entityManagement.renderCharacter();
         entityManagement.getCharacter().updateHitboxPosition();
     }
 
     private void updateCharacterMovement(double deltaTime) {
+        // Aktualisiert die Bewegung des Spielers basierend auf Tasteneingaben.
         Set<KeyCode> pressedKeys = keyInputHandler.getPressedKeys();
         double distance = character.getCharacterSpeed() * deltaTime;
         boolean moved = false;
@@ -174,6 +179,7 @@ public class GameLoop extends AnimationTimer {
 
 
     private void moveCharacter(double dx, double dy) {
+        // Bewegt den Spieler unter Berücksichtigung von möglichen Kollisionen.
         double newX = character.getX() + dx;
         double newY = character.getY() + dy;
         double newHitboxX = character.getHitbox().getX() + dx;
@@ -188,6 +194,7 @@ public class GameLoop extends AnimationTimer {
     }
 
     public String getFormattedGameTime() {
+        // Gibt die Spielzeit im Format "MM:SS" formatiert als String zurück.
         int seconds = (int) totalGameTime % 60;
         int minutes = (int) (totalGameTime / 60);
         return String.format("%02d:%02d", minutes, seconds);

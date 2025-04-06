@@ -1,3 +1,16 @@
+/**
+ * Verwaltet alle Spielfiguren (Character) und Gegner (Entity) auf dem Spielfeld.
+ *
+ * Hauptaufgaben:
+ * - Erstellen, Laden und Entfernen von Charakter und Gegner-Entities
+ * - Verwaltung von Projektile für Spieler und Gegner
+ * - Vorladen und Bereitstellen von Entity-Sprites (inkl. Byte-Cache für GIF-Animationen)
+ * - Steuerung des Spawn- und Bewegungsverhaltens von Gegnern je nach Sichtkontakt und KI-Logik
+ * - Geld-Belohnung und Übergang bei Levelende oder Wellenende
+ **/
+
+
+
 package org.projectgame.project2dgame.Entities;
 
 import javafx.animation.KeyFrame;
@@ -74,6 +87,9 @@ public class EntityManagement {
         imageBytesCache.put("player-spawn", getBytesFromStream("/Entities/Main Character/spawn2.gif"));
     }
 
+
+    // Liest eine Bilddatei und wandelt sie in ein Byte-Array um.
+    // Wird intern von loadImageCache() genutzt.
     private byte[] getBytesFromStream(String path) {
         try (InputStream is = getClass().getResourceAsStream(path)) {
             if (is == null) {
@@ -92,6 +108,9 @@ public class EntityManagement {
         }
     }
 
+
+    // Erstellt ein neues ImageView aus den gecachten Bytes.
+    // So wird garantiert immer eine neue, frische Animation abgespielt.
     public static ImageView getImage(String key) {
         byte[] bytes = imageBytesCache.get(key);
         if (bytes == null) throw new RuntimeException("Image bytes not found: " + key);
@@ -104,6 +123,8 @@ public class EntityManagement {
 
 
     // Überarbeitet von ChatGPT, da Problem mit den Gegner, welche in einander spawnen durch zu kleine Verzögerung zwischen den Spawns
+    // Lädt die Gegner für ein Level (Slimes, Skeletons, Bats oder Boss).
+    // Gegner werden zeitverzögert gespawnt, um Kollision beim Erscheinen zu vermeiden
     public void loadEntities(CollisionCheck collisionCheck) {
         if(level == 5) {
             // Boss spawnt in Level 5
@@ -214,6 +235,9 @@ public class EntityManagement {
         }
     }
 
+
+    // Spawnt Gegnerwellen für den Endless Mode.
+    // Funktioniert ähnlich wie loadEntities(), aber unendlich skalierend.
     public void spawnEndlessEntities(int slamount, int skamount, int bamount, int slimeHealth, int skeletonHealth, int batHealth) {
         Main.pauseGameloop(true);
 
@@ -258,23 +282,26 @@ public class EntityManagement {
         });
     }
 
+    // Lädt den Charakter neu und setzt ihn auf Standardwerte zurück.
     public void reloadCharacter() {
         character.reload();
     }
 
-
+    // Erstellt den Charakter beim Levelstart und fügt ihn ins Spiel ein.
     public void loadCharacter() {
+        if(character != null) {
+            character = null;
+        }
         character = new Character(100, 300, this);
         gamePane.getChildren().add(character.getSprite());
         gamePane.getChildren().add(character.getHitbox());
         gamePane.getChildren().add(character.getHealthBar());
     }
 
-    public Pane getGamePane() {
-        return gamePane;
-    }
 
     // Hilfe von Youtube Tutorials und ChatGPT
+    // Aktualisiert das Verhalten aller Gegner pro Frame.
+    // Je nach Typ laufen sie auf den Spieler zu, greifen an oder fliehen.
     public void updateEntities(double deltaTime, CollisionCheck collisionCheck) {
         for (Entity entity : new ArrayList<>(entities)) {
             entity.updateHitboxPosition();
@@ -409,6 +436,7 @@ public class EntityManagement {
     }
 
 
+    // Lässt eine Entity gezielt auf ein Ziel zugehen
     private void moveTowards(Entity entity, double targetX, double targetY, double deltaTime, CollisionCheck collisionCheck) {
        entity.setIdle(false);
         double dx = targetX - entity.getX();
@@ -435,6 +463,7 @@ public class EntityManagement {
         entity.setY(newY);
     }
 
+    // Lässt eine Entity vom Ziel wegfliehen
     private void moveAwayFrom(Entity entity, double fromX, double fromY, double deltaTime, CollisionCheck collisionCheck) {
         entity.setIdle(false);
         double dx = entity.getX() - fromX;
@@ -457,6 +486,8 @@ public class EntityManagement {
     }
 
 
+    // Lässt eine Entity zufällig herumwandern, solange sie den Spieler nicht sehen kann.
+    // Bei Collision wird die Richtung gewechselt.
     private void zufaelligBewegen(Entity entity, double deltaTime, CollisionCheck collisionCheck) {
 
         if (entity.isWaiting()) return;
@@ -510,6 +541,8 @@ public class EntityManagement {
 
 
 
+    // Prüft, ob der Spieler für die Entity sichtbar ist (kein Hindernis dazwischen).
+    // "Raycasting"-Logik: https://permadi.com/1996/05/ray-casting-tutorial-table-of-contents/
     private boolean isPlayerVisible(Entity entity, Character player, CollisionCheck collisionCheck) {
         double startX = entity.getX() + entity.getSprite().getBoundsInLocal().getWidth() / 2;
         double startY = entity.getY() + entity.getSprite().getBoundsInLocal().getHeight() / 2;
@@ -528,6 +561,10 @@ public class EntityManagement {
         if (character != null) {
             character.render();
         }
+    }
+
+    public Pane getGamePane() {
+        return gamePane;
     }
 
     public Character getCharacter() {
@@ -566,6 +603,9 @@ public class EntityManagement {
         gamePane.getChildren().remove(projectile.getSprite());
     }
 
+
+    // Entfernt eine Entity (Gegner) aus dem Spiel und vergibt eine Geldbelohnung.
+    // Bei Leeren aller Gegner wird je nach Modus die nächste Welle gestartet oder das Level beendet.
     public void removeEntity(Entity entity) {
         entities.remove(entity);
         gamePane.getChildren().remove(entity.getSprite());
@@ -601,8 +641,10 @@ public class EntityManagement {
                     }
 
                     if (level != 5) {
+                        // Wenn nicht Boss normal win screen
                         Main.setWindow("Win", 0);
                     } else {
+                        // Wenn Boss besiegt wird die Cutscene abgespielt
                         SoundEngine.playAmbientSound();
                         EndCutscene endCutscene = new EndCutscene(getGamePane());
                         endCutscene.setOnFinished(() -> {

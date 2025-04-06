@@ -1,3 +1,9 @@
+/*
+    * Hält grundlegende Informationen über den Player
+ */
+
+
+
 package org.projectgame.project2dgame.Entities;
 
 import org.projectgame.project2dgame.GameField.GameField;

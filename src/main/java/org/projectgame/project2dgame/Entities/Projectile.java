@@ -17,6 +17,7 @@ public class Projectile {
     private boolean active = true;
 
     public Projectile(double x, double y, double directionX, double directionY, String spritePath) {
+        // Initialisiert das Projektil mit Position, Richtung und Sprite-Pfad.
         this.x = x;
         this.y = y;
         this.directionX = directionX;
@@ -40,6 +41,7 @@ public class Projectile {
     }
 
     public void update(double deltaTime) {
+        // Bewegt das Projektil basierend auf seiner Richtung und Geschwindigkeit. Aktualisiert Sprite- und Hitbox-Position.
         x += directionX * speed * deltaTime;
         y += directionY * speed * deltaTime;
         sprite.setX(x);

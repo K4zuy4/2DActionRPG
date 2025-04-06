@@ -1,3 +1,9 @@
+/*
+  * Allgemeine Debug Klasse zum testen neuer Funktionen
+ */
+
+
+
 package org.projectgame.project2dgame;
 
 import javafx.application.Platform;

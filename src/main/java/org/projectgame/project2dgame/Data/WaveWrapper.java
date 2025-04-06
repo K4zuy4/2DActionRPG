@@ -1,3 +1,8 @@
+/*
+ * Wrapper zum Speichern der Zeiten für den Endless Mode
+ */
+
+
 package org.projectgame.project2dgame.Data;
 
 public class WaveWrapper {

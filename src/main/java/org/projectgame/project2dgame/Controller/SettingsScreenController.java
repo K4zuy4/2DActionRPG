@@ -40,9 +40,12 @@ public class SettingsScreenController {
 
     @FXML
     public void initialize() {
+        // Initialisiert die Einstellungen, Lautstärke setzen und aktuelle Tastenbelegungen laden
+
         volumeSlider.setValue(GameSettings.getVolume() * 100);
         volumeLabel.setText("Lautstärke: " + (int) volumeSlider.getValue() + "%");
 
+        // Listener für Lautstärkeänderung und direktes Speichern
         volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             volumeLabel.setText("Lautstärke: " + newVal.intValue() + "%");
             try {
@@ -52,6 +55,7 @@ public class SettingsScreenController {
             }
         });
 
+        // Anzeigen der aktuellen Keybindings
         wButton.setText(GameSettings.getKeyMap().get("upKey").toString());
         aButton.setText(GameSettings.getKeyMap().get("leftKey").toString());
         sButton.setText(GameSettings.getKeyMap().get("downKey").toString());
@@ -64,11 +68,14 @@ public class SettingsScreenController {
 
     @FXML
     protected void onExitButton(ActionEvent event) {
+        // Schließt das Einstellungsfenster
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
 
     private void changeKey(String key, Button button) {
+        // Ermöglicht das Ändern einer Tastenbelegung durch Tastendruck
+
         button.setText("...");
         button.getScene().getRoot().requestFocus();
         button.getScene().setOnKeyPressed((KeyEvent e) -> {

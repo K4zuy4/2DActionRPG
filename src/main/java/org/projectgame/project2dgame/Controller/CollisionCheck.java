@@ -24,6 +24,8 @@ public class CollisionCheck {
     }
 
     public boolean checkCollision(Rectangle playerHitbox) {
+        // Prüft, ob die Spieler-Hitbox mit einer Wand kollidiert
+
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
                 Tile tile = tileMap.getTile(y, x);
@@ -39,6 +41,8 @@ public class CollisionCheck {
     }
 
     public void checkDamageTiles(Rectangle playerHitbox) {
+        // Prüft, ob der Spieler auf einem Schaden verursachenden Tile steht
+
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
                 Tile tile = tileMap.getTile(y, x);
@@ -52,9 +56,8 @@ public class CollisionCheck {
     }
 
 
-
-   // Extra Methode nur für die Bat, da sich diese häufiger in andere Entities gebuggt hat
     public boolean checkBatCollisionWithEntity(Rectangle hitbox, Entity self, double dx, double dy) {
+        // Spezielle Kollisionserkennung für Bats, damit sie nicht in andere Entities buggen
         Rectangle movedHitbox = new Rectangle(
                 hitbox.getX() + dx,
                 hitbox.getY() + dy,
@@ -73,6 +76,8 @@ public class CollisionCheck {
 
 
     public boolean checkCollisionEntity(Rectangle entityHitbox, double dx, double dy) {
+        // Prüft Entity-Kollisionen mit Wänden, dem Spieler oder anderen Entities
+
         // Kollision mit Wänden
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
@@ -131,6 +136,9 @@ public class CollisionCheck {
     }
 
     public boolean kannSpawnen(Rectangle hitbox, List<Entity> tempEntities) {
+        // Prüft, ob an einer Position ein Entity gespawnt werden kann (ohne Kollisionen)
+
+
         // Kollision mit Wänden
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
@@ -167,6 +175,8 @@ public class CollisionCheck {
 
 
     public boolean checkCollisionProjectile(Rectangle projectileHitbox) {
+        // Prüft, ob ein Projektil eine Wand oder einen Gegner trifft
+
         // Kollision mit Wänden
         for (int y = 0; y < tileMap.getHeight(); y++) {
             for (int x = 0; x < tileMap.getWidth(); x++) {
@@ -192,6 +202,8 @@ public class CollisionCheck {
 
     // Mit Hilfe von ChatGPT damit der Pfeil selber als Hitbox zählt und keine Collision Bugs auftreten
     public boolean checkEnemyProjectileCollision(Node hitboxNode) {
+        // Prüft, ob ein gegnerisches Projektil den Spieler oder eine Wand trifft
+
         Character player = entityManagement.getCharacter();
         if (player == null) return false;
 
@@ -217,6 +229,8 @@ public class CollisionCheck {
 
 
     public boolean isObstacleBetween(double startX, double startY, double endX, double endY) {
+        // Prüft, ob eine Wand zwischen zwei Punkten liegt (für Line-Of-Sight Checks)
+
         double dx = endX - startX;
         double dy = endY - startY;
         double steps = Math.max(Math.abs(dx), Math.abs(dy));
@@ -238,35 +252,4 @@ public class CollisionCheck {
         }
         return false;
     }
-
-
-    public boolean checkCollisionBat(Rectangle batHitbox) {
-        // Kollision mit Wänden
-        for (int y = 0; y < tileMap.getHeight(); y++) {
-            for (int x = 0; x < tileMap.getWidth(); x++) {
-                Tile tile = tileMap.getTile(y, x);
-                if (tile.getHitbox() != null &&
-                        batHitbox.getBoundsInParent().intersects(tile.getHitbox().getBoundsInParent())) {
-                    return true;
-                }
-            }
-        }
-
-        // Kollision mit Spieler
-        Character player = entityManagement.getCharacter();
-        if (player != null && batHitbox.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
-            player.takeDamage(20, false);
-            return true;
-        }
-
-        // Entity-Kollision
-        for (Entity entity : entityManagement.getEntity()) {
-            if (entity.getHitbox() != batHitbox && batHitbox.getBoundsInParent().intersects(entity.getHitbox().getBoundsInParent())) {
-                return true; //
-            }
-        }
-
-        return false;
-    }
-
 }

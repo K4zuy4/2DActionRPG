@@ -14,19 +14,27 @@ public class KeyInputHandler {
     }
 
     public void addKeyHandlers(Scene scene) {
+        // Registriert Key-Pressed und Key-Released Events auf der angegebenen Szene
+
         scene.setOnKeyPressed(this::handleKeyPressed);
         scene.setOnKeyReleased(this::handleKeyReleased);
     }
 
     private void handleKeyPressed(KeyEvent event) {
+        // Fügt eine gedrückte Taste dem Set hinzu
+
         pressedKeys.add(event.getCode());
     }
 
     private void handleKeyReleased(KeyEvent event) {
+        // Entfernt eine losgelassene Taste aus dem Set
+
         pressedKeys.remove(event.getCode());
     }
 
     public Set<KeyCode> getPressedKeys() {
+        // Gibt das Set aller aktuell gedrückten Tasten zurück
+
         return pressedKeys;
     }
 }

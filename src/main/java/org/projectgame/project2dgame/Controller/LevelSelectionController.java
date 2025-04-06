@@ -3,6 +3,7 @@ package org.projectgame.project2dgame.Controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.GameField.GameField;
 import org.projectgame.project2dgame.Main;
@@ -19,6 +20,8 @@ public class LevelSelectionController {
 
     @FXML
     public void initialize() {
+        // Initialisiert die Level-Auswahl und erstellt Buttons für jedes freigeschaltete Level
+
         int totalLevels = GameField.getLevelCount();
         int columns = 3;
 
@@ -34,10 +37,12 @@ public class LevelSelectionController {
             levelButton.setMinWidth(60);
 
 
+            // Nur Level freischalten, wenn vorherige abgeschlossen
             if (level > 1 && !CharacterInfo.getLevelDone().contains(level - 1)) {
                 levelButton.setDisable(true);
             }
 
+            // Starte ausgewähltes Level
             levelButton.setOnAction(e -> {
                 try {
                     lvlSelect(level);
@@ -52,33 +57,23 @@ public class LevelSelectionController {
         }
     }
 
-
     @FXML
-    protected void onLvl1Button() throws IOException {
-        lvlSelect(1);
-    }
-
-    @FXML
-    protected void onLvl2Button() throws IOException {
-        lvlSelect(2);
-    }
-
-    @FXML
-    protected void onLvl3Button() throws IOException {
-        lvlSelect(3);
-    }
-
-    @FXML
-    protected void onBackButton() throws IOException {
-        Main.setWindow("MainMenu", 0);
+    protected void onBackButton() {
+        // Schließt das aktuelle Fenster
+        Stage stage = (Stage) backButton.getScene().getWindow().getScene().getWindow();
+        stage.close();
     }
 
     private void lvlSelect(int lvl) throws IOException {
+        // Schließt das Fenster und öffnet das gewählte Level
+        Stage stage = (Stage) backButton.getScene().getWindow().getScene().getWindow();
+        stage.close();
         Main.setWindow("GameField", lvl);
     }
 
     @FXML
     private void onBestenlisteButton() {
+        // Öffnet die Bestenliste
         Main.openBestenlisteWindow();
     }
 }

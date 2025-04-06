@@ -29,6 +29,8 @@ public class TileMap {
     }
 
     private Tile[][] loadMap(String path) throws IOException {
+        // Lädt die Map-Daten aus einer Datei und erstellt das 2D-Array der Tiles.
+
         InputStream inputStream = Main.class.getResourceAsStream(path);
 
         if (inputStream == null) {
@@ -57,6 +59,8 @@ public class TileMap {
     }
 
     private void drawTiles() {
+        // Zeichnet alle Tiles auf das Spielfeld, inklusive Hitboxen für solide und schädliche Tiles.
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Tile tile = tiles[y][x];
@@ -90,6 +94,8 @@ public class TileMap {
     }
 
     private Image loadTileImage(int type) throws IOException {
+        // Lädt ein einzelnes Tile-Bild basierend auf seinem Typ (mit Caching zur Optimierung).
+
         if (tileImageCache.containsKey(type)) { // cache
             return tileImageCache.get(type);
         }

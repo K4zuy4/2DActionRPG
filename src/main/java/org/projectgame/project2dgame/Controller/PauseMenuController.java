@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Main;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class PauseMenuController {
     @FXML
     protected void onMainButton() {
         try {
+            CharacterInfo.reset();
             Main.setWindow("MainMenu", 0);
             Stage stage = (Stage) weiterButton.getScene().getWindow().getScene().getWindow();
             stage.close();

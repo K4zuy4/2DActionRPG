@@ -18,6 +18,7 @@ import java.util.Random;
 import static javafx.scene.paint.Color.rgb;
 
 public class Skeleton extends Entity {
+    // Animationen des Skeletts für verschiedene Zustände
     private final ImageView leftGif;
     private final ImageView rightGif;
     private final ImageView attackRightGif;
@@ -25,6 +26,8 @@ public class Skeleton extends Entity {
     private final ImageView idleGif;
     private final ImageView spawnGif;
     private ImageView currentSprite;
+
+    // Statusvariablen
     private boolean isAttacking = false;
     private long lastAttackTime = 0;
     private final long attackCooldown = 3000;
@@ -43,6 +46,7 @@ public class Skeleton extends Entity {
         cooldownDuration = ran.nextInt(500, 1000);
         retreatDuration = ran.nextInt(500, 1000);
 
+        // Animationen laden
         leftGif = EntityManagement.getImage("skeleton-left");
         rightGif = EntityManagement.getImage("skeleton-right");
         attackRightGif = EntityManagement.getImage("skeleton-attack_right");
@@ -53,6 +57,7 @@ public class Skeleton extends Entity {
         this.sprite = spawnGif;
         this.currentSprite = spawnGif;
 
+        // Nach Spawn-Delay in Idle wechseln
         PauseTransition spawnDelay = new PauseTransition(Duration.seconds(1.2));
         spawnDelay.setOnFinished(e -> {
             this.sprite.setImage(idleGif.getImage());
@@ -60,6 +65,7 @@ public class Skeleton extends Entity {
         });
         spawnDelay.play();
 
+        // Sprite und Hitbox konfigurieren
         this.sprite.setFitWidth(GameField.getTileSize() * 2.5);
         this.sprite.setFitHeight(GameField.getTileSize() * 2.5);
         this.sprite.setX(x);
@@ -78,6 +84,7 @@ public class Skeleton extends Entity {
 
     @Override
     public void update(double deltaTime) {
+        // Update-Logik: Startet Angriff, wenn Cooldown abgelaufen ist
         long now = System.currentTimeMillis();
         if (!isAttacking && now - lastAttackTime >= attackCooldown) {
             startAttack();
@@ -85,6 +92,7 @@ public class Skeleton extends Entity {
     }
 
     public void startAttack() {
+        // Startet Angriffsanimation und feuert Pfeil ab
         isAttacking = true;
         lastAttackTime = System.currentTimeMillis();
 
@@ -117,6 +125,7 @@ public class Skeleton extends Entity {
 
     @Override
     public void updateHitboxPosition() {
+        // Aktualisiert Hitbox-Position relativ zur Sprite-Position
         hitbox.setX(x + (sprite.getFitWidth() - hitbox.getWidth()) / 2);
         hitbox.setY(y + (sprite.getFitHeight() - hitbox.getHeight() - 50));
         healthBar.setLayoutX(x + 45);
@@ -125,6 +134,7 @@ public class Skeleton extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
+        // Wählt und setzt die passende Animation je nach Status und Bewegungsrichtung
         if(Main.getGameLoop() != null && !Main.isGameLoopPaused()) {
             if (isIdle) {
                 if (currentSprite != idleGif) {
@@ -161,6 +171,7 @@ public class Skeleton extends Entity {
     }
 
     private void setSprite(ImageView newSprite) {
+        // Hilfsmethode zum Wechseln des aktuellen Sprites
         if (newSprite == currentSprite) return;
 
         newSprite.setX(x);

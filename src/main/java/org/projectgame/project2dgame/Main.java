@@ -48,6 +48,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        // JavaFX Startmethode: Initialisiert das Spiel-Fenster und lädt das Main Menu
         CharacterInfo.init();
         primaryStage = stage;
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/Images/icon.png")));
@@ -65,6 +66,8 @@ public class Main extends Application {
     }
 
     public static void setWindow(String window, int level) throws IOException {
+        // Wechselt das aktuelle Fenster basierend auf dem angegebenen Namen und Level.
+
         FXMLLoader loader = new FXMLLoader();
         Scene scene;
         switch (window) {
@@ -90,16 +93,10 @@ public class Main extends Application {
                 break;
 
             case "LevelSelect":
-                loader.setLocation(Main.class.getResource("/FXMLFiles/LevelSelection.fxml"));
-                scene = new Scene(loader.load());
-                primaryStage.setTitle("Sanctum of Sorrow - Level Selection");
-                if(!SoundEngine.isPlaying()) SoundEngine.playMainMenuMusic();
-                primaryStage.setScene(scene);
-                primaryStage.centerOnScreen();
+                openLevelSelection();
                 break;
 
             case "GameOver":
-                GameOverEndlessScreenController controller = new GameOverEndlessScreenController();
                 loader.setLocation(Main.class.getResource("/FXMLFiles/GameOverScreen.fxml"));
                 scene = new Scene(loader.load());
                 primaryStage.setTitle("Sanctum of Sorrow - Game Over");
@@ -127,6 +124,7 @@ public class Main extends Application {
                 }
                 primaryStage.setScene(scene);
                 primaryStage.centerOnScreen();
+                Main.resetEndlessMode();
                 break;
 
             case "Win":
@@ -148,7 +146,7 @@ public class Main extends Application {
         }
     }
 
-    // GameField asynchron laden
+    // Lädt das Spielfeld asynchron, um Lags beim Laden zu verhindern.
     public static void loadGameFieldAsync(int level) {
         Task<Void> loadTask = new Task<>() {
             private Parent root;
@@ -233,8 +231,12 @@ public class Main extends Application {
         new Thread(loadTask).start();
     }
 
+    // Startet den Endlosmodus und setzt das Spielfeld mit zufälliger Karte.
     public static void startEndlessMode() throws IOException {
         endlessMode = true;
+        endlessGameManager = null;
+        entityManagement = null;
+
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/GameField.fxml"));
         Parent root = loader.load();
         gameFieldController = loader.getController();
@@ -296,6 +298,7 @@ public class Main extends Application {
     }
 
 
+    // Öffnet das Upgrade Menu.
     public static void openUpgradeWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/ShopMenu.fxml"));
@@ -325,6 +328,7 @@ public class Main extends Application {
         }
     }
 
+    // Öffnet das Pause-Menü (während das Spiel pausiert ist).
     public static void openPauseMenu() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/PauseMenu.fxml"));
@@ -344,7 +348,26 @@ public class Main extends Application {
         }
     }
 
+    // Öffnet die Level Selection
+    public static void openLevelSelection() {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/LevelSelection.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            stage.setTitle("Sanctum of Sorrow - Level Selection");
+            scene.getRoot().setFocusTraversable(true);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.show();
+            if(!SoundEngine.isPlaying()) SoundEngine.playMainMenuMusic();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+
+    // Öffnet die Bestenliste
     public static void openBestenlisteWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/BestenListe.fxml"));
@@ -361,6 +384,7 @@ public class Main extends Application {
         }
     }
 
+    // Öffnet das Einstellungsfenster
     public static void openSettingsWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/FXMLFiles/SettingsScreen.fxml"));
@@ -378,7 +402,7 @@ public class Main extends Application {
         }
     }
 
-
+    // Lädt die passende TileMap je nach Levelnummer.
     public static TileMap levelSelector(int level, Pane gamePane) throws IOException {
         return switch (level) {
             case 0 -> new TileMap("/Tiles/TileMap0.txt", GameField.getTileSize(), gamePane);
@@ -391,16 +415,19 @@ public class Main extends Application {
         };
     }
 
+    // Speichert die aktuelle Spielzeit eines Levels in die Bestenliste.
     public static void safeGameTime(int level) throws IOException {
         Double time = gameLoop.getRawGameTimeSeconds();
         GameSettings.saveTime(level, time);
     }
 
+    // Speichert die Spielzeit für die erreichte Welle im Endless-Mode.
     public static void safeEndlessGameTime(int wave) throws IOException {
         Double time = gameLoop.getRawGameTimeSeconds();
         GameSettings.saveWave(wave, time);
     }
 
+    // Stoppt den aktuellen GameLoop beim Schließen der Anwendung.
     @Override
     public void stop() {
         if(gameLoop != null) {
@@ -408,8 +435,11 @@ public class Main extends Application {
         }
     }
 
+    // Setzt den Endless-Mode zurück
     public static void resetEndlessMode() {
+        CharacterInfo.reset();
         endlessMode = false;
+        EndlessGameManager.reset();
         endlessGameManager = null;
         entityManagement = null;
     }
@@ -463,13 +493,5 @@ public class Main extends Application {
 
     public static Pane getGamePane() {
         return gameFieldController.getGamePane();
-    }
-
-    public static boolean endlessMode() {
-        return endlessMode;
-    }
-
-    public static void setEndlessMode(boolean endlessMode) {
-        Main.endlessMode = endlessMode;
     }
 }
