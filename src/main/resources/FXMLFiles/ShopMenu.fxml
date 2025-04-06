@@ -70,7 +70,7 @@
             </ImageView>
          </children>
       </Group>
-      <ImageView fitHeight="52.0" fitWidth="50.0" layoutX="166.0" layoutY="428.0">
+      <ImageView fitHeight="38.0" fitWidth="43.0" layoutX="174.0" layoutY="433.0">
          <image>
             <Image url="@../Images/undo.png" />
          </image>

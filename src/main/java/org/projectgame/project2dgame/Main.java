@@ -23,6 +23,7 @@ import org.projectgame.project2dgame.Controller.GameFieldController;
 import org.projectgame.project2dgame.Controller.KeyInputHandler;
 import org.projectgame.project2dgame.Controller.SoundEngine;
 import org.projectgame.project2dgame.Data.GameSettings;
+import org.projectgame.project2dgame.Data.StoryCutscene;
 import org.projectgame.project2dgame.Entities.CharacterInfo;
 import org.projectgame.project2dgame.Entities.EntityManagement;
 import org.projectgame.project2dgame.GameField.GameField;
@@ -167,6 +168,10 @@ public class Main extends Application {
 
             @Override
             protected void succeeded() {
+                primaryStage.setScene(scene);
+                primaryStage.centerOnScreen();
+                primaryStage.setTitle("Sanctum of Sorrow - Level " + level);
+
                 gameLoop = new GameLoop(entityManagement, keyInputHandler, collisionCheck, timeLabel);
                 entityManagement.setCollisonCheck(collisionCheck);
                 entityManagement.createProjectileManagement();
@@ -174,19 +179,36 @@ public class Main extends Application {
                 Pane gamePane = gameFieldController.getGamePane();
                 gamePane.getChildren().addAll(geldLabel, imageView, timeLabel);
 
-                primaryStage.setScene(scene);
-                primaryStage.centerOnScreen();
-                primaryStage.setTitle("Sanctum of Sorrow - Level " + level);
-                SoundEngine.playFightMusic();
-
-                PauseTransition delay = new PauseTransition(Duration.millis(200));
-                delay.setOnFinished(e -> {
-                    entityManagement.loadEntities(collisionCheck);
-                });
-                delay.play();
-
                 gameLoop.start();
+                gameLoop.setPaused(true);
+
+                if (level == 1) {
+                    // Storycutscene abspielen
+                    SoundEngine.playAmbientSound();
+                    entityManagement.getCharacter().setSpawnStill();
+                    entityManagement.getCharacter().updateHitboxPosition();
+                    StoryCutscene cutscene = new StoryCutscene(gamePane);
+                    cutscene.setOnFinished(() -> {
+                        entityManagement.getCharacter().playSpawnAnimation();
+                        PauseTransition delay = new PauseTransition(Duration.millis(1500));
+                        delay.setOnFinished(e -> {
+                            entityManagement.loadEntities(collisionCheck);
+                            SoundEngine.playFightMusic();
+                        });
+                        delay.play();
+                    });
+                } else {
+                    if(level == 5) SoundEngine.playBossMusic();
+                    else SoundEngine.playFightMusic();
+                    entityManagement.getCharacter().updateHitboxPosition();
+                    PauseTransition delay = new PauseTransition(Duration.millis(1500));
+                    delay.setOnFinished(e -> {
+                        entityManagement.loadEntities(collisionCheck);
+                    });
+                    delay.play();
+                }
             }
+
         };
 
         new Thread(loadTask).start();

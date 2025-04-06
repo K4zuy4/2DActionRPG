@@ -68,13 +68,13 @@ public class GameLoop extends AnimationTimer {
         }
 
         update(lastFrame);
-        render();
 
         lastUpdate = now;
     }
 
     public void update(double lastFrame) {
         if(!paused) {
+            render();
             totalGameTime += lastFrame;
             timeSinceLastLabelUpdate += lastFrame;
 

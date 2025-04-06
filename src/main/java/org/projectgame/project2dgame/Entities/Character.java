@@ -42,8 +42,12 @@ public class Character {
     private final ImageView leftGif;
     private final ImageView idleGif;
     private final ImageView spawnGif;
+    private final ImageView spawnGif2;
+    private final ImageView spawnStill;
     private ImageView currentGif;
     private boolean dead = false;
+    private boolean isSpawning = false;
+    private PauseTransition spawnDelay;
 
     public Character(double x, double y, EntityManagement entityManagement) {
         this.x = x;
@@ -55,11 +59,13 @@ public class Character {
         this.leftGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/walking_left.gif"))));
         this.idleGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/idle.gif"))));
         this.spawnGif = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/spawn.gif"))));
+        this.spawnGif2 = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/spawn2.gif"))));
+        this.spawnStill = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Entities/Main Character/spawnStill.png"))));
         this.currentGif = spawnGif;
 
         this.sprite = spawnGif;
 
-        PauseTransition spawnDelay = new PauseTransition(Duration.seconds(2.1));
+        spawnDelay = new PauseTransition(Duration.seconds(2.1));
         spawnDelay.setOnFinished(e -> {
             this.sprite.setImage(idleGif.getImage());
             this.currentGif = idleGif;
@@ -71,6 +77,7 @@ public class Character {
         this.sprite.setX(x);
         this.sprite.setY(y);
 
+
         this.hitbox = new Rectangle(0, 0, GameField.getTileSize() * 0.7, GameField.getTileSize() * 0.7);
         if(GameField.isDebug()) {
             hitbox.setFill(rgb(255, 0, 0, 0.3));
@@ -81,6 +88,8 @@ public class Character {
         healthBar = new ProgressBar(1);
         healthBar.setPrefWidth(GameField.getTileSize() * 1.5);
         healthBar.setPrefHeight(10);
+        healthBar.setLayoutX(x);
+        healthBar.setLayoutY(y - 20);
 
         updateHealthBar();
 
@@ -125,6 +134,27 @@ public class Character {
             scheduler.shutdown();
         }
     }
+
+    public void setSpawnStill() {
+        spawnDelay.stop();
+        this.currentGif = spawnGif2;
+        this.sprite.setImage(spawnStill.getImage());
+    }
+
+    public void playSpawnAnimation() {
+        isSpawning = true;
+        this.currentGif = spawnGif2;
+        this.sprite.setImage(EntityManagement.getImage("player-spawn").getImage());
+
+        PauseTransition idleDelay = new PauseTransition(Duration.seconds(2.1));
+        idleDelay.setOnFinished(e -> {
+            this.sprite.setImage(idleGif.getImage());
+            this.currentGif = idleGif;
+            isSpawning = false;  // Animation beendet
+        });
+        idleDelay.play();
+    }
+
 
 
     private void updateHealthBar() {
@@ -205,13 +235,14 @@ public class Character {
 
 
     public void setSpriteToIdle2() {
-        if (Main.getGameLoop() != null && !Main.isGameLoopPaused()) {
+        if (Main.getGameLoop() != null && !Main.isGameLoopPaused() && !isSpawning) {
             if (currentGif != idleGif) {
                 this.sprite.setImage(idleGif.getImage());
                 currentGif = idleGif;
             }
         }
     }
+
 
     public ImageView getSprite() {
         return sprite;

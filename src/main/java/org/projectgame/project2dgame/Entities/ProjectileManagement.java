@@ -44,8 +44,6 @@ public class ProjectileManagement {
                 yield "/VFX/FB_Right.gif";
             }
             default -> "";
-
-            // https://nyknck.itch.io/pixelarteffectfx017 Fireball VFX
         };
 
         double hitboxWidth = character.getHitbox().getWidth();

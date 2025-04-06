@@ -206,7 +206,7 @@ public class Bat extends Entity {
 
     @Override
     public void updateSpriteDirection(double dx, double dy) {
-        if (!Main.isGameLoopPaused()) {
+        if (Main.getGameLoop() != null && !Main.isGameLoopPaused()) {
             this.sprite.setFitWidth(GameField.getTileSize() * 1.7);
             this.sprite.setFitHeight(GameField.getTileSize() * 1.7);
 

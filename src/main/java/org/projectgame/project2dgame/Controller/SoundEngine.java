@@ -9,6 +9,7 @@ import java.util.Objects;
 public class SoundEngine {
     private static MediaPlayer backgroundMusicPlayer;
     private static MediaPlayer soundPlayer;
+    private static MediaPlayer AmbientSoundPlayer;
     private static double lautstaerke = GameSettings.getVolume();
 
     private SoundEngine() {}
@@ -16,6 +17,10 @@ public class SoundEngine {
     public static void playBackgroundMusic(String musicFilePath) {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.stop();
+        }
+
+        if (AmbientSoundPlayer != null) {
+            AmbientSoundPlayer.stop();
         }
 
         Media backgroundMusic = new Media(Objects.requireNonNull(SoundEngine.class.getResource(musicFilePath)).toExternalForm());
@@ -33,6 +38,23 @@ public class SoundEngine {
         soundPlayer.setCycleCount(1);
         soundPlayer.setVolume(lautstaerke);
         soundPlayer.play();
+    }
+
+    public static void playAmbientSound(String soundFilePath) {
+        if (AmbientSoundPlayer != null) {
+            AmbientSoundPlayer.stop();
+        }
+
+        if (backgroundMusicPlayer != null) {
+            backgroundMusicPlayer.stop();
+        }
+
+        Media sound = new Media(Objects.requireNonNull(SoundEngine.class.getResource(soundFilePath)).toExternalForm());
+
+        AmbientSoundPlayer = new MediaPlayer(sound);
+        AmbientSoundPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        AmbientSoundPlayer.setVolume(lautstaerke * 2);
+        AmbientSoundPlayer.play();
     }
 
     public static void playMainMenuMusic() {
@@ -67,6 +89,13 @@ public class SoundEngine {
         soundPlayer.setCycleCount(1);
     }
 
+    public static void playAmbientSound() {
+        playAmbientSound("/Sound/DarkAmbient.mp3");
+    }
+
+    public static void playBossMusic() {
+        playBackgroundMusic("/Sound/BossFight.mp3");
+    }
     public static void stopMusic() {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.stop();

@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.SettingsScreenController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/MainMenu.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.projectgame.project2dgame.Controller.SettingsScreenController">
     <children>
         <Text fill="#f8f8f8" layoutX="108.8" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" textAlignment="CENTER" wrappingWidth="381.0" AnchorPane.leftAnchor="108.8">
             <font>
@@ -46,7 +46,7 @@
             <Font name="Britannic Bold" size="12.0" />
          </font>
       </Button>
-      <ImageView fitHeight="40.0" fitWidth="41.0" layoutX="24.0" layoutY="11.0">
+      <ImageView fitHeight="25.0" fitWidth="27.0" layoutX="32.0" layoutY="17.0">
          <image>
             <Image url="@../Images/undo.png" />
          </image>

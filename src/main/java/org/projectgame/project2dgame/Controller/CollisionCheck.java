@@ -144,7 +144,7 @@ public class CollisionCheck {
 
         // Kollision mit Spieler
         Character player = entityManagement.getCharacter();
-        if (player != null && hitbox.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
+        if (hitbox.getBoundsInParent().intersects(player.getHitbox().getBoundsInParent())) {
             return false;
         }
 

@@ -10,6 +10,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.projectgame.project2dgame.Controller.CollisionCheck;
+import org.projectgame.project2dgame.Controller.SoundEngine;
+import org.projectgame.project2dgame.Data.EndCutscene;
 import org.projectgame.project2dgame.Entities.Enemies.Bat;
 import org.projectgame.project2dgame.Entities.Enemies.DeathBoss;
 import org.projectgame.project2dgame.Entities.Enemies.Skeleton;
@@ -67,6 +69,8 @@ public class EntityManagement {
         imageBytesCache.put("deathboss-attack", getBytesFromStream("/Entities/DeathBoss/deathboss-attack.gif"));
         imageBytesCache.put("deathboss-summon", getBytesFromStream("/Entities/DeathBoss/deathboss-summon.gif"));
         imageBytesCache.put("deathboss-teleport", getBytesFromStream("/Entities/DeathBoss/deathboss-teleport.gif"));
+
+        imageBytesCache.put("player-spawn", getBytesFromStream("/Entities/Main Character/spawn2.gif"));
     }
 
     private byte[] getBytesFromStream(String path) {
@@ -540,7 +544,20 @@ public class EntityManagement {
                 if (!CharacterInfo.getLevelDone().contains(level)) {
                     CharacterInfo.getLevelDone().add(level);
                 }
-                Main.setWindow("Win", 0);
+                if (level != 5) {
+                    Main.setWindow("Win", 0);
+                } else {
+                    SoundEngine.playAmbientSound();
+                    EndCutscene endCutscene = new EndCutscene(getGamePane());
+                    endCutscene.setOnFinished(() -> {
+                        try {
+                            Main.setWindow("MainMenu", 0);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    });
+
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
