@@ -3,6 +3,7 @@ package org.projectgame.project2dgame.Data;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -56,9 +57,13 @@ public class EndCutscene {
         showNextText();
 
         cutscenePane.setOnMouseClicked(event -> showNextText());
-        cutscenePane.setOnKeyPressed(event -> showNextText());
+        cutscenePane.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                showNextText();
+            }
+        });
 
-        Label continueLabel = new Label("Drücke eine beliebige Taste, um fortzufahren...");
+        Label continueLabel = new Label("Drücke die Leertaste oder eine Maustaste, um fortzufahren...");
         continueLabel.setTextFill(Color.GRAY);
         continueLabel.setFont(new Font("Consolas", 18));
         // Positioniere das Continue-Label unten (alternativ in ein BorderPane oder ähnliches einbetten)
@@ -78,6 +83,9 @@ public class EndCutscene {
     }
 
     public void endCutscene() {
+        cutscenePane.setOnKeyPressed(null);
+        cutscenePane.setOnMouseClicked(null);
+
         FadeTransition fade = new FadeTransition(Duration.seconds(1.5), cutscenePane);
         fade.setFromValue(1.0);
         fade.setToValue(0.0);
