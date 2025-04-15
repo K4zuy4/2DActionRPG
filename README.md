@@ -1,1 +1,1 @@
-Lade dir, um das Spiel zu spielen, den neusten Release runter. Diesen findest du an der linken Seite dieser Page. Weitere Instalaltionanweisungen findest du danach in der README.txt innerhalb des Ordners.
+Lade dir, um das Spiel zu spielen, den neusten Release runter. Diesen findest du an der rechten Seite dieser Page. Weitere Instalaltionanweisungen findest du danach in der README.txt innerhalb des Ordners.
